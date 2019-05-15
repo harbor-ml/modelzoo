@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+message VisionClassificationRequest {
+  bytes input_image = 1;
+  uint32 num_returns = 2;
+}
+
+message VisionClassificationResponse {
+  message Result {
+    uint32 rank = 1;
+    string category = 2;
+    float proba = 3;
+  }
+
+  repeated Result results = 1;
+}
+
+service Model {
+  rpc VisionClassification(VisionClassificationRequest)
+      returns (VisionClassificationResponse) {}
+}
