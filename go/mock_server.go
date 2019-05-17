@@ -6,27 +6,45 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
 
+	panichandler "github.com/kazegusuri/grpc-panic-handler"
+	dataurl "github.com/vincent-petithory/dataurl"
+
+	proto "github.com/golang/protobuf/proto"
 	services "github.com/harbor-ml/modelzoo/go/protos"
 	"google.golang.org/grpc"
 )
 
 const port int = 9090
-const modelAddr string = "http://127.0.0.1:8000"
 
-func postJSON(url string, payload map[string]interface{}) (message map[string]interface{}) {
-	serializedBytes, err := json.Marshal(payload)
-	if err != nil {
-		log.Fatalln(err)
+// const modelAddrTemplate string = "http://localhost:8000/%v/predict"
+
+const modelAddrTemplate string = "http://35.163.225.179:1337/%v/predict"
+
+var avaiableModels = []string{"res50", "squeezenet"}
+
+func panicIf(e interface{}) {
+	if e != nil {
+		panic(e)
 	}
+}
+
+func postJSON(url string, payload map[string]string) (message map[string]interface{}) {
+	serializedBytes, err := json.Marshal(payload)
+	panicIf(err)
 
 	resp, err := http.Post(url, "application/json", bytes.NewBuffer(serializedBytes))
-	if err != nil {
-		log.Fatalln(err)
+	panicIf(err)
+
+	if resp.StatusCode != 200 {
+		panicIf(resp)
 	}
+
+	defer resp.Body.Close()
 
 	json.NewDecoder(resp.Body).Decode(&message)
 	return
@@ -36,30 +54,58 @@ type mockModelServer struct {
 	reqID int
 }
 
+func (s *mockModelServer) GetImage(
+	c context.Context, req *services.ImageDownloadRequest) (
+	*services.ImageDownloadResponse, error) {
+
+	url := req.GetUrl()
+	resp, err := http.Get(url)
+	panicIf(err)
+
+	defer resp.Body.Close()
+
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	panicIf(err)
+	codedBody := dataurl.EncodeBytes(bodyBytes)
+	result := &services.ImageDownloadResponse{
+		Image: codedBody,
+	}
+
+	return result, nil
+}
+
+func (s *mockModelServer) ListModels(
+	c context.Context, req *services.VisionClassificationGetModelsReq) (
+	*services.VisionClassificationGetModelsResp, error) {
+	resp := &services.VisionClassificationGetModelsResp{
+		Models: avaiableModels,
+	}
+	return resp, nil
+}
+
 func (s *mockModelServer) VisionClassification(
 	c context.Context, req *services.VisionClassificationRequest) (
 	*services.VisionClassificationResponse, error) {
 
-	log.Printf("Recv: %d, %v\n", s.reqID, req)
+	serializedReq, err := proto.Marshal(req)
+	panicIf(err)
 
-	encodedReq := base64.StdEncoding.EncodeToString([]byte(req.String()))
-	log.Printf("Encoded Request! %v", encodedReq)
+	encodedReq := base64.StdEncoding.EncodeToString(serializedReq)
 
-	// Create dummy input
-	result := services.VisionClassificationResponse_Result{
-		Rank:     1,
-		Category: "Pikachu",
-		Proba:    0.99,
-	}
-	lst := []*services.VisionClassificationResponse_Result{&result}
-	val := services.VisionClassificationResponse{
-		Results: lst,
-	}
+	payload := map[string]string{"input": encodedReq}
+	modelAddr := fmt.Sprintf(modelAddrTemplate, req.GetModelName())
+	resp := postJSON(modelAddr, payload)
+
+	val := &services.VisionClassificationResponse{}
+	decoded, err := base64.StdEncoding.DecodeString(resp["output"].(string))
+	panicIf(err)
+
+	proto.Unmarshal(decoded, val)
 
 	// This might require a lock
 	s.reqID++
 
-	return &val, nil
+	return val, nil
 }
 
 func main() {
@@ -69,7 +115,11 @@ func main() {
 	}
 	log.Println("Server started, listening to port", port)
 
-	grpcServer := grpc.NewServer()
+	uIntOpt := grpc.UnaryInterceptor(panichandler.UnaryPanicHandler)
+	sIntOpt := grpc.StreamInterceptor(panichandler.StreamPanicHandler)
+
+	grpcServer := grpc.NewServer(uIntOpt, sIntOpt)
+
 	s := &mockModelServer{0}
 	services.RegisterModelServer(grpcServer, s)
 	grpcServer.Serve(lis)

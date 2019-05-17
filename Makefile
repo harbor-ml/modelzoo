@@ -20,3 +20,8 @@ protos:
 .PHONY: link
 link:
 	cd js; npm link ./protos
+
+.PHONY: envoy
+envoy:
+	docker build -t harbor/envoy -f envoy.Dockerfile envoy
+	docker run -it -p 9901:9901 -p 8080:8080 harbor/envoy

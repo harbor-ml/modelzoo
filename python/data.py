@@ -47,4 +47,6 @@ U.N.I.
 Wake Me Up
 We Are
 What Do I Know?
-""".strip().split('\n')
+""".strip().split(
+    "\n"
+)

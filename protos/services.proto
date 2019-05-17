@@ -1,8 +1,17 @@
 syntax = "proto3";
 
+message VisionClassificationGetModelsReq {}
+
+message VisionClassificationGetModelsResp {
+  repeated string models = 1;
+}
+
+
 message VisionClassificationRequest {
-  bytes input_image = 1;
+  string input_image = 1;
   uint32 num_returns = 2;
+
+  string model_name = 3;
 }
 
 message VisionClassificationResponse {
@@ -15,7 +24,18 @@ message VisionClassificationResponse {
   repeated Result results = 1;
 }
 
+message ImageDownloadRequest {
+  string url = 1;
+}
+message ImageDownloadResponse {
+  string image = 1;
+}
+
 service Model {
   rpc VisionClassification(VisionClassificationRequest)
       returns (VisionClassificationResponse) {}
+
+  rpc GetImage(ImageDownloadRequest) returns (ImageDownloadResponse) {}
+  rpc ListModels(VisionClassificationGetModelsReq) returns (VisionClassificationGetModelsResp) {}
+  
 }

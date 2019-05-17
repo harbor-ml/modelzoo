@@ -2,192 +2,490 @@
 # source: protos/services.proto
 
 import sys
-_b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
+
+_b = sys.version_info[0] < 3 and (lambda x: x) or (lambda x: x.encode("latin1"))
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
 from google.protobuf import symbol_database as _symbol_database
 from google.protobuf import descriptor_pb2
+
 # @@protoc_insertion_point(imports)
 
 _sym_db = _symbol_database.Default()
 
 
-
-
 DESCRIPTOR = _descriptor.FileDescriptor(
-  name='protos/services.proto',
-  package='',
-  syntax='proto3',
-  serialized_pb=_b('\n\x15protos/services.proto\"G\n\x1bVisionClassificationRequest\x12\x13\n\x0binput_image\x18\x01 \x01(\x0c\x12\x13\n\x0bnum_returns\x18\x02 \x01(\r\"\x8e\x01\n\x1cVisionClassificationResponse\x12\x35\n\x07results\x18\x01 \x03(\x0b\x32$.VisionClassificationResponse.Result\x1a\x37\n\x06Result\x12\x0c\n\x04rank\x18\x01 \x01(\r\x12\x10\n\x08\x63\x61tegory\x18\x02 \x01(\t\x12\r\n\x05proba\x18\x03 \x01(\x02\x32^\n\x05Model\x12U\n\x14VisionClassification\x12\x1c.VisionClassificationRequest\x1a\x1d.VisionClassificationResponse\"\x00\x62\x06proto3')
+    name="protos/services.proto",
+    package="",
+    syntax="proto3",
+    serialized_pb=_b(
+        '\n\x15protos/services.proto""\n VisionClassificationGetModelsReq"3\n!VisionClassificationGetModelsResp\x12\x0e\n\x06models\x18\x01 \x03(\t"[\n\x1bVisionClassificationRequest\x12\x13\n\x0binput_image\x18\x01 \x01(\t\x12\x13\n\x0bnum_returns\x18\x02 \x01(\r\x12\x12\n\nmodel_name\x18\x03 \x01(\t"\x8e\x01\n\x1cVisionClassificationResponse\x12\x35\n\x07results\x18\x01 \x03(\x0b\x32$.VisionClassificationResponse.Result\x1a\x37\n\x06Result\x12\x0c\n\x04rank\x18\x01 \x01(\r\x12\x10\n\x08\x63\x61tegory\x18\x02 \x01(\t\x12\r\n\x05proba\x18\x03 \x01(\x02"#\n\x14ImageDownloadRequest\x12\x0b\n\x03url\x18\x01 \x01(\t"&\n\x15ImageDownloadResponse\x12\r\n\x05image\x18\x01 \x01(\t2\xf2\x01\n\x05Model\x12U\n\x14VisionClassification\x12\x1c.VisionClassificationRequest\x1a\x1d.VisionClassificationResponse"\x00\x12;\n\x08GetImage\x12\x15.ImageDownloadRequest\x1a\x16.ImageDownloadResponse"\x00\x12U\n\nListModels\x12!.VisionClassificationGetModelsReq\x1a".VisionClassificationGetModelsResp"\x00\x62\x06proto3'
+    ),
 )
 
 
+_VISIONCLASSIFICATIONGETMODELSREQ = _descriptor.Descriptor(
+    name="VisionClassificationGetModelsReq",
+    full_name="VisionClassificationGetModelsReq",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=25,
+    serialized_end=59,
+)
+
+
+_VISIONCLASSIFICATIONGETMODELSRESP = _descriptor.Descriptor(
+    name="VisionClassificationGetModelsResp",
+    full_name="VisionClassificationGetModelsResp",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="models",
+            full_name="VisionClassificationGetModelsResp.models",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            options=None,
+            file=DESCRIPTOR,
+        )
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=61,
+    serialized_end=112,
+)
 
 
 _VISIONCLASSIFICATIONREQUEST = _descriptor.Descriptor(
-  name='VisionClassificationRequest',
-  full_name='VisionClassificationRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='input_image', full_name='VisionClassificationRequest.input_image', index=0,
-      number=1, type=12, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b(""),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='num_returns', full_name='VisionClassificationRequest.num_returns', index=1,
-      number=2, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=25,
-  serialized_end=96,
+    name="VisionClassificationRequest",
+    full_name="VisionClassificationRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="input_image",
+            full_name="VisionClassificationRequest.input_image",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="num_returns",
+            full_name="VisionClassificationRequest.num_returns",
+            index=1,
+            number=2,
+            type=13,
+            cpp_type=3,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="model_name",
+            full_name="VisionClassificationRequest.model_name",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=114,
+    serialized_end=205,
 )
 
 
 _VISIONCLASSIFICATIONRESPONSE_RESULT = _descriptor.Descriptor(
-  name='Result',
-  full_name='VisionClassificationResponse.Result',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='rank', full_name='VisionClassificationResponse.Result.rank', index=0,
-      number=1, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='category', full_name='VisionClassificationResponse.Result.category', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='proba', full_name='VisionClassificationResponse.Result.proba', index=2,
-      number=3, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=186,
-  serialized_end=241,
+    name="Result",
+    full_name="VisionClassificationResponse.Result",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="rank",
+            full_name="VisionClassificationResponse.Result.rank",
+            index=0,
+            number=1,
+            type=13,
+            cpp_type=3,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="category",
+            full_name="VisionClassificationResponse.Result.category",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="proba",
+            full_name="VisionClassificationResponse.Result.proba",
+            index=2,
+            number=3,
+            type=2,
+            cpp_type=6,
+            label=1,
+            has_default_value=False,
+            default_value=float(0),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=295,
+    serialized_end=350,
 )
 
 _VISIONCLASSIFICATIONRESPONSE = _descriptor.Descriptor(
-  name='VisionClassificationResponse',
-  full_name='VisionClassificationResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='results', full_name='VisionClassificationResponse.results', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[_VISIONCLASSIFICATIONRESPONSE_RESULT, ],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=99,
-  serialized_end=241,
+    name="VisionClassificationResponse",
+    full_name="VisionClassificationResponse",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="results",
+            full_name="VisionClassificationResponse.results",
+            index=0,
+            number=1,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            options=None,
+            file=DESCRIPTOR,
+        )
+    ],
+    extensions=[],
+    nested_types=[_VISIONCLASSIFICATIONRESPONSE_RESULT],
+    enum_types=[],
+    options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=208,
+    serialized_end=350,
+)
+
+
+_IMAGEDOWNLOADREQUEST = _descriptor.Descriptor(
+    name="ImageDownloadRequest",
+    full_name="ImageDownloadRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="url",
+            full_name="ImageDownloadRequest.url",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            options=None,
+            file=DESCRIPTOR,
+        )
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=352,
+    serialized_end=387,
+)
+
+
+_IMAGEDOWNLOADRESPONSE = _descriptor.Descriptor(
+    name="ImageDownloadResponse",
+    full_name="ImageDownloadResponse",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="image",
+            full_name="ImageDownloadResponse.image",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            options=None,
+            file=DESCRIPTOR,
+        )
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=389,
+    serialized_end=427,
 )
 
 _VISIONCLASSIFICATIONRESPONSE_RESULT.containing_type = _VISIONCLASSIFICATIONRESPONSE
-_VISIONCLASSIFICATIONRESPONSE.fields_by_name['results'].message_type = _VISIONCLASSIFICATIONRESPONSE_RESULT
-DESCRIPTOR.message_types_by_name['VisionClassificationRequest'] = _VISIONCLASSIFICATIONREQUEST
-DESCRIPTOR.message_types_by_name['VisionClassificationResponse'] = _VISIONCLASSIFICATIONRESPONSE
+_VISIONCLASSIFICATIONRESPONSE.fields_by_name[
+    "results"
+].message_type = _VISIONCLASSIFICATIONRESPONSE_RESULT
+DESCRIPTOR.message_types_by_name[
+    "VisionClassificationGetModelsReq"
+] = _VISIONCLASSIFICATIONGETMODELSREQ
+DESCRIPTOR.message_types_by_name[
+    "VisionClassificationGetModelsResp"
+] = _VISIONCLASSIFICATIONGETMODELSRESP
+DESCRIPTOR.message_types_by_name[
+    "VisionClassificationRequest"
+] = _VISIONCLASSIFICATIONREQUEST
+DESCRIPTOR.message_types_by_name[
+    "VisionClassificationResponse"
+] = _VISIONCLASSIFICATIONRESPONSE
+DESCRIPTOR.message_types_by_name["ImageDownloadRequest"] = _IMAGEDOWNLOADREQUEST
+DESCRIPTOR.message_types_by_name["ImageDownloadResponse"] = _IMAGEDOWNLOADRESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-VisionClassificationRequest = _reflection.GeneratedProtocolMessageType('VisionClassificationRequest', (_message.Message,), dict(
-  DESCRIPTOR = _VISIONCLASSIFICATIONREQUEST,
-  __module__ = 'protos.services_pb2'
-  # @@protoc_insertion_point(class_scope:VisionClassificationRequest)
-  ))
+VisionClassificationGetModelsReq = _reflection.GeneratedProtocolMessageType(
+    "VisionClassificationGetModelsReq",
+    (_message.Message,),
+    dict(
+        DESCRIPTOR=_VISIONCLASSIFICATIONGETMODELSREQ,
+        __module__="protos.services_pb2"
+        # @@protoc_insertion_point(class_scope:VisionClassificationGetModelsReq)
+    ),
+)
+_sym_db.RegisterMessage(VisionClassificationGetModelsReq)
+
+VisionClassificationGetModelsResp = _reflection.GeneratedProtocolMessageType(
+    "VisionClassificationGetModelsResp",
+    (_message.Message,),
+    dict(
+        DESCRIPTOR=_VISIONCLASSIFICATIONGETMODELSRESP,
+        __module__="protos.services_pb2"
+        # @@protoc_insertion_point(class_scope:VisionClassificationGetModelsResp)
+    ),
+)
+_sym_db.RegisterMessage(VisionClassificationGetModelsResp)
+
+VisionClassificationRequest = _reflection.GeneratedProtocolMessageType(
+    "VisionClassificationRequest",
+    (_message.Message,),
+    dict(
+        DESCRIPTOR=_VISIONCLASSIFICATIONREQUEST,
+        __module__="protos.services_pb2"
+        # @@protoc_insertion_point(class_scope:VisionClassificationRequest)
+    ),
+)
 _sym_db.RegisterMessage(VisionClassificationRequest)
 
-VisionClassificationResponse = _reflection.GeneratedProtocolMessageType('VisionClassificationResponse', (_message.Message,), dict(
-
-  Result = _reflection.GeneratedProtocolMessageType('Result', (_message.Message,), dict(
-    DESCRIPTOR = _VISIONCLASSIFICATIONRESPONSE_RESULT,
-    __module__ = 'protos.services_pb2'
-    # @@protoc_insertion_point(class_scope:VisionClassificationResponse.Result)
-    ))
-  ,
-  DESCRIPTOR = _VISIONCLASSIFICATIONRESPONSE,
-  __module__ = 'protos.services_pb2'
-  # @@protoc_insertion_point(class_scope:VisionClassificationResponse)
-  ))
+VisionClassificationResponse = _reflection.GeneratedProtocolMessageType(
+    "VisionClassificationResponse",
+    (_message.Message,),
+    dict(
+        Result=_reflection.GeneratedProtocolMessageType(
+            "Result",
+            (_message.Message,),
+            dict(
+                DESCRIPTOR=_VISIONCLASSIFICATIONRESPONSE_RESULT,
+                __module__="protos.services_pb2"
+                # @@protoc_insertion_point(class_scope:VisionClassificationResponse.Result)
+            ),
+        ),
+        DESCRIPTOR=_VISIONCLASSIFICATIONRESPONSE,
+        __module__="protos.services_pb2"
+        # @@protoc_insertion_point(class_scope:VisionClassificationResponse)
+    ),
+)
 _sym_db.RegisterMessage(VisionClassificationResponse)
 _sym_db.RegisterMessage(VisionClassificationResponse.Result)
 
+ImageDownloadRequest = _reflection.GeneratedProtocolMessageType(
+    "ImageDownloadRequest",
+    (_message.Message,),
+    dict(
+        DESCRIPTOR=_IMAGEDOWNLOADREQUEST,
+        __module__="protos.services_pb2"
+        # @@protoc_insertion_point(class_scope:ImageDownloadRequest)
+    ),
+)
+_sym_db.RegisterMessage(ImageDownloadRequest)
+
+ImageDownloadResponse = _reflection.GeneratedProtocolMessageType(
+    "ImageDownloadResponse",
+    (_message.Message,),
+    dict(
+        DESCRIPTOR=_IMAGEDOWNLOADRESPONSE,
+        __module__="protos.services_pb2"
+        # @@protoc_insertion_point(class_scope:ImageDownloadResponse)
+    ),
+)
+_sym_db.RegisterMessage(ImageDownloadResponse)
 
 
 _MODEL = _descriptor.ServiceDescriptor(
-  name='Model',
-  full_name='Model',
-  file=DESCRIPTOR,
-  index=0,
-  options=None,
-  serialized_start=243,
-  serialized_end=337,
-  methods=[
-  _descriptor.MethodDescriptor(
-    name='VisionClassification',
-    full_name='Model.VisionClassification',
+    name="Model",
+    full_name="Model",
+    file=DESCRIPTOR,
     index=0,
-    containing_service=None,
-    input_type=_VISIONCLASSIFICATIONREQUEST,
-    output_type=_VISIONCLASSIFICATIONRESPONSE,
     options=None,
-  ),
-])
+    serialized_start=430,
+    serialized_end=672,
+    methods=[
+        _descriptor.MethodDescriptor(
+            name="VisionClassification",
+            full_name="Model.VisionClassification",
+            index=0,
+            containing_service=None,
+            input_type=_VISIONCLASSIFICATIONREQUEST,
+            output_type=_VISIONCLASSIFICATIONRESPONSE,
+            options=None,
+        ),
+        _descriptor.MethodDescriptor(
+            name="GetImage",
+            full_name="Model.GetImage",
+            index=1,
+            containing_service=None,
+            input_type=_IMAGEDOWNLOADREQUEST,
+            output_type=_IMAGEDOWNLOADRESPONSE,
+            options=None,
+        ),
+        _descriptor.MethodDescriptor(
+            name="ListModels",
+            full_name="Model.ListModels",
+            index=2,
+            containing_service=None,
+            input_type=_VISIONCLASSIFICATIONGETMODELSREQ,
+            output_type=_VISIONCLASSIFICATIONGETMODELSRESP,
+            options=None,
+        ),
+    ],
+)
 _sym_db.RegisterServiceDescriptor(_MODEL)
 
-DESCRIPTOR.services_by_name['Model'] = _MODEL
+DESCRIPTOR.services_by_name["Model"] = _MODEL
 
 # @@protoc_insertion_point(module_scope)

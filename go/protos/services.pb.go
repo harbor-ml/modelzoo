@@ -24,9 +24,80 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
+type VisionClassificationGetModelsReq struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *VisionClassificationGetModelsReq) Reset()         { *m = VisionClassificationGetModelsReq{} }
+func (m *VisionClassificationGetModelsReq) String() string { return proto.CompactTextString(m) }
+func (*VisionClassificationGetModelsReq) ProtoMessage()    {}
+func (*VisionClassificationGetModelsReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_edd031a16b9fa047, []int{0}
+}
+
+func (m *VisionClassificationGetModelsReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_VisionClassificationGetModelsReq.Unmarshal(m, b)
+}
+func (m *VisionClassificationGetModelsReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_VisionClassificationGetModelsReq.Marshal(b, m, deterministic)
+}
+func (m *VisionClassificationGetModelsReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_VisionClassificationGetModelsReq.Merge(m, src)
+}
+func (m *VisionClassificationGetModelsReq) XXX_Size() int {
+	return xxx_messageInfo_VisionClassificationGetModelsReq.Size(m)
+}
+func (m *VisionClassificationGetModelsReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_VisionClassificationGetModelsReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_VisionClassificationGetModelsReq proto.InternalMessageInfo
+
+type VisionClassificationGetModelsResp struct {
+	Models               []string `protobuf:"bytes,1,rep,name=models,proto3" json:"models,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *VisionClassificationGetModelsResp) Reset()         { *m = VisionClassificationGetModelsResp{} }
+func (m *VisionClassificationGetModelsResp) String() string { return proto.CompactTextString(m) }
+func (*VisionClassificationGetModelsResp) ProtoMessage()    {}
+func (*VisionClassificationGetModelsResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_edd031a16b9fa047, []int{1}
+}
+
+func (m *VisionClassificationGetModelsResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_VisionClassificationGetModelsResp.Unmarshal(m, b)
+}
+func (m *VisionClassificationGetModelsResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_VisionClassificationGetModelsResp.Marshal(b, m, deterministic)
+}
+func (m *VisionClassificationGetModelsResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_VisionClassificationGetModelsResp.Merge(m, src)
+}
+func (m *VisionClassificationGetModelsResp) XXX_Size() int {
+	return xxx_messageInfo_VisionClassificationGetModelsResp.Size(m)
+}
+func (m *VisionClassificationGetModelsResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_VisionClassificationGetModelsResp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_VisionClassificationGetModelsResp proto.InternalMessageInfo
+
+func (m *VisionClassificationGetModelsResp) GetModels() []string {
+	if m != nil {
+		return m.Models
+	}
+	return nil
+}
+
 type VisionClassificationRequest struct {
-	InputImage           []byte   `protobuf:"bytes,1,opt,name=input_image,json=inputImage,proto3" json:"input_image,omitempty"`
+	InputImage           string   `protobuf:"bytes,1,opt,name=input_image,json=inputImage,proto3" json:"input_image,omitempty"`
 	NumReturns           uint32   `protobuf:"varint,2,opt,name=num_returns,json=numReturns,proto3" json:"num_returns,omitempty"`
+	ModelName            string   `protobuf:"bytes,3,opt,name=model_name,json=modelName,proto3" json:"model_name,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -36,7 +107,7 @@ func (m *VisionClassificationRequest) Reset()         { *m = VisionClassificatio
 func (m *VisionClassificationRequest) String() string { return proto.CompactTextString(m) }
 func (*VisionClassificationRequest) ProtoMessage()    {}
 func (*VisionClassificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edd031a16b9fa047, []int{0}
+	return fileDescriptor_edd031a16b9fa047, []int{2}
 }
 
 func (m *VisionClassificationRequest) XXX_Unmarshal(b []byte) error {
@@ -57,11 +128,11 @@ func (m *VisionClassificationRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_VisionClassificationRequest proto.InternalMessageInfo
 
-func (m *VisionClassificationRequest) GetInputImage() []byte {
+func (m *VisionClassificationRequest) GetInputImage() string {
 	if m != nil {
 		return m.InputImage
 	}
-	return nil
+	return ""
 }
 
 func (m *VisionClassificationRequest) GetNumReturns() uint32 {
@@ -69,6 +140,13 @@ func (m *VisionClassificationRequest) GetNumReturns() uint32 {
 		return m.NumReturns
 	}
 	return 0
+}
+
+func (m *VisionClassificationRequest) GetModelName() string {
+	if m != nil {
+		return m.ModelName
+	}
+	return ""
 }
 
 type VisionClassificationResponse struct {
@@ -82,7 +160,7 @@ func (m *VisionClassificationResponse) Reset()         { *m = VisionClassificati
 func (m *VisionClassificationResponse) String() string { return proto.CompactTextString(m) }
 func (*VisionClassificationResponse) ProtoMessage()    {}
 func (*VisionClassificationResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edd031a16b9fa047, []int{1}
+	return fileDescriptor_edd031a16b9fa047, []int{3}
 }
 
 func (m *VisionClassificationResponse) XXX_Unmarshal(b []byte) error {
@@ -123,7 +201,7 @@ func (m *VisionClassificationResponse_Result) Reset()         { *m = VisionClass
 func (m *VisionClassificationResponse_Result) String() string { return proto.CompactTextString(m) }
 func (*VisionClassificationResponse_Result) ProtoMessage()    {}
 func (*VisionClassificationResponse_Result) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edd031a16b9fa047, []int{1, 0}
+	return fileDescriptor_edd031a16b9fa047, []int{3, 0}
 }
 
 func (m *VisionClassificationResponse_Result) XXX_Unmarshal(b []byte) error {
@@ -165,32 +243,122 @@ func (m *VisionClassificationResponse_Result) GetProba() float32 {
 	return 0
 }
 
+type ImageDownloadRequest struct {
+	Url                  string   `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ImageDownloadRequest) Reset()         { *m = ImageDownloadRequest{} }
+func (m *ImageDownloadRequest) String() string { return proto.CompactTextString(m) }
+func (*ImageDownloadRequest) ProtoMessage()    {}
+func (*ImageDownloadRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_edd031a16b9fa047, []int{4}
+}
+
+func (m *ImageDownloadRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ImageDownloadRequest.Unmarshal(m, b)
+}
+func (m *ImageDownloadRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ImageDownloadRequest.Marshal(b, m, deterministic)
+}
+func (m *ImageDownloadRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ImageDownloadRequest.Merge(m, src)
+}
+func (m *ImageDownloadRequest) XXX_Size() int {
+	return xxx_messageInfo_ImageDownloadRequest.Size(m)
+}
+func (m *ImageDownloadRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ImageDownloadRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ImageDownloadRequest proto.InternalMessageInfo
+
+func (m *ImageDownloadRequest) GetUrl() string {
+	if m != nil {
+		return m.Url
+	}
+	return ""
+}
+
+type ImageDownloadResponse struct {
+	Image                string   `protobuf:"bytes,1,opt,name=image,proto3" json:"image,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ImageDownloadResponse) Reset()         { *m = ImageDownloadResponse{} }
+func (m *ImageDownloadResponse) String() string { return proto.CompactTextString(m) }
+func (*ImageDownloadResponse) ProtoMessage()    {}
+func (*ImageDownloadResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_edd031a16b9fa047, []int{5}
+}
+
+func (m *ImageDownloadResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ImageDownloadResponse.Unmarshal(m, b)
+}
+func (m *ImageDownloadResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ImageDownloadResponse.Marshal(b, m, deterministic)
+}
+func (m *ImageDownloadResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ImageDownloadResponse.Merge(m, src)
+}
+func (m *ImageDownloadResponse) XXX_Size() int {
+	return xxx_messageInfo_ImageDownloadResponse.Size(m)
+}
+func (m *ImageDownloadResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ImageDownloadResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ImageDownloadResponse proto.InternalMessageInfo
+
+func (m *ImageDownloadResponse) GetImage() string {
+	if m != nil {
+		return m.Image
+	}
+	return ""
+}
+
 func init() {
+	proto.RegisterType((*VisionClassificationGetModelsReq)(nil), "VisionClassificationGetModelsReq")
+	proto.RegisterType((*VisionClassificationGetModelsResp)(nil), "VisionClassificationGetModelsResp")
 	proto.RegisterType((*VisionClassificationRequest)(nil), "VisionClassificationRequest")
 	proto.RegisterType((*VisionClassificationResponse)(nil), "VisionClassificationResponse")
 	proto.RegisterType((*VisionClassificationResponse_Result)(nil), "VisionClassificationResponse.Result")
+	proto.RegisterType((*ImageDownloadRequest)(nil), "ImageDownloadRequest")
+	proto.RegisterType((*ImageDownloadResponse)(nil), "ImageDownloadResponse")
 }
 
 func init() { proto.RegisterFile("protos/services.proto", fileDescriptor_edd031a16b9fa047) }
 
 var fileDescriptor_edd031a16b9fa047 = []byte{
-	// 250 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x90, 0x31, 0x4f, 0xc3, 0x30,
-	0x10, 0x85, 0x71, 0x4b, 0x0b, 0x5c, 0xe9, 0x62, 0x15, 0x29, 0x0a, 0x45, 0x44, 0x11, 0x43, 0xa6,
-	0x20, 0x95, 0x9d, 0x85, 0x89, 0x01, 0x86, 0x93, 0x60, 0x24, 0x72, 0xc3, 0x51, 0x59, 0x24, 0x76,
-	0xf0, 0xd9, 0x48, 0xfc, 0x29, 0x7e, 0x23, 0xaa, 0x23, 0x3a, 0x45, 0xd9, 0xfc, 0x3e, 0x3d, 0xeb,
-	0x3e, 0x3d, 0xb8, 0xe8, 0x9c, 0xf5, 0x96, 0x6f, 0x99, 0xdc, 0xb7, 0xae, 0x89, 0xcb, 0x98, 0xf3,
-	0x0a, 0x2e, 0x5f, 0x35, 0x6b, 0x6b, 0x1e, 0x1a, 0xc5, 0xac, 0x3f, 0x74, 0xad, 0xbc, 0xb6, 0x06,
-	0xe9, 0x2b, 0x10, 0x7b, 0x79, 0x0d, 0x0b, 0x6d, 0xba, 0xe0, 0x2b, 0xdd, 0xaa, 0x1d, 0x25, 0x22,
-	0x13, 0xc5, 0x39, 0x42, 0x44, 0x8f, 0x7b, 0xb2, 0x2f, 0x98, 0xd0, 0x56, 0x8e, 0x7c, 0x70, 0x86,
-	0x93, 0x49, 0x26, 0x8a, 0x25, 0x82, 0x09, 0x2d, 0xf6, 0x24, 0xff, 0x15, 0xb0, 0x1e, 0xbe, 0xc0,
-	0x9d, 0x35, 0x4c, 0xf2, 0x1e, 0x4e, 0x1c, 0x71, 0x68, 0x3c, 0x27, 0x22, 0x9b, 0x16, 0x8b, 0xcd,
-	0x4d, 0x39, 0xd6, 0x2f, 0x31, 0x96, 0xf1, 0xff, 0x53, 0xfa, 0x0c, 0xf3, 0x1e, 0x49, 0x09, 0xc7,
-	0x4e, 0x99, 0xcf, 0x68, 0xb9, 0xc4, 0xf8, 0x96, 0x29, 0x9c, 0xd6, 0xca, 0xd3, 0xce, 0xba, 0x9f,
-	0x28, 0x77, 0x86, 0x87, 0x2c, 0x57, 0x30, 0xeb, 0x9c, 0xdd, 0xaa, 0x64, 0x9a, 0x89, 0x62, 0x82,
-	0x7d, 0xd8, 0xbc, 0xc1, 0xec, 0xc9, 0xbe, 0x53, 0x23, 0x5f, 0x60, 0x35, 0x24, 0x22, 0xd7, 0xe5,
-	0xc8, 0x62, 0xe9, 0xd5, 0xa8, 0x7d, 0x7e, 0xb4, 0x9d, 0xc7, 0xe1, 0xef, 0xfe, 0x02, 0x00, 0x00,
-	0xff, 0xff, 0xe2, 0x04, 0xb0, 0x41, 0x91, 0x01, 0x00, 0x00,
+	// 375 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x52, 0x41, 0x6b, 0xe2, 0x40,
+	0x18, 0x35, 0xba, 0xba, 0xe6, 0x13, 0x61, 0x19, 0xa2, 0x84, 0xac, 0xb2, 0x71, 0xd8, 0x43, 0x2e,
+	0x3b, 0x0b, 0xf6, 0x28, 0xf4, 0xd2, 0x82, 0x14, 0x5a, 0x0f, 0x03, 0xf6, 0x2a, 0xa3, 0x4e, 0x65,
+	0x68, 0x32, 0x13, 0x67, 0x26, 0x2d, 0xbd, 0xf4, 0x27, 0xf5, 0xc7, 0xf5, 0x17, 0x14, 0x27, 0xb1,
+	0x94, 0x12, 0xf4, 0x36, 0xef, 0xf1, 0xbe, 0xe4, 0xbd, 0xef, 0x7b, 0x30, 0xc8, 0xb5, 0xb2, 0xca,
+	0xfc, 0x37, 0x5c, 0x3f, 0x89, 0x0d, 0x37, 0xc4, 0x61, 0x8c, 0x21, 0xbe, 0x17, 0x46, 0x28, 0x79,
+	0x95, 0x32, 0x63, 0xc4, 0x83, 0xd8, 0x30, 0x2b, 0x94, 0x9c, 0x73, 0x7b, 0xa7, 0xb6, 0x3c, 0x35,
+	0x94, 0xef, 0xf1, 0x0c, 0x26, 0x67, 0x34, 0x26, 0x47, 0x43, 0xe8, 0x64, 0x0e, 0x85, 0x5e, 0xdc,
+	0x4a, 0x7c, 0x5a, 0x21, 0xfc, 0x0a, 0xbf, 0xeb, 0x86, 0x29, 0xdf, 0x17, 0xdc, 0x58, 0xf4, 0x07,
+	0x7a, 0x42, 0xe6, 0x85, 0x5d, 0x89, 0x8c, 0xed, 0x78, 0xe8, 0xc5, 0x5e, 0xe2, 0x53, 0x70, 0xd4,
+	0xcd, 0x81, 0x39, 0x08, 0x64, 0x91, 0xad, 0x34, 0xb7, 0x85, 0x96, 0x26, 0x6c, 0xc6, 0x5e, 0xd2,
+	0xa7, 0x20, 0x8b, 0x8c, 0x96, 0x0c, 0x1a, 0x03, 0xb8, 0x5f, 0xad, 0x24, 0xcb, 0x78, 0xd8, 0x72,
+	0x1f, 0xf0, 0x1d, 0xb3, 0x60, 0x19, 0xc7, 0x6f, 0x1e, 0x8c, 0xea, 0x0d, 0x98, 0x5c, 0x49, 0xc3,
+	0xd1, 0x25, 0xfc, 0xd4, 0xdc, 0x14, 0xa9, 0x2d, 0x9d, 0xf7, 0xa6, 0x7f, 0xc9, 0x29, 0x3d, 0xa1,
+	0x4e, 0x4c, 0x8f, 0x43, 0xd1, 0x02, 0x3a, 0x25, 0x85, 0x10, 0xfc, 0xd0, 0x4c, 0x3e, 0xba, 0x10,
+	0x7d, 0xea, 0xde, 0x28, 0x82, 0xee, 0x86, 0x59, 0xbe, 0x53, 0xfa, 0xc5, 0x79, 0xf7, 0xe9, 0x27,
+	0x46, 0x01, 0xb4, 0x73, 0xad, 0xd6, 0xcc, 0x99, 0x6e, 0xd2, 0x12, 0xe0, 0x04, 0x02, 0x97, 0xfc,
+	0x5a, 0x3d, 0xcb, 0x54, 0xb1, 0xed, 0x71, 0x53, 0xbf, 0xa0, 0x55, 0xe8, 0xb4, 0xda, 0xd0, 0xe1,
+	0x89, 0xff, 0xc1, 0xe0, 0x9b, 0xb2, 0x8a, 0x14, 0x40, 0xfb, 0xeb, 0x3a, 0x4b, 0x30, 0x7d, 0xf7,
+	0xa0, 0xed, 0x0e, 0x86, 0x96, 0x10, 0xd4, 0x45, 0x44, 0x23, 0x72, 0xe2, 0x54, 0xd1, 0xf8, 0xe4,
+	0x5e, 0x70, 0x03, 0xcd, 0xa0, 0x3b, 0xe7, 0xd5, 0xd9, 0x06, 0xa4, 0x2e, 0x44, 0x34, 0x24, 0xb5,
+	0x8e, 0x71, 0x03, 0x2d, 0x01, 0x6e, 0x85, 0xa9, 0x1a, 0x85, 0x26, 0xe4, 0x5c, 0x2b, 0x23, 0x4c,
+	0xce, 0x96, 0x12, 0x37, 0xd6, 0x1d, 0x57, 0xf3, 0x8b, 0x8f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x72,
+	0x30, 0x0f, 0xde, 0xff, 0x02, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -206,6 +374,8 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ModelClient interface {
 	VisionClassification(ctx context.Context, in *VisionClassificationRequest, opts ...grpc.CallOption) (*VisionClassificationResponse, error)
+	GetImage(ctx context.Context, in *ImageDownloadRequest, opts ...grpc.CallOption) (*ImageDownloadResponse, error)
+	ListModels(ctx context.Context, in *VisionClassificationGetModelsReq, opts ...grpc.CallOption) (*VisionClassificationGetModelsResp, error)
 }
 
 type modelClient struct {
@@ -225,9 +395,29 @@ func (c *modelClient) VisionClassification(ctx context.Context, in *VisionClassi
 	return out, nil
 }
 
+func (c *modelClient) GetImage(ctx context.Context, in *ImageDownloadRequest, opts ...grpc.CallOption) (*ImageDownloadResponse, error) {
+	out := new(ImageDownloadResponse)
+	err := c.cc.Invoke(ctx, "/Model/GetImage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *modelClient) ListModels(ctx context.Context, in *VisionClassificationGetModelsReq, opts ...grpc.CallOption) (*VisionClassificationGetModelsResp, error) {
+	out := new(VisionClassificationGetModelsResp)
+	err := c.cc.Invoke(ctx, "/Model/ListModels", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ModelServer is the server API for Model service.
 type ModelServer interface {
 	VisionClassification(context.Context, *VisionClassificationRequest) (*VisionClassificationResponse, error)
+	GetImage(context.Context, *ImageDownloadRequest) (*ImageDownloadResponse, error)
+	ListModels(context.Context, *VisionClassificationGetModelsReq) (*VisionClassificationGetModelsResp, error)
 }
 
 // UnimplementedModelServer can be embedded to have forward compatible implementations.
@@ -236,6 +426,12 @@ type UnimplementedModelServer struct {
 
 func (*UnimplementedModelServer) VisionClassification(ctx context.Context, req *VisionClassificationRequest) (*VisionClassificationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VisionClassification not implemented")
+}
+func (*UnimplementedModelServer) GetImage(ctx context.Context, req *ImageDownloadRequest) (*ImageDownloadResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetImage not implemented")
+}
+func (*UnimplementedModelServer) ListModels(ctx context.Context, req *VisionClassificationGetModelsReq) (*VisionClassificationGetModelsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListModels not implemented")
 }
 
 func RegisterModelServer(s *grpc.Server, srv ModelServer) {
@@ -260,6 +456,42 @@ func _Model_VisionClassification_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Model_GetImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ImageDownloadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ModelServer).GetImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Model/GetImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ModelServer).GetImage(ctx, req.(*ImageDownloadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Model_ListModels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VisionClassificationGetModelsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ModelServer).ListModels(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Model/ListModels",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ModelServer).ListModels(ctx, req.(*VisionClassificationGetModelsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Model_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "Model",
 	HandlerType: (*ModelServer)(nil),
@@ -267,6 +499,14 @@ var _Model_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VisionClassification",
 			Handler:    _Model_VisionClassification_Handler,
+		},
+		{
+			MethodName: "GetImage",
+			Handler:    _Model_GetImage_Handler,
+		},
+		{
+			MethodName: "ListModels",
+			Handler:    _Model_ListModels_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

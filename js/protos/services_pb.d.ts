@@ -1,13 +1,48 @@
 import * as jspb from "google-protobuf"
 
+export class VisionClassificationGetModelsReq extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): VisionClassificationGetModelsReq.AsObject;
+  static toObject(includeInstance: boolean, msg: VisionClassificationGetModelsReq): VisionClassificationGetModelsReq.AsObject;
+  static serializeBinaryToWriter(message: VisionClassificationGetModelsReq, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): VisionClassificationGetModelsReq;
+  static deserializeBinaryFromReader(message: VisionClassificationGetModelsReq, reader: jspb.BinaryReader): VisionClassificationGetModelsReq;
+}
+
+export namespace VisionClassificationGetModelsReq {
+  export type AsObject = {
+  }
+}
+
+export class VisionClassificationGetModelsResp extends jspb.Message {
+  getModelsList(): Array<string>;
+  setModelsList(value: Array<string>): void;
+  clearModelsList(): void;
+  addModels(value: string, index?: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): VisionClassificationGetModelsResp.AsObject;
+  static toObject(includeInstance: boolean, msg: VisionClassificationGetModelsResp): VisionClassificationGetModelsResp.AsObject;
+  static serializeBinaryToWriter(message: VisionClassificationGetModelsResp, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): VisionClassificationGetModelsResp;
+  static deserializeBinaryFromReader(message: VisionClassificationGetModelsResp, reader: jspb.BinaryReader): VisionClassificationGetModelsResp;
+}
+
+export namespace VisionClassificationGetModelsResp {
+  export type AsObject = {
+    modelsList: Array<string>,
+  }
+}
+
 export class VisionClassificationRequest extends jspb.Message {
-  getInputImage(): Uint8Array | string;
-  getInputImage_asU8(): Uint8Array;
-  getInputImage_asB64(): string;
-  setInputImage(value: Uint8Array | string): void;
+  getInputImage(): string;
+  setInputImage(value: string): void;
 
   getNumReturns(): number;
   setNumReturns(value: number): void;
+
+  getModelName(): string;
+  setModelName(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): VisionClassificationRequest.AsObject;
@@ -19,8 +54,9 @@ export class VisionClassificationRequest extends jspb.Message {
 
 export namespace VisionClassificationRequest {
   export type AsObject = {
-    inputImage: Uint8Array | string,
+    inputImage: string,
     numReturns: number,
+    modelName: string,
   }
 }
 
@@ -69,5 +105,41 @@ export namespace VisionClassificationResponse {
     }
   }
 
+}
+
+export class ImageDownloadRequest extends jspb.Message {
+  getUrl(): string;
+  setUrl(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ImageDownloadRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ImageDownloadRequest): ImageDownloadRequest.AsObject;
+  static serializeBinaryToWriter(message: ImageDownloadRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ImageDownloadRequest;
+  static deserializeBinaryFromReader(message: ImageDownloadRequest, reader: jspb.BinaryReader): ImageDownloadRequest;
+}
+
+export namespace ImageDownloadRequest {
+  export type AsObject = {
+    url: string,
+  }
+}
+
+export class ImageDownloadResponse extends jspb.Message {
+  getImage(): string;
+  setImage(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ImageDownloadResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ImageDownloadResponse): ImageDownloadResponse.AsObject;
+  static serializeBinaryToWriter(message: ImageDownloadResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ImageDownloadResponse;
+  static deserializeBinaryFromReader(message: ImageDownloadResponse, reader: jspb.BinaryReader): ImageDownloadResponse;
+}
+
+export namespace ImageDownloadResponse {
+  export type AsObject = {
+    image: string,
+  }
 }
 
