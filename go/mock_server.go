@@ -25,7 +25,11 @@ const port int = 9090
 
 const modelAddrTemplate string = "http://35.163.225.179:1337/%v/predict"
 
-var avaiableModels = []string{"res50", "squeezenet"}
+var avaiableModels = []*services.GetModelsResp_Model{
+	{ModelName: "res50-pytorch", ModelCategory: services.ModelCategory_VisionClassification},
+	{ModelName: "squeezenet-pytorch", ModelCategory: services.ModelCategory_VisionClassification},
+	{ModelName: "gpt2", ModelCategory: services.ModelCategory_TextGeneration},
+}
 
 func panicIf(e interface{}) {
 	if e != nil {
@@ -75,9 +79,9 @@ func (s *mockModelServer) GetImage(
 }
 
 func (s *mockModelServer) ListModels(
-	c context.Context, req *services.VisionClassificationGetModelsReq) (
-	*services.VisionClassificationGetModelsResp, error) {
-	resp := &services.VisionClassificationGetModelsResp{
+	c context.Context, req *services.GetModelsReq) (
+	*services.GetModelsResp, error) {
+	resp := &services.GetModelsResp{
 		Models: avaiableModels,
 	}
 	return resp, nil
@@ -89,20 +93,33 @@ func (s *mockModelServer) VisionClassification(
 
 	serializedReq, err := proto.Marshal(req)
 	panicIf(err)
-
 	encodedReq := base64.StdEncoding.EncodeToString(serializedReq)
-
 	payload := map[string]string{"input": encodedReq}
 	modelAddr := fmt.Sprintf(modelAddrTemplate, req.GetModelName())
 	resp := postJSON(modelAddr, payload)
-
 	val := &services.VisionClassificationResponse{}
 	decoded, err := base64.StdEncoding.DecodeString(resp["output"].(string))
 	panicIf(err)
-
 	proto.Unmarshal(decoded, val)
+	s.reqID++
 
-	// This might require a lock
+	return val, nil
+}
+
+func (s *mockModelServer) TextGeneration(
+	c context.Context, req *services.TextGenerationRequest) (
+	*services.TextGenerationResponse, error) {
+
+	serializedReq, err := proto.Marshal(req)
+	panicIf(err)
+	encodedReq := base64.StdEncoding.EncodeToString(serializedReq)
+	payload := map[string]string{"input": encodedReq}
+	modelAddr := fmt.Sprintf(modelAddrTemplate, req.GetModelName())
+	resp := postJSON(modelAddr, payload)
+	val := &services.TextGenerationResponse{}
+	decoded, err := base64.StdEncoding.DecodeString(resp["output"].(string))
+	panicIf(err)
+	proto.Unmarshal(decoded, val)
 	s.reqID++
 
 	return val, nil
@@ -115,10 +132,12 @@ func main() {
 	}
 	log.Println("Server started, listening to port", port)
 
+	panichandler.InstallPanicHandler(panichandler.LogPanicStackMultiLine)
 	uIntOpt := grpc.UnaryInterceptor(panichandler.UnaryPanicHandler)
 	sIntOpt := grpc.StreamInterceptor(panichandler.StreamPanicHandler)
-
 	grpcServer := grpc.NewServer(uIntOpt, sIntOpt)
+
+	// grpcServer := grpc.NewServer()
 
 	s := &mockModelServer{0}
 	services.RegisterModelServer(grpcServer, s)

@@ -1,11 +1,29 @@
 syntax = "proto3";
 
-message VisionClassificationGetModelsReq {}
-
-message VisionClassificationGetModelsResp {
-  repeated string models = 1;
+enum ModelCategory {
+  VisionClassification = 0;
+  TextGeneration = 1;
 }
 
+message GetModelsReq {}
+
+message GetModelsResp {
+  message Model {
+    string model_name = 1;
+    ModelCategory model_category = 2;
+  }
+  repeated Model models = 1;
+}
+
+message TextGenerationRequest {
+  string input_phrase = 1;
+  float temperature = 2; 
+
+  string model_name = 3;
+}
+message TextGenerationResponse {
+  repeated string generated_texts = 1;
+}
 
 message VisionClassificationRequest {
   string input_image = 1;
@@ -35,7 +53,9 @@ service Model {
   rpc VisionClassification(VisionClassificationRequest)
       returns (VisionClassificationResponse) {}
 
+  rpc TextGeneration(TextGenerationRequest)
+      returns (TextGenerationResponse) {}
+
   rpc GetImage(ImageDownloadRequest) returns (ImageDownloadResponse) {}
-  rpc ListModels(VisionClassificationGetModelsReq) returns (VisionClassificationGetModelsResp) {}
-  
+  rpc ListModels(GetModelsReq) returns (GetModelsResp) {}
 }

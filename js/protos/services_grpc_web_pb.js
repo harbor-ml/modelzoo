@@ -143,6 +143,61 @@ proto.ModelPromiseClient.prototype.visionClassification =
 /**
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.TextGenerationRequest,
+ *   !proto.TextGenerationResponse>}
+ */
+const methodInfo_Model_TextGeneration = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.TextGenerationResponse,
+  /** @param {!proto.TextGenerationRequest} request */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.TextGenerationResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.TextGenerationRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.Error, ?proto.TextGenerationResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.TextGenerationResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.ModelClient.prototype.textGeneration =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/Model/TextGeneration',
+      request,
+      metadata || {},
+      methodInfo_Model_TextGeneration,
+      callback);
+};
+
+
+/**
+ * @param {!proto.TextGenerationRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.TextGenerationResponse>}
+ *     A native promise that resolves to the response
+ */
+proto.ModelPromiseClient.prototype.textGeneration =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/Model/TextGeneration',
+      request,
+      metadata || {},
+      methodInfo_Model_TextGeneration);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
  *   !proto.ImageDownloadRequest,
  *   !proto.ImageDownloadResponse>}
  */
@@ -198,27 +253,27 @@ proto.ModelPromiseClient.prototype.getImage =
 /**
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.VisionClassificationGetModelsReq,
- *   !proto.VisionClassificationGetModelsResp>}
+ *   !proto.GetModelsReq,
+ *   !proto.GetModelsResp>}
  */
 const methodInfo_Model_ListModels = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.VisionClassificationGetModelsResp,
-  /** @param {!proto.VisionClassificationGetModelsReq} request */
+  proto.GetModelsResp,
+  /** @param {!proto.GetModelsReq} request */
   function(request) {
     return request.serializeBinary();
   },
-  proto.VisionClassificationGetModelsResp.deserializeBinary
+  proto.GetModelsResp.deserializeBinary
 );
 
 
 /**
- * @param {!proto.VisionClassificationGetModelsReq} request The
+ * @param {!proto.GetModelsReq} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.VisionClassificationGetModelsResp)}
+ * @param {function(?grpc.web.Error, ?proto.GetModelsResp)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.VisionClassificationGetModelsResp>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.GetModelsResp>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.ModelClient.prototype.listModels =
@@ -233,11 +288,11 @@ proto.ModelClient.prototype.listModels =
 
 
 /**
- * @param {!proto.VisionClassificationGetModelsReq} request The
+ * @param {!proto.GetModelsReq} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.VisionClassificationGetModelsResp>}
+ * @return {!Promise<!proto.GetModelsResp>}
  *     A native promise that resolves to the response
  */
 proto.ModelPromiseClient.prototype.listModels =

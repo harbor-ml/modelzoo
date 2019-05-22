@@ -11,10 +11,14 @@ var jspb = require('google-protobuf');
 var goog = jspb;
 var global = Function('return this')();
 
+goog.exportSymbol('proto.GetModelsReq', null, global);
+goog.exportSymbol('proto.GetModelsResp', null, global);
+goog.exportSymbol('proto.GetModelsResp.Model', null, global);
 goog.exportSymbol('proto.ImageDownloadRequest', null, global);
 goog.exportSymbol('proto.ImageDownloadResponse', null, global);
-goog.exportSymbol('proto.VisionClassificationGetModelsReq', null, global);
-goog.exportSymbol('proto.VisionClassificationGetModelsResp', null, global);
+goog.exportSymbol('proto.ModelCategory', null, global);
+goog.exportSymbol('proto.TextGenerationRequest', null, global);
+goog.exportSymbol('proto.TextGenerationResponse', null, global);
 goog.exportSymbol('proto.VisionClassificationRequest', null, global);
 goog.exportSymbol('proto.VisionClassificationResponse', null, global);
 goog.exportSymbol('proto.VisionClassificationResponse.Result', null, global);
@@ -29,12 +33,12 @@ goog.exportSymbol('proto.VisionClassificationResponse.Result', null, global);
  * @extends {jspb.Message}
  * @constructor
  */
-proto.VisionClassificationGetModelsReq = function(opt_data) {
+proto.GetModelsReq = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.VisionClassificationGetModelsReq, jspb.Message);
+goog.inherits(proto.GetModelsReq, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.VisionClassificationGetModelsReq.displayName = 'proto.VisionClassificationGetModelsReq';
+  proto.GetModelsReq.displayName = 'proto.GetModelsReq';
 }
 
 
@@ -49,8 +53,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.VisionClassificationGetModelsReq.prototype.toObject = function(opt_includeInstance) {
-  return proto.VisionClassificationGetModelsReq.toObject(opt_includeInstance, this);
+proto.GetModelsReq.prototype.toObject = function(opt_includeInstance) {
+  return proto.GetModelsReq.toObject(opt_includeInstance, this);
 };
 
 
@@ -59,11 +63,11 @@ proto.VisionClassificationGetModelsReq.prototype.toObject = function(opt_include
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.VisionClassificationGetModelsReq} msg The msg instance to transform.
+ * @param {!proto.GetModelsReq} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.VisionClassificationGetModelsReq.toObject = function(includeInstance, msg) {
+proto.GetModelsReq.toObject = function(includeInstance, msg) {
   var f, obj = {
 
   };
@@ -79,23 +83,23 @@ proto.VisionClassificationGetModelsReq.toObject = function(includeInstance, msg)
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.VisionClassificationGetModelsReq}
+ * @return {!proto.GetModelsReq}
  */
-proto.VisionClassificationGetModelsReq.deserializeBinary = function(bytes) {
+proto.GetModelsReq.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.VisionClassificationGetModelsReq;
-  return proto.VisionClassificationGetModelsReq.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.GetModelsReq;
+  return proto.GetModelsReq.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.VisionClassificationGetModelsReq} msg The message object to deserialize into.
+ * @param {!proto.GetModelsReq} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.VisionClassificationGetModelsReq}
+ * @return {!proto.GetModelsReq}
  */
-proto.VisionClassificationGetModelsReq.deserializeBinaryFromReader = function(msg, reader) {
+proto.GetModelsReq.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -115,9 +119,9 @@ proto.VisionClassificationGetModelsReq.deserializeBinaryFromReader = function(ms
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.VisionClassificationGetModelsReq.prototype.serializeBinary = function() {
+proto.GetModelsReq.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.VisionClassificationGetModelsReq.serializeBinaryToWriter(this, writer);
+  proto.GetModelsReq.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -125,11 +129,11 @@ proto.VisionClassificationGetModelsReq.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.VisionClassificationGetModelsReq} message
+ * @param {!proto.GetModelsReq} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.VisionClassificationGetModelsReq.serializeBinaryToWriter = function(message, writer) {
+proto.GetModelsReq.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
 };
 
@@ -145,19 +149,19 @@ proto.VisionClassificationGetModelsReq.serializeBinaryToWriter = function(messag
  * @extends {jspb.Message}
  * @constructor
  */
-proto.VisionClassificationGetModelsResp = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.VisionClassificationGetModelsResp.repeatedFields_, null);
+proto.GetModelsResp = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.GetModelsResp.repeatedFields_, null);
 };
-goog.inherits(proto.VisionClassificationGetModelsResp, jspb.Message);
+goog.inherits(proto.GetModelsResp, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.VisionClassificationGetModelsResp.displayName = 'proto.VisionClassificationGetModelsResp';
+  proto.GetModelsResp.displayName = 'proto.GetModelsResp';
 }
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.VisionClassificationGetModelsResp.repeatedFields_ = [1];
+proto.GetModelsResp.repeatedFields_ = [1];
 
 
 
@@ -172,8 +176,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.VisionClassificationGetModelsResp.prototype.toObject = function(opt_includeInstance) {
-  return proto.VisionClassificationGetModelsResp.toObject(opt_includeInstance, this);
+proto.GetModelsResp.prototype.toObject = function(opt_includeInstance) {
+  return proto.GetModelsResp.toObject(opt_includeInstance, this);
 };
 
 
@@ -182,13 +186,14 @@ proto.VisionClassificationGetModelsResp.prototype.toObject = function(opt_includ
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.VisionClassificationGetModelsResp} msg The msg instance to transform.
+ * @param {!proto.GetModelsResp} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.VisionClassificationGetModelsResp.toObject = function(includeInstance, msg) {
+proto.GetModelsResp.toObject = function(includeInstance, msg) {
   var f, obj = {
-    modelsList: jspb.Message.getRepeatedField(msg, 1)
+    modelsList: jspb.Message.toObjectList(msg.getModelsList(),
+    proto.GetModelsResp.Model.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -202,23 +207,23 @@ proto.VisionClassificationGetModelsResp.toObject = function(includeInstance, msg
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.VisionClassificationGetModelsResp}
+ * @return {!proto.GetModelsResp}
  */
-proto.VisionClassificationGetModelsResp.deserializeBinary = function(bytes) {
+proto.GetModelsResp.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.VisionClassificationGetModelsResp;
-  return proto.VisionClassificationGetModelsResp.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.GetModelsResp;
+  return proto.GetModelsResp.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.VisionClassificationGetModelsResp} msg The message object to deserialize into.
+ * @param {!proto.GetModelsResp} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.VisionClassificationGetModelsResp}
+ * @return {!proto.GetModelsResp}
  */
-proto.VisionClassificationGetModelsResp.deserializeBinaryFromReader = function(msg, reader) {
+proto.GetModelsResp.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -226,7 +231,8 @@ proto.VisionClassificationGetModelsResp.deserializeBinaryFromReader = function(m
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = new proto.GetModelsResp.Model;
+      reader.readMessage(value,proto.GetModelsResp.Model.deserializeBinaryFromReader);
       msg.addModels(value);
       break;
     default:
@@ -242,9 +248,9 @@ proto.VisionClassificationGetModelsResp.deserializeBinaryFromReader = function(m
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.VisionClassificationGetModelsResp.prototype.serializeBinary = function() {
+proto.GetModelsResp.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.VisionClassificationGetModelsResp.serializeBinaryToWriter(this, writer);
+  proto.GetModelsResp.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -252,13 +258,544 @@ proto.VisionClassificationGetModelsResp.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.VisionClassificationGetModelsResp} message
+ * @param {!proto.GetModelsResp} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.VisionClassificationGetModelsResp.serializeBinaryToWriter = function(message, writer) {
+proto.GetModelsResp.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getModelsList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      1,
+      f,
+      proto.GetModelsResp.Model.serializeBinaryToWriter
+    );
+  }
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.GetModelsResp.Model = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.GetModelsResp.Model, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.GetModelsResp.Model.displayName = 'proto.GetModelsResp.Model';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.GetModelsResp.Model.prototype.toObject = function(opt_includeInstance) {
+  return proto.GetModelsResp.Model.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.GetModelsResp.Model} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.GetModelsResp.Model.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    modelName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    modelCategory: jspb.Message.getFieldWithDefault(msg, 2, 0)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.GetModelsResp.Model}
+ */
+proto.GetModelsResp.Model.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.GetModelsResp.Model;
+  return proto.GetModelsResp.Model.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.GetModelsResp.Model} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.GetModelsResp.Model}
+ */
+proto.GetModelsResp.Model.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setModelName(value);
+      break;
+    case 2:
+      var value = /** @type {!proto.ModelCategory} */ (reader.readEnum());
+      msg.setModelCategory(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.GetModelsResp.Model.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.GetModelsResp.Model.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.GetModelsResp.Model} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.GetModelsResp.Model.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getModelName();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+  f = message.getModelCategory();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      2,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string model_name = 1;
+ * @return {string}
+ */
+proto.GetModelsResp.Model.prototype.getModelName = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/** @param {string} value */
+proto.GetModelsResp.Model.prototype.setModelName = function(value) {
+  jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional ModelCategory model_category = 2;
+ * @return {!proto.ModelCategory}
+ */
+proto.GetModelsResp.Model.prototype.getModelCategory = function() {
+  return /** @type {!proto.ModelCategory} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/** @param {!proto.ModelCategory} value */
+proto.GetModelsResp.Model.prototype.setModelCategory = function(value) {
+  jspb.Message.setProto3EnumField(this, 2, value);
+};
+
+
+/**
+ * repeated Model models = 1;
+ * @return {!Array.<!proto.GetModelsResp.Model>}
+ */
+proto.GetModelsResp.prototype.getModelsList = function() {
+  return /** @type{!Array.<!proto.GetModelsResp.Model>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.GetModelsResp.Model, 1));
+};
+
+
+/** @param {!Array.<!proto.GetModelsResp.Model>} value */
+proto.GetModelsResp.prototype.setModelsList = function(value) {
+  jspb.Message.setRepeatedWrapperField(this, 1, value);
+};
+
+
+/**
+ * @param {!proto.GetModelsResp.Model=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.GetModelsResp.Model}
+ */
+proto.GetModelsResp.prototype.addModels = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.GetModelsResp.Model, opt_index);
+};
+
+
+proto.GetModelsResp.prototype.clearModelsList = function() {
+  this.setModelsList([]);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.TextGenerationRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.TextGenerationRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.TextGenerationRequest.displayName = 'proto.TextGenerationRequest';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.TextGenerationRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.TextGenerationRequest.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.TextGenerationRequest} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.TextGenerationRequest.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    inputPhrase: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    temperature: +jspb.Message.getFieldWithDefault(msg, 2, 0.0),
+    modelName: jspb.Message.getFieldWithDefault(msg, 3, "")
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.TextGenerationRequest}
+ */
+proto.TextGenerationRequest.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.TextGenerationRequest;
+  return proto.TextGenerationRequest.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.TextGenerationRequest} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.TextGenerationRequest}
+ */
+proto.TextGenerationRequest.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setInputPhrase(value);
+      break;
+    case 2:
+      var value = /** @type {number} */ (reader.readFloat());
+      msg.setTemperature(value);
+      break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setModelName(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.TextGenerationRequest.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.TextGenerationRequest.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.TextGenerationRequest} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.TextGenerationRequest.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getInputPhrase();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+  f = message.getTemperature();
+  if (f !== 0.0) {
+    writer.writeFloat(
+      2,
+      f
+    );
+  }
+  f = message.getModelName();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string input_phrase = 1;
+ * @return {string}
+ */
+proto.TextGenerationRequest.prototype.getInputPhrase = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/** @param {string} value */
+proto.TextGenerationRequest.prototype.setInputPhrase = function(value) {
+  jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional float temperature = 2;
+ * @return {number}
+ */
+proto.TextGenerationRequest.prototype.getTemperature = function() {
+  return /** @type {number} */ (+jspb.Message.getFieldWithDefault(this, 2, 0.0));
+};
+
+
+/** @param {number} value */
+proto.TextGenerationRequest.prototype.setTemperature = function(value) {
+  jspb.Message.setProto3FloatField(this, 2, value);
+};
+
+
+/**
+ * optional string model_name = 3;
+ * @return {string}
+ */
+proto.TextGenerationRequest.prototype.getModelName = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/** @param {string} value */
+proto.TextGenerationRequest.prototype.setModelName = function(value) {
+  jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.TextGenerationResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.TextGenerationResponse.repeatedFields_, null);
+};
+goog.inherits(proto.TextGenerationResponse, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.TextGenerationResponse.displayName = 'proto.TextGenerationResponse';
+}
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.TextGenerationResponse.repeatedFields_ = [1];
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.TextGenerationResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.TextGenerationResponse.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.TextGenerationResponse} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.TextGenerationResponse.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    generatedTextsList: jspb.Message.getRepeatedField(msg, 1)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.TextGenerationResponse}
+ */
+proto.TextGenerationResponse.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.TextGenerationResponse;
+  return proto.TextGenerationResponse.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.TextGenerationResponse} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.TextGenerationResponse}
+ */
+proto.TextGenerationResponse.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addGeneratedTexts(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.TextGenerationResponse.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.TextGenerationResponse.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.TextGenerationResponse} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.TextGenerationResponse.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getGeneratedTextsList();
   if (f.length > 0) {
     writer.writeRepeatedString(
       1,
@@ -269,16 +806,16 @@ proto.VisionClassificationGetModelsResp.serializeBinaryToWriter = function(messa
 
 
 /**
- * repeated string models = 1;
+ * repeated string generated_texts = 1;
  * @return {!Array.<string>}
  */
-proto.VisionClassificationGetModelsResp.prototype.getModelsList = function() {
+proto.TextGenerationResponse.prototype.getGeneratedTextsList = function() {
   return /** @type {!Array.<string>} */ (jspb.Message.getRepeatedField(this, 1));
 };
 
 
 /** @param {!Array.<string>} value */
-proto.VisionClassificationGetModelsResp.prototype.setModelsList = function(value) {
+proto.TextGenerationResponse.prototype.setGeneratedTextsList = function(value) {
   jspb.Message.setField(this, 1, value || []);
 };
 
@@ -287,13 +824,13 @@ proto.VisionClassificationGetModelsResp.prototype.setModelsList = function(value
  * @param {!string} value
  * @param {number=} opt_index
  */
-proto.VisionClassificationGetModelsResp.prototype.addModels = function(value, opt_index) {
+proto.TextGenerationResponse.prototype.addGeneratedTexts = function(value, opt_index) {
   jspb.Message.addToRepeatedField(this, 1, value, opt_index);
 };
 
 
-proto.VisionClassificationGetModelsResp.prototype.clearModelsList = function() {
-  this.setModelsList([]);
+proto.TextGenerationResponse.prototype.clearGeneratedTextsList = function() {
+  this.setGeneratedTextsList([]);
 };
 
 
@@ -1140,5 +1677,13 @@ proto.ImageDownloadResponse.prototype.setImage = function(value) {
   jspb.Message.setProto3StringField(this, 1, value);
 };
 
+
+/**
+ * @enum {number}
+ */
+proto.ModelCategory = {
+  VISIONCLASSIFICATION: 0,
+  TEXTGENERATION: 1
+};
 
 goog.object.extend(exports, proto);

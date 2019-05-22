@@ -1,10 +1,12 @@
 import * as grpcWeb from 'grpc-web';
 
 import {
+  GetModelsReq,
+  GetModelsResp,
   ImageDownloadRequest,
   ImageDownloadResponse,
-  VisionClassificationGetModelsReq,
-  VisionClassificationGetModelsResp,
+  TextGenerationRequest,
+  TextGenerationResponse,
   VisionClassificationRequest,
   VisionClassificationResponse} from './services_pb';
 
@@ -20,6 +22,13 @@ export class ModelClient {
                response: VisionClassificationResponse) => void
   ): grpcWeb.ClientReadableStream<VisionClassificationResponse>;
 
+  textGeneration(
+    request: TextGenerationRequest,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.Error,
+               response: TextGenerationResponse) => void
+  ): grpcWeb.ClientReadableStream<TextGenerationResponse>;
+
   getImage(
     request: ImageDownloadRequest,
     metadata: grpcWeb.Metadata | undefined,
@@ -28,11 +37,11 @@ export class ModelClient {
   ): grpcWeb.ClientReadableStream<ImageDownloadResponse>;
 
   listModels(
-    request: VisionClassificationGetModelsReq,
+    request: GetModelsReq,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
-               response: VisionClassificationGetModelsResp) => void
-  ): grpcWeb.ClientReadableStream<VisionClassificationGetModelsResp>;
+               response: GetModelsResp) => void
+  ): grpcWeb.ClientReadableStream<GetModelsResp>;
 
 }
 
@@ -46,15 +55,20 @@ export class ModelPromiseClient {
     metadata?: grpcWeb.Metadata
   ): Promise<VisionClassificationResponse>;
 
+  textGeneration(
+    request: TextGenerationRequest,
+    metadata?: grpcWeb.Metadata
+  ): Promise<TextGenerationResponse>;
+
   getImage(
     request: ImageDownloadRequest,
     metadata?: grpcWeb.Metadata
   ): Promise<ImageDownloadResponse>;
 
   listModels(
-    request: VisionClassificationGetModelsReq,
+    request: GetModelsReq,
     metadata?: grpcWeb.Metadata
-  ): Promise<VisionClassificationGetModelsResp>;
+  ): Promise<GetModelsResp>;
 
 }
 

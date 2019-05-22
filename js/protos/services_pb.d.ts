@@ -1,36 +1,105 @@
 import * as jspb from "google-protobuf"
 
-export class VisionClassificationGetModelsReq extends jspb.Message {
+export class GetModelsReq extends jspb.Message {
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): VisionClassificationGetModelsReq.AsObject;
-  static toObject(includeInstance: boolean, msg: VisionClassificationGetModelsReq): VisionClassificationGetModelsReq.AsObject;
-  static serializeBinaryToWriter(message: VisionClassificationGetModelsReq, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): VisionClassificationGetModelsReq;
-  static deserializeBinaryFromReader(message: VisionClassificationGetModelsReq, reader: jspb.BinaryReader): VisionClassificationGetModelsReq;
+  toObject(includeInstance?: boolean): GetModelsReq.AsObject;
+  static toObject(includeInstance: boolean, msg: GetModelsReq): GetModelsReq.AsObject;
+  static serializeBinaryToWriter(message: GetModelsReq, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetModelsReq;
+  static deserializeBinaryFromReader(message: GetModelsReq, reader: jspb.BinaryReader): GetModelsReq;
 }
 
-export namespace VisionClassificationGetModelsReq {
+export namespace GetModelsReq {
   export type AsObject = {
   }
 }
 
-export class VisionClassificationGetModelsResp extends jspb.Message {
-  getModelsList(): Array<string>;
-  setModelsList(value: Array<string>): void;
+export class GetModelsResp extends jspb.Message {
+  getModelsList(): Array<GetModelsResp.Model>;
+  setModelsList(value: Array<GetModelsResp.Model>): void;
   clearModelsList(): void;
-  addModels(value: string, index?: number): void;
+  addModels(value?: GetModelsResp.Model, index?: number): GetModelsResp.Model;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): VisionClassificationGetModelsResp.AsObject;
-  static toObject(includeInstance: boolean, msg: VisionClassificationGetModelsResp): VisionClassificationGetModelsResp.AsObject;
-  static serializeBinaryToWriter(message: VisionClassificationGetModelsResp, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): VisionClassificationGetModelsResp;
-  static deserializeBinaryFromReader(message: VisionClassificationGetModelsResp, reader: jspb.BinaryReader): VisionClassificationGetModelsResp;
+  toObject(includeInstance?: boolean): GetModelsResp.AsObject;
+  static toObject(includeInstance: boolean, msg: GetModelsResp): GetModelsResp.AsObject;
+  static serializeBinaryToWriter(message: GetModelsResp, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetModelsResp;
+  static deserializeBinaryFromReader(message: GetModelsResp, reader: jspb.BinaryReader): GetModelsResp;
 }
 
-export namespace VisionClassificationGetModelsResp {
+export namespace GetModelsResp {
   export type AsObject = {
-    modelsList: Array<string>,
+    modelsList: Array<GetModelsResp.Model.AsObject>,
+  }
+
+  export class Model extends jspb.Message {
+    getModelName(): string;
+    setModelName(value: string): void;
+
+    getModelCategory(): ModelCategory;
+    setModelCategory(value: ModelCategory): void;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): Model.AsObject;
+    static toObject(includeInstance: boolean, msg: Model): Model.AsObject;
+    static serializeBinaryToWriter(message: Model, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): Model;
+    static deserializeBinaryFromReader(message: Model, reader: jspb.BinaryReader): Model;
+  }
+
+  export namespace Model {
+    export type AsObject = {
+      modelName: string,
+      modelCategory: ModelCategory,
+    }
+  }
+
+}
+
+export class TextGenerationRequest extends jspb.Message {
+  getInputPhrase(): string;
+  setInputPhrase(value: string): void;
+
+  getTemperature(): number;
+  setTemperature(value: number): void;
+
+  getModelName(): string;
+  setModelName(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): TextGenerationRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: TextGenerationRequest): TextGenerationRequest.AsObject;
+  static serializeBinaryToWriter(message: TextGenerationRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): TextGenerationRequest;
+  static deserializeBinaryFromReader(message: TextGenerationRequest, reader: jspb.BinaryReader): TextGenerationRequest;
+}
+
+export namespace TextGenerationRequest {
+  export type AsObject = {
+    inputPhrase: string,
+    temperature: number,
+    modelName: string,
+  }
+}
+
+export class TextGenerationResponse extends jspb.Message {
+  getGeneratedTextsList(): Array<string>;
+  setGeneratedTextsList(value: Array<string>): void;
+  clearGeneratedTextsList(): void;
+  addGeneratedTexts(value: string, index?: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): TextGenerationResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: TextGenerationResponse): TextGenerationResponse.AsObject;
+  static serializeBinaryToWriter(message: TextGenerationResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): TextGenerationResponse;
+  static deserializeBinaryFromReader(message: TextGenerationResponse, reader: jspb.BinaryReader): TextGenerationResponse;
+}
+
+export namespace TextGenerationResponse {
+  export type AsObject = {
+    generatedTextsList: Array<string>,
   }
 }
 
@@ -143,3 +212,7 @@ export namespace ImageDownloadResponse {
   }
 }
 
+export enum ModelCategory { 
+  VISIONCLASSIFICATION = 0,
+  TEXTGENERATION = 1,
+}
