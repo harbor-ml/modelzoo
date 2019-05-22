@@ -28,7 +28,8 @@ const modelAddrTemplate string = "http://35.163.225.179:1337/%v/predict"
 var avaiableModels = []*services.GetModelsResp_Model{
 	{ModelName: "res50-pytorch", ModelCategory: services.ModelCategory_VisionClassification},
 	{ModelName: "squeezenet-pytorch", ModelCategory: services.ModelCategory_VisionClassification},
-	{ModelName: "gpt2", ModelCategory: services.ModelCategory_TextGeneration},
+	{ModelName: "rise-pytorch", ModelCategory: services.ModelCategory_TextGeneration},
+	{ModelName: "marvel-pytorch", ModelCategory: services.ModelCategory_TextGeneration},
 }
 
 func panicIf(e interface{}) {
@@ -116,7 +117,13 @@ func (s *mockModelServer) TextGeneration(
 	payload := map[string]string{"input": encodedReq}
 	modelAddr := fmt.Sprintf(modelAddrTemplate, req.GetModelName())
 	resp := postJSON(modelAddr, payload)
+	// log.Println(resp)
+
+	if resp["default"].(bool) {
+		panic(resp["default_reason"])
+	}
 	val := &services.TextGenerationResponse{}
+
 	decoded, err := base64.StdEncoding.DecodeString(resp["output"].(string))
 	panicIf(err)
 	proto.Unmarshal(decoded, val)
@@ -132,7 +139,7 @@ func main() {
 	}
 	log.Println("Server started, listening to port", port)
 
-	panichandler.InstallPanicHandler(panichandler.LogPanicStackMultiLine)
+	panichandler.InstallPanicHandler(panichandler.LogPanicDump)
 	uIntOpt := grpc.UnaryInterceptor(panichandler.UnaryPanicHandler)
 	sIntOpt := grpc.StreamInterceptor(panichandler.StreamPanicHandler)
 	grpcServer := grpc.NewServer(uIntOpt, sIntOpt)

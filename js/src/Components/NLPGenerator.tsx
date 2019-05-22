@@ -1,12 +1,28 @@
-import { Button, Card, Collapse, Divider, Icon, InputNumber, Row, Tag } from "antd";
+import {
+  Button,
+  Card,
+  Collapse,
+  Divider,
+  Icon,
+  InputNumber,
+  Row,
+  Tag
+} from "antd";
 import { Error as grpcError } from "grpc-web";
 import { ModelClient } from "protos/services_grpc_web_pb";
-import { TextGenerationRequest, TextGenerationResponse } from "protos/services_pb";
-import React, { CSSProperties, FC, useContext, useMemo, useReducer } from "react";
+import {
+  TextGenerationRequest,
+  TextGenerationResponse
+} from "protos/services_pb";
+import React, {
+  CSSProperties,
+  FC,
+  useContext,
+  useMemo,
+  useReducer
+} from "react";
 import { ClientContext } from "../App";
 import { round } from "./Utils";
-
-
 
 interface TextState {
   inputPhrase: string;
@@ -50,7 +66,7 @@ function initTextState(props: SingleTextProp): TextState {
     predResult: null,
     predButtomShown: true,
     resultCardShown: false,
-    temperature: 3,
+    temperature: 0.7,
     props: props
   };
 }
@@ -68,6 +84,7 @@ function singleTextReducer(state: TextState, action: ActionPayload): TextState {
       startInferneceTime: startTS
     };
   } else if (action.type === TextAction.ShowResult) {
+    console.log(action.data);
     return {
       ...state,
       resultCardShown: true,
@@ -196,10 +213,14 @@ export const SingleText: FC<SingleTextProp> = props => {
               >
                 {state.predResult
                   .getGeneratedTextsList()
-                  .map((paragraph, i) => {return (
-                    <Collapse.Panel header="" key={i.toString()}>
-                      <p> {paragraph} </p>
-                    </Collapse.Panel>);
+                  .map((paragraph, i) => {
+                    return (
+                      <Collapse.Panel header="" key={i.toString()}>
+                        {paragraph.split("\n").map((item, i) => {
+                          return <p key={i}>{item}</p>;
+                        })}
+                      </Collapse.Panel>
+                    );
                   })}
               </Collapse>
             ) : (

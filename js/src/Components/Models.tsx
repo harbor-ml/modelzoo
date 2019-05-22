@@ -31,6 +31,7 @@ export const Models: FC = () => {
     <div>
       <Card key="chooseYourModel">
         <Row>Please choose your the models you want to intereact with:</Row>
+        <Row>Text-Gen Models take 5s+</Row>
 
         <Row>
           <Radio.Group
