@@ -236,3 +236,30 @@ export const SingleText: FC<SingleTextProp> = props => {
     </Row>
   );
 };
+
+export const ProfaneSingleText: FC<SingleTextProp> = props => {
+  const [state, dispatch] = useReducer(singleTextReducer, props, initTextState);
+  const client = useContext(ClientContext);
+
+  const gridStyle: CSSProperties = {
+    textAlign: "center" as "center",
+    verticalAlign: "middle" as "middle",
+    height: "100%",
+    alignItems: "center" as "center"
+  };
+ 
+  return (
+    <Row gutter={32} type="flex" justify="space-between" align="middle">
+      <Card
+        type="inner"
+        title={state.props.modelName}
+      >
+        <Card.Grid
+          style={{ ...gridStyle, width: state.predButtomShown ? "30%" : "40%" }}
+        >
+          {"No profanity please!"}
+        </Card.Grid>
+      </Card>
+    </Row>
+  );
+};

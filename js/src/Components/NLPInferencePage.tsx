@@ -1,6 +1,6 @@
 import { Button, Card, Col, Input, Row } from "antd";
 import React, { FC, useState } from "react";
-import { SingleText } from "./NLPGenerator";
+import { SingleText, ProfaneSingleText } from "./NLPGenerator";
 
 interface IDImgTuple {
   id: number;
@@ -23,6 +23,9 @@ export const NLPInferencePage: FC<InferecePageProp> = props => {
   };
 
   function createTextRow(result: string) {
+    var Filter = require('bad-words'),
+    filter = new Filter();
+    result = filter.clean(result);
     let component = (
       <Row style={{ padding: "2px" }} key={textIDCounter}>
         <SingleText
@@ -41,6 +44,35 @@ export const NLPInferencePage: FC<InferecePageProp> = props => {
     ]);
   }
 
+  function checkThenCreate(result: string) {
+    var Filter = require('bad-words'),
+    filter = new Filter();
+    var profane = filter.isProfane(result);
+    if (!profane) {
+      return createTextRow(result);
+    }
+    let component = (
+      <Row style={{ padding: "2px" }} key={textIDCounter}>
+        <ProfaneSingleText
+          key={textIDCounter}
+          inputPhrase={result}
+          compID={textIDCounter}
+          removeFunc={removeTextComp}
+          modelName={props.modelNameSelected}
+        />
+      </Row>
+    );
+  }
+
+  function checkThenSet(result: string) {
+    var Filter = require('bad-words'),
+    filter = new Filter();
+    var profane = filter.isProfane(result);
+    if (!profane) {
+      return setTextCache(result);
+    }
+  }
+
   return (
     <div>
       <Row gutter={16} style={{ marginTop: "5px" }}>
@@ -51,9 +83,9 @@ export const NLPInferencePage: FC<InferecePageProp> = props => {
               <Input
                 placeholder={defaultPhrase}
                 style={{ marginBottom: 32 }}
-                onChange={val => setTextCache(val.target.value)}
+                onChange={val => checkThenSet(val.target.value)}
                 onPressEnter={() => {
-                  createTextRow(textCache);
+                  checkThenCreate(textCache);
                 }}
                 allowClear={true}
               />
