@@ -24,6 +24,10 @@ import React, {
 import { ClientContext } from "../App";
 import { round } from "./Utils";
 
+// We use require rather than import because it breaks typescript
+const Filter = require("bad-words"),
+  filter = new Filter();
+
 interface TextState {
   inputPhrase: string;
   predResult: TextGenerationResponse | null;
@@ -114,9 +118,6 @@ interface SingleTextProp {
   removeFunc: Function;
   modelName: string;
 }
-
-var Filter = require('bad-words'),
-filter = new Filter();
 
 export const SingleText: FC<SingleTextProp> = props => {
   const [state, dispatch] = useReducer(singleTextReducer, props, initTextState);

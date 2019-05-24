@@ -2,6 +2,10 @@ import { Button, Card, Col, Input, Row, Alert } from "antd";
 import React, { FC, useState } from "react";
 import { SingleText } from "./NLPGenerator";
 
+// We use require rather than import because it breaks typescript
+const Filter = require("bad-words"),
+  filter = new Filter();
+
 interface IDImgTuple {
   id: number;
   comp: JSX.Element;
@@ -12,9 +16,6 @@ interface InferecePageProp {
 }
 
 const defaultPhrase = "Serverless ";
-
-var Filter = require('bad-words'),
-filter = new Filter();
 
 export const NLPInferencePage: FC<InferecePageProp> = props => {
   const [addedTexts, setAddedTexts] = useState<IDImgTuple[]>([]);
@@ -27,7 +28,7 @@ export const NLPInferencePage: FC<InferecePageProp> = props => {
   };
 
   function createTextRow(result: string) {
-    var profane = filter.isProfane(result);
+    let profane = filter.isProfane(result);
     let component = (
       <Row style={{ padding: "2px" }} key={textIDCounter}>
         <SingleText
