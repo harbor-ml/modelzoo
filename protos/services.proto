@@ -1,8 +1,8 @@
 syntax = "proto3";
 
 enum ModelCategory {
-  VisionClassification = 0;
-  TextGeneration = 1;
+  VISIONCLASSIFICATION = 0;
+  TEXTGENERATION = 1;
 }
 
 message GetModelsReq {}

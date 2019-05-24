@@ -45,12 +45,13 @@ def make_resp(req: VisionClassificationRequest):
 responses = {
     "fail": generate_clipper_resp(True, "failed output"),
     "res50-pytorch": generate_clipper_resp(False, "failed"),
-    "squeezenet": generate_clipper_resp(False, "lalala"),
-    "gpt2": generate_clipper_resp(False,"")
+    "squeezenet-pytorch": generate_clipper_resp(False, "lalala"),
+    "rise-pytorch": generate_clipper_resp(False,""),
+    "marvel-pytorch": generate_clipper_resp(False,"")
 }
 
 from torchvision import transforms
-async def handle_text(request: Request):
+async def handle_text(request: Request, app_name: str):
     inp = await request.json()
     req = TextGenerationRequest()
     req.ParseFromString(base64.b64decode(inp["input"]))
@@ -60,13 +61,13 @@ async def handle_text(request: Request):
     r = TextGenerationResponse(generated_texts=[generated_text for _ in range(3)])
     encoded = base64.b64encode(r.SerializeToString()).decode()
 
-    resp = responses["gpt2"].copy()
+    resp = responses[app_name].copy()
     resp["output"] = encoded
     print("response: ", resp)
     return JSONResponse(resp)
 
 
-async def handle_vision(request: Request):
+async def handle_vision(request: Request, app_name: str):
     inp = await request.json()
     req = VisionClassificationRequest()
     req.ParseFromString(base64.b64decode(inp["input"]))
@@ -78,7 +79,7 @@ async def handle_vision(request: Request):
     print(img.size, img.mode, img.format, img.info)
     print(tensor.shape)
 
-    resp = responses["res50-pytorch"].copy()
+    resp = responses[app_name].copy()
     resp["output"] = make_resp(req)
     print("response: ", resp)
     return JSONResponse(resp)
@@ -87,11 +88,11 @@ async def handle_vision(request: Request):
 async def homepage(request: Request):
     app_name = request.path_params["app_name"]
     
-    if app_name == "gpt2":
-        resp = await handle_text(request)
+    if app_name == "rise-pytorch" or app_name == "marvel-pytorch":
+        resp = await handle_text(request, app_name)
         return resp
     elif app_name in responses:
-        resp = await handle_vision(request)
+        resp = await handle_vision(request, app_name)
         return resp
     else:
         return JSONResponse({"avaiable_apps": list(responses.keys())})

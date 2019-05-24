@@ -24,6 +24,10 @@ import React, {
 import { ClientContext } from "../App";
 import { round } from "./Utils";
 
+// We use require rather than import because it breaks typescript
+const Filter = require("bad-words"),
+  filter = new Filter();
+
 interface TextState {
   inputPhrase: string;
   predResult: TextGenerationResponse | null;
@@ -216,8 +220,9 @@ export const SingleText: FC<SingleTextProp> = props => {
                   .map((paragraph, i) => {
                     return (
                       <Collapse.Panel header="" key={i.toString()}>
+
                         {paragraph.split("\n").map((item, i) => {
-                          return <p key={i}>{item}</p>;
+                          return <p key={i}>{filter.clean(item)}</p>;
                         })}
                       </Collapse.Panel>
                     );

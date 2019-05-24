@@ -24,7 +24,7 @@ const App: FC = () => {
           >
             <Menu.Item key="1" disabled>
               <Title level={4} style={{ color: "#ffffff" }}>
-                MovelZoo.Live
+                ModelZoo.Live
               </Title>
             </Menu.Item>
           </Menu>
