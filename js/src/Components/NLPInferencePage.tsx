@@ -1,6 +1,6 @@
-import { Button, Card, Col, Input, Row } from "antd";
+import { Button, Card, Col, Input, Row, Alert } from "antd";
 import React, { FC, useState } from "react";
-import { SingleText, ProfaneSingleText } from "./NLPGenerator";
+import { SingleText } from "./NLPGenerator";
 
 interface IDImgTuple {
   id: number;
@@ -13,19 +13,21 @@ interface InferecePageProp {
 
 const defaultPhrase = "Serverless ";
 
+var Filter = require('bad-words'),
+filter = new Filter();
+
 export const NLPInferencePage: FC<InferecePageProp> = props => {
   const [addedTexts, setAddedTexts] = useState<IDImgTuple[]>([]);
   const [textCache, setTextCache] = useState<string>(defaultPhrase);
   const [textIDCounter, setTextIDCounter] = useState(0);
+  const [alertComponent, setAlertComponent] = useState<JSX.Element>();
 
   const removeTextComp = (val: number) => {
     setAddedTexts(addedTexts => addedTexts.filter(v => v.id !== val));
   };
 
   function createTextRow(result: string) {
-    var Filter = require('bad-words'),
-    filter = new Filter();
-    result = filter.clean(result);
+    var profane = filter.isProfane(result);
     let component = (
       <Row style={{ padding: "2px" }} key={textIDCounter}>
         <SingleText
@@ -44,32 +46,21 @@ export const NLPInferencePage: FC<InferecePageProp> = props => {
     ]);
   }
 
-  function checkThenCreate(result: string) {
-    var Filter = require('bad-words'),
-    filter = new Filter();
-    var profane = filter.isProfane(result);
-    if (!profane) {
-      return createTextRow(result);
-    }
-    let component = (
-      <Row style={{ padding: "2px" }} key={textIDCounter}>
-        <ProfaneSingleText
-          key={textIDCounter}
-          inputPhrase={result}
-          compID={textIDCounter}
-          removeFunc={removeTextComp}
-          modelName={props.modelNameSelected}
-        />
-      </Row>
+  function createAlert() {
+    setAlertComponent(
+      <Alert
+      closable
+        message="Please be nice to the bot! No profanity."
+        type="error"
+      />
     );
   }
 
-  function checkThenSet(result: string) {
-    var Filter = require('bad-words'),
-    filter = new Filter();
-    var profane = filter.isProfane(result);
-    if (!profane) {
-      return setTextCache(result);
+  function createProfaneFilter(result: string) {
+    if (!filter.isProfane(result)) {
+      return createTextRow(result);
+    } else {
+      return createAlert();
     }
   }
 
@@ -83,10 +74,11 @@ export const NLPInferencePage: FC<InferecePageProp> = props => {
               <Input
                 placeholder={defaultPhrase}
                 style={{ marginBottom: 32 }}
-                onChange={val => checkThenSet(val.target.value)}
-                onPressEnter={() => {
-                  checkThenCreate(textCache);
+                onChange={val => {
+                  setTextCache(val.target.value);
+                  setAlertComponent((<div></div>));
                 }}
+                onPressEnter={() => createProfaneFilter(textCache)}
                 allowClear={true}
               />
             </Card.Grid>
@@ -94,13 +86,18 @@ export const NLPInferencePage: FC<InferecePageProp> = props => {
             <Card.Grid style={{ width: "50%" }}>
               <Button
                 onClick={() => {
-                  createTextRow(textCache);
+                  createProfaneFilter(textCache);
                 }}
               >
                 Add Phrase
               </Button>
+
+              {alertComponent}
             </Card.Grid>
           
+            
+            
+
           </Card>
         </Col>
       </Row>

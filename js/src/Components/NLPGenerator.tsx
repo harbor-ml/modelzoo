@@ -115,6 +115,9 @@ interface SingleTextProp {
   modelName: string;
 }
 
+var Filter = require('bad-words'),
+filter = new Filter();
+
 export const SingleText: FC<SingleTextProp> = props => {
   const [state, dispatch] = useReducer(singleTextReducer, props, initTextState);
   const client = useContext(ClientContext);
@@ -216,8 +219,9 @@ export const SingleText: FC<SingleTextProp> = props => {
                   .map((paragraph, i) => {
                     return (
                       <Collapse.Panel header="" key={i.toString()}>
+
                         {paragraph.split("\n").map((item, i) => {
-                          return <p key={i}>{item}</p>;
+                          return <p key={i}>{filter.clean(item)}</p>;
                         })}
                       </Collapse.Panel>
                     );
