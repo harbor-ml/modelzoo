@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    container.label: go-service
+  name: go-mockserver-serv
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+spec:
+  type: LoadBalancer
+  selector:
+    container.label: go-dep
+  ports:
+  - protocol: http
+    port: 9090
+    targetPort: 9090
+  selector:
+    ai.clipper.name: mgmt-frontend
+    ai.clipper.container.label: {{ cluster_name }}
