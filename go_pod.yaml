@@ -8,6 +8,6 @@ spec:
   containers:
   - image: modelzoo/go
     imagePullPolicy: Always
-    name: goContainer
+    name: go-mockserver-container
     ports:
     - containerPort: 9090
