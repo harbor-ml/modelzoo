@@ -1,14 +1,14 @@
-  apiVersion: v1
-  kind: Pod
-  metadata:
-    labels:
-      container.label: go-container
-    name: go-mockserver-pod
-  spec:
-    containers:
-      image: modelzoo/go
-      imagePullPolicy: Always
-      name: goContainer
-      ports:
-        - containerPort: 9090
-      restartPolicy: Always
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    container.label: go-container
+  name: go-mockserver-pod
+spec:
+  containers:
+  - image: modelzoo/go
+    imagePullPolicy: Always
+    name: goContainer
+    ports:
+    - containerPort: 9090
+    restartPolicy: Always
