@@ -1,0 +1,18 @@
+ apiVersion: extensions/v1beta1
+ kind: Deployment
+ metadata:
+   name: go-deployment
+   labels:
+    container.label: go-deployment
+ spec:
+   replicas: 3
+   template:
+     metadata:
+       labels:
+         container.label: go-container
+     spec:
+       containers:
+         - name: go-mockserver-container
+           image: modelzoo/go
+           ports:
+             - containerPort: 9090
