@@ -10,7 +10,7 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    container.label: go-deployment
+    container.label: go-container
   ports:
   - protocol: TCP
     port: 9090
