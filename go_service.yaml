@@ -10,11 +10,8 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    container.label: go-dep
+    container.label: go-container
   ports:
   - protocol: http
     port: 9090
     targetPort: 9090
-  selector:
-    ai.clipper.name: mgmt-frontend
-    ai.clipper.container.label: {{ cluster_name }}

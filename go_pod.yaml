@@ -1,20 +1,14 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
   labels:
-    container.label: go-dep
-  name: go-mockserver-dep
+    container.label: go-container
+  name: go-mockserver-pod
 spec:
-  replicas: 3
-  template:
-    metadata:
-      labels:
-        container.label: go-deployment
-    spec:
-      containers:
-        image: modelzoo/go
-        imagePullPolicy: Always
-        name: goContainer
-        ports:
-        - containerPort: 9090
-      restartPolicy: Always
+  containers:
+    image: modelzoo/go
+    imagePullPolicy: Always
+    name: goContainer
+    ports:
+      - containerPort: 9090
+    restartPolicy: Always
