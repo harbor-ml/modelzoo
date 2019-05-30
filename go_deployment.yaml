@@ -16,3 +16,4 @@
            image: modelzoo/go
            ports:
              - containerPort: 9090
+           imagePullPolicy: Never
