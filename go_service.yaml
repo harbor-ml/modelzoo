@@ -12,6 +12,6 @@ spec:
   selector:
     container.label: go-deployment
   ports:
-  - protocol: http
+  - protocol: TCP
     port: 9090
     targetPort: 9090
