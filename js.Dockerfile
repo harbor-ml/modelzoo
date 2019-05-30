@@ -1,7 +1,8 @@
 FROM modelzoo/base
 
-RUN make envoy
-
 WORKDIR js
+
+RUN npm i grpc-web \
+ && npm install
 
  CMD ["npm", "start"]

@@ -31,4 +31,6 @@ RUN wget -O protoc-gen-grpc-web https://github.com/grpc/grpc-web/releases/downlo
 RUN pip install protobuf google mypy-protobuf \
  && go get -u github.com/golang/protobuf/protoc-gen-go \
  && make protos \
- && make link \
+ && make link
+
+CMD ["/bin/bash"]
