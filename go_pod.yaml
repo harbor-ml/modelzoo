@@ -6,8 +6,7 @@ metadata:
   name: go-mockserver-pod
 spec:
   containers:
-  - image: modelzoo/go
-    imagePullPolicy: Never
+  - image: rdurrani/modelzoo
     name: go-mockserver-container
     ports:
     - containerPort: 9090
