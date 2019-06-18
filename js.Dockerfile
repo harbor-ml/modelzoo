@@ -1,10 +1,13 @@
 FROM modelzoo/base
 
+WORKDIR js
+
+RUN npm install
+
+WORKDIR modelzoo
+
 RUN make link
 
 WORKDIR js
-
-RUN npm i grpc-web \
- && npm install
 
  CMD ["npm", "start"]
