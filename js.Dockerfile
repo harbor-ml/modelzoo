@@ -4,10 +4,13 @@ WORKDIR js
 
 RUN npm install
 
-WORKDIR modelzoo
+WORKDIR /
 
 RUN make link
 
 WORKDIR js
 
- CMD ["npm", "start"]
+RUN npm run build \
+ && npm install -g serve
+
+CMD ["serve", "-s", "build"]
