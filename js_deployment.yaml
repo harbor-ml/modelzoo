@@ -1,18 +1,18 @@
  apiVersion: extensions/v1beta1
  kind: Deployment
  metadata:
-   name: js-deployment
+   name: jsdeployment
    labels:
-    container.label: js-deployment
+    container.label: jsdeployment
  spec:
    replicas: 3
    template:
      metadata:
        labels:
-         container.label: js-container
+         container.label: jscontainer
      spec:
        containers:
-         - name: js-server-container
+         - name: jsservercontainer
            image: modelzoo/js
            ports:
              - containerPort: 5000

@@ -20,11 +20,11 @@ static_resources:
               domains: ["*"]
               routes:
               - match: { prefix: "/" }
-                route: { host_rewrite: js-server-serv, cluster: kubernetes, timeout: 60s }
+                route: { host_rewrite: js-server-serv, cluster: default, timeout: 60s }
           http_filters:
           - name: envoy.router
   clusters:
-  - name: kubernetes
+  - name: default
     connect_timeout: 0.25s
     type: STRICT_DNS
     dns_lookup_family: V4_ONLY

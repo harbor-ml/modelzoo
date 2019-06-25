@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: js-server-serv
+  name: jsserverserv
 spec:
   clusterIP: None
   ports:
@@ -10,4 +10,4 @@ spec:
     targetPort: http
     protocol: TCP
   selector:
-    container.label: js-container
+    metadata.labels.container.label: jscontainer
