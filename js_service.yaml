@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: js-server-serv
+spec:
+  clusterIP: None
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  selector:
+    container.label: js-container

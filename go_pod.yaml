@@ -3,10 +3,10 @@ kind: Pod
 metadata:
   labels:
     container.label: go-container
-  name: go-mockserver-pod
+  name: go-server-pod
 spec:
   containers:
-  - image: rdurrani/modelzoo
-    name: go-mockserver-container
+  - image: modelzoo/go
+    name: go-server-container
     ports:
     - containerPort: 9090
