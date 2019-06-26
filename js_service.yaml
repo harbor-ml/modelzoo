@@ -10,4 +10,4 @@ spec:
     targetPort: http
     protocol: TCP
   selector:
-    metadata.labels.container.label: jscontainer
+    container: jscontainer
