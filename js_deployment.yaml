@@ -3,13 +3,13 @@
  metadata:
    name: jsdeployment
    labels:
-    container.label: jsdeployment
+    container: jsdeployment
  spec:
    replicas: 3
    template:
      metadata:
        labels:
-         container.label: jscontainer
+         container: jscontainer
      spec:
        containers:
          - name: jsservercontainer
