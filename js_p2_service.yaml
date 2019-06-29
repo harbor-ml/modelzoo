@@ -1,0 +1,16 @@
+# This is a dummy service just making sure that the pods are discoverable.
+# Unfortunately, it too can't be exposed externally.
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    container.label: js-s-service
+  name: js-mockserver-serv
+spec:
+  type: NodePort 
+  selector:
+    container: js-container
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
