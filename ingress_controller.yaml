@@ -297,5 +297,5 @@ spec:
         args:
         - /nginx-ingress-controller
         - --publish-service=$(POD_NAMESPACE)/nginx-ingress-lb
-        - --default-backend-service=default-http-backend
+        - --default-backend-service=$(POD_NAMESPACE)/default-http-backend
 ---
