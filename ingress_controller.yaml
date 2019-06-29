@@ -120,6 +120,7 @@ rules:
       - configmaps
       - pods
       - secrets
+      - services
       - namespaces
     verbs:
       - get
