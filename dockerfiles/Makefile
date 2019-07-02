@@ -11,29 +11,28 @@ go:
 js:
 	docker build -f js.Dockerfile /Users/rehandurrani/Documents/modelzoo/dockerfiles -t modelzoo/js
 
+# Base must always be public when built so that js and go containers can pull correct version.
 .PHONY: base
 base:
 	docker build -f base.Dockerfile /Users/rehandurrani/Documents/modelzoo/dockerfiles -t modelzoo/base
+	docker push modelzoo/base
 
 .PHONY: envoy
 envoy:
 	docker build -f envoy.Dockerfile /Users/rehandurrani/Documents/modelzoo/dockerfiles -t modelzoo/envoy
 
 .PHONY: all
-all: base basepublic js go jspublic gopublic envoy envoypublic
+all: base js go envoy
 
 .PHONY: public
-public: all 
+public: all jspublic gopublic envoypublic
 
-.PHONY: gopublic jspublic basepublic envoypublic
+.PHONY: gopublic jspublic envoypublic
 gopublic:
 	docker push modelzoo/go
 
 jspublic:
 	docker push modelzoo/js
-
-basepublic:
-	docker push modelzoo/base
 
 envoypublic:
 	docker push modelzoo/envoy
