@@ -12,6 +12,13 @@ RUN apt-get update \
 
 RUN git clone https://github.com/harbor-ml/modelzoo.git
 
+WORKDIR modelzoo
+
+RUN git checkout rehan/containerization \
+ && git pull
+
+WORKDIR /
+
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
 
 ENV NVM_DIR /root/.nvm
