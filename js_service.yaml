@@ -3,11 +3,12 @@ kind: Service
 metadata:
   name: js-server-serv
 spec:
-  clusterIP: None
   ports:
   - name: http
-    port: 5000
-    targetPort: http
+    port: 80
+    targetPort: 5000
     protocol: TCP
+  externalIPs:
+  - 34.207.114.194
   selector:
     container: js-container

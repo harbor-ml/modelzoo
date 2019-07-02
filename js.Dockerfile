@@ -13,4 +13,5 @@ WORKDIR js
 RUN npm run build \
  && npm install -g serve
 
-CMD ["serve", "-s", "build"]
+# CMD ["serve", "-s", "build"]
+CMD ["npm", "run", "dev"]

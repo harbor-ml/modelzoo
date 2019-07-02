@@ -26,6 +26,8 @@ metadata:
   labels:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
+data:
+  8080: "default/envoy-proxy-serv:8080"
 
 ---
 kind: ConfigMap
@@ -262,5 +264,37 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-nginx
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
+    - name: https
+      port: 443
+      targetPort: 443
+      protocol: TCP
+    - name: proxied-envoy
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+    - name: proxied-go
+      port: 9090
+      targetPort: 9090
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
 
 ---

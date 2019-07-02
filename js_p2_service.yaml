@@ -7,7 +7,6 @@ metadata:
     container.label: js-s-service
   name: js-mockserver-serv
 spec:
-  type: NodePort 
   selector:
     container: js-container
   ports:
