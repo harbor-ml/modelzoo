@@ -10,7 +10,7 @@ RUN apt-get update \
  && ln -s /usr/bin/python3 /usr/bin/python \
  && ln -s /usr/bin/pip3 /usr/bin/pip
 
-COPY . .
+RUN git clone https://github.com/harbor-ml/modelzoo.git
 
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
 
@@ -32,4 +32,6 @@ RUN pip install protobuf google mypy-protobuf \
  && go get -u github.com/golang/protobuf/protoc-gen-go \
  && make protos
  
+WORKDIR modelzoo
+
 CMD ["/bin/bash"]

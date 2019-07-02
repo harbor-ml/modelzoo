@@ -4,7 +4,7 @@ WORKDIR js
 
 RUN npm install
 
-WORKDIR /
+WORKDIR modelzoo
 
 RUN make link
 
