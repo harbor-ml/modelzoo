@@ -11,7 +11,7 @@ go:
 js:
 	docker build -f js.Dockerfile /Users/rehandurrani/Documents/modelzoo/dockerfiles -t modelzoo/js
 
-# Base must always be public when built so that js and go containers can pull correct version.
+# Base must always be pushed to repo when built so that js and go containers can pull correct version.
 .PHONY: base
 base:
 	docker build -f base.Dockerfile /Users/rehandurrani/Documents/modelzoo/dockerfiles -t modelzoo/base
