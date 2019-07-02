@@ -1,0 +1,19 @@
+ apiVersion: extensions/v1beta1
+ kind: Deployment
+ metadata:
+   name: envoy-deployment
+   labels:
+    container.label: envoy-deployment
+ spec:
+   replicas: 3
+   template:
+     metadata:
+       labels:
+         container: envoy-container
+     spec:
+       containers:
+         - name: envoy-proxy-pod
+           image: modelzoo/envoy
+           ports:
+             - containerPort: 9901
+             - containerPort: 8080
