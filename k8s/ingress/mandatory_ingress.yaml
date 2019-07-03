@@ -28,6 +28,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
 data:
   8080: "default/envoy-proxy-serv:8080"
+  9090: "default/go-server-serv:9090"
 
 ---
 kind: ConfigMap
