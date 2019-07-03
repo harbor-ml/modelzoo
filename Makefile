@@ -29,3 +29,7 @@ docker:
 .PHONY: dockerPublic
 dockerPublic:
 	cd dockerfiles; make public
+
+.PHONY: k8s
+k8s:
+	cd k8s; make all

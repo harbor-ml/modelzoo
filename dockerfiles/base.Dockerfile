@@ -35,10 +35,10 @@ RUN wget -O protoc-gen-grpc-web https://github.com/grpc/grpc-web/releases/downlo
  && mv protoc-gen-grpc-web /usr/local/bin/ \
  && chmod +x /usr/local/bin/protoc-gen-grpc-web
 
+WORKDIR modelzoo
+
 RUN pip install protobuf google mypy-protobuf \
  && go get -u github.com/golang/protobuf/protoc-gen-go \
  && make protos
- 
-WORKDIR modelzoo
 
 CMD ["/bin/bash"]
