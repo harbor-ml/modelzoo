@@ -8,7 +8,7 @@ import { Models } from "./Components/Models";
 
 const { Title } = Typography;
 
-const client = new ModelClient("http://34.207.114.194:9090", null, null);
+const client = new ModelClient("34.207.114.194:32424", null, null);
 export const ClientContext = React.createContext(client);
 
 const App: FC = () => {
