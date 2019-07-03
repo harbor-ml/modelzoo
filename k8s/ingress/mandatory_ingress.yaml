@@ -28,7 +28,6 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
 data:
   8080: "default/envoy-proxy-serv:8080"
-  9090: "default/go-server-serv:9090"
 
 ---
 kind: ConfigMap
@@ -289,10 +288,6 @@ spec:
     - name: proxied-envoy
       port: 8080
       targetPort: 8080
-      protocol: TCP
-    - name: proxied-go
-      port: 9090
-      targetPort: 9090
       protocol: TCP
   selector:
     app.kubernetes.io/name: ingress-nginx
