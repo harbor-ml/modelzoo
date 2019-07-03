@@ -3,12 +3,8 @@ kind: Service
 metadata:
   labels:
     container.label: go-service
-  name: go-mockserver-serv
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
-    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+  name: go-server-serv
 spec:
-  type: LoadBalancer
   selector:
     container.label: go-container
   ports:
