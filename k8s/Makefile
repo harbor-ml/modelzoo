@@ -3,19 +3,18 @@ SHELL := /bin/bash
 placeholder:
 	@echo "Use make with commands like `make go`"
 
-.PHONY: go
+.PHONY: all go envoy js ingress
+
 go:
 	cd go; make all
 
-.PHONY: envoy
 envoy:
 	cd envoy; make all
 
-.PHONY: js
+js:	
 	cd js; make all
 
-.PHONY: ingress
+ingress:
 	cd ingress; make all
 
-.PHONY: all
 all: go envoy js ingress
