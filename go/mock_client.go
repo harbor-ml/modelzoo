@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-const serverAddr string = "localhost:9090"
+const serverAddr string = "10.104.137.162:9090"
 
 func main() {
 	conn, err := grpc.Dial(serverAddr, grpc.WithInsecure())
