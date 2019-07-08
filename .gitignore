@@ -229,6 +229,3 @@ dmypy.json
 
 # End of https://www.gitignore.io/api/go,node,python
 
-# IDEs
-.vscode/
-

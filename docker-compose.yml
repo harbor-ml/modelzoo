@@ -1,0 +1,17 @@
+version: "3"
+services:
+  envoy:
+    image: modelzoo/envoy
+    build:
+      context: ./dockerfiles
+      dockerfile: envoy.Dockerfile
+  go-proxy:
+    image: modelzoo/go
+    build:
+      context: .
+      dockerfile: ./dockerfiles/go.Dockerfile
+  js-server:
+    image: modelzoo/js
+    build:
+      context: .
+      dockerfile: ./dockerfiles/js.Dockerfile

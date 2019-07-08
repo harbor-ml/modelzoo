@@ -5,7 +5,7 @@ metadata:
     container.label: envoy-service
   name: envoy-proxy-serv
 spec:
-  type: NodePort 
+  type: NodePort
   selector:
     container: envoy-container
   ports:
