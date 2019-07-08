@@ -1,17 +1,19 @@
 FROM modelzoo/base
 
-WORKDIR js
+WORKDIR /
+RUN mkdir -p /modelzoo/js
+COPY js /modelzoo/js
+RUN cd /modelzoo/js && npm install
 
-RUN npm install
-
+COPY protos Makefile /modelzoo/
 WORKDIR /modelzoo
-
+RUN make protos
 RUN make link
 
-WORKDIR js
+WORKDIR /modelzoo/js
 
-RUN npm run build \
- && npm install -g serve
+# RUN npm run build \
+#  && npm install -g serve
+# CMD ["serve", "-s", "build"]
 
-CMD ["serve", "-s", "build"]
-# CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]

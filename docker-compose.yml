@@ -15,3 +15,8 @@ services:
     build:
       context: .
       dockerfile: ./dockerfiles/js.Dockerfile
+  mock-backend:
+    image: modelzoo/mock-clipper
+    build:
+      context: .
+      dockerfile: ./dockerfiles/python.Dockerfile

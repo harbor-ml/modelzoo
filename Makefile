@@ -21,6 +21,11 @@ protos:
 link:
 	cd js; npm link ./protos
 
+.PHONY: base
+base:
+	docker build -t modelzoo/base -f ./dockerfiles/base.Dockerfile .
+	docker push modelzoo/base
+
 # To me (RSD) it seems that the default make of docker should be private unless otherwise specified.
 .PHONY: docker
 docker:

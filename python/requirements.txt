@@ -1,0 +1,6 @@
+starlette[full]
+numpy
+w3lib
+torchvision
+torch
+protobuf

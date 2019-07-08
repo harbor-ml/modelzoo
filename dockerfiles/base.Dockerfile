@@ -1,7 +1,5 @@
 FROM golang:1.12-stretch
 
-WORKDIR /
-
 RUN apt-get update \
  && apt-get install -y software-properties-common autoconf automake libtool g++ unzip protobuf-compiler build-essential git wget \
  && apt-get upgrade -y \
@@ -9,15 +7,6 @@ RUN apt-get update \
  && rm /usr/bin/python \
  && ln -s /usr/bin/python3 /usr/bin/python \
  && ln -s /usr/bin/pip3 /usr/bin/pip
-
-RUN git clone https://github.com/harbor-ml/modelzoo.git
-
-WORKDIR modelzoo
-
-RUN git checkout rehan/containerization \
- && git pull
-
-WORKDIR /
 
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
 
@@ -35,10 +24,11 @@ RUN wget -O protoc-gen-grpc-web https://github.com/grpc/grpc-web/releases/downlo
  && mv protoc-gen-grpc-web /usr/local/bin/ \
  && chmod +x /usr/local/bin/protoc-gen-grpc-web
 
-WORKDIR modelzoo
-
 RUN pip install protobuf google mypy-protobuf \
- && go get -u github.com/golang/protobuf/protoc-gen-go \
- && make protos
+ && go get -u github.com/golang/protobuf/protoc-gen-go
+
+# RUN mkdir /modelzoo
+# COPY . /modelzoo
+# RUN make protos
 
 CMD ["/bin/bash"]
