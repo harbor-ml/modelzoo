@@ -3,8 +3,12 @@ services:
   envoy:
     image: modelzoo/envoy
     build:
-      context: ./dockerfiles
-      dockerfile: envoy.Dockerfile
+      context: .
+      dockerfile: ./dockerfiles/envoy.Dockerfile
+    ports:
+    - 8080:8080
+    - 80:80
+    - 443:443
   go-proxy:
     image: modelzoo/go
     build:

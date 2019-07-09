@@ -1,16 +1,16 @@
 FROM modelzoo/base
 
-WORKDIR /
-RUN mkdir /modelzoo
-COPY . /modelzoo
-
-WORKDIR /modelzoo
-RUN make protos
-
 RUN go get -u github.com/vincent-petithory/dataurl \
- && go get -u github.com/kazegusuri/grpc-panic-handler \
- && go get -u github.com/harbor-ml/modelzoo/go/protos
+ && go get -u github.com/kazegusuri/grpc-panic-handler 
 
-WORKDIR /modelzoo/go
+RUN mkdir /go/src/modelzoo
+COPY go /go/src/modelzoo/go
+COPY protos /go/src/modelzoo/protos
+COPY Makefile /go/src/modelzoo
+
+WORKDIR /go/src/modelzoo
+RUN make proto-go
+
+WORKDIR /go/src/modelzoo/go
 
 CMD ["go", "run", "mock_server.go"]

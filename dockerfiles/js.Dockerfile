@@ -2,12 +2,15 @@ FROM modelzoo/base
 
 WORKDIR /
 RUN mkdir -p /modelzoo/js
-COPY js /modelzoo/js
+COPY js/package.json /modelzoo/js/
 RUN cd /modelzoo/js && npm install
 
-COPY protos Makefile /modelzoo/
+COPY js /modelzoo/js/
+
+COPY protos /modelzoo/protos
+COPY Makefile /modelzoo/
 WORKDIR /modelzoo
-RUN make protos
+RUN make proto-js
 RUN make link
 
 WORKDIR /modelzoo/js

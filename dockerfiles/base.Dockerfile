@@ -1,12 +1,18 @@
 FROM golang:1.12-stretch
 
 RUN apt-get update \
- && apt-get install -y software-properties-common autoconf automake libtool g++ unzip protobuf-compiler build-essential git wget \
- && apt-get upgrade -y \
- && apt install -y python3-pip \
- && rm /usr/bin/python \
- && ln -s /usr/bin/python3 /usr/bin/python \
- && ln -s /usr/bin/pip3 /usr/bin/pip
+ && apt-get install -y software-properties-common autoconf automake libtool g++ unzip protobuf-compiler build-essential git wget 
+
+RUN wget \
+        --quiet 'https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh' \
+        -O /tmp/anaconda.sh \
+    && /bin/bash /tmp/anaconda.sh -b -p /opt/conda \
+    && rm /tmp/anaconda.sh \
+    && /opt/conda/bin/conda install -y \
+        libgcc \
+    && /opt/conda/bin/conda clean -y --all 
+ENV PATH "/opt/conda/bin:$PATH"
+
 
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
 

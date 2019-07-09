@@ -11,7 +11,6 @@ function getCategoryHumanName(cat: ModelCategory): string {
   } else if (cat === ModelCategory.VISIONCLASSIFICATION) {
     return "vision";
   }
-  console.error("Can't find model category");
   return "";
 }
 

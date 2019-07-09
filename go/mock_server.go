@@ -15,7 +15,7 @@ import (
 	dataurl "github.com/vincent-petithory/dataurl"
 
 	proto "github.com/golang/protobuf/proto"
-	services "github.com/harbor-ml/modelzoo/go/protos"
+	services "modelzoo/go/protos"
 	"google.golang.org/grpc"
 )
 
@@ -23,13 +23,13 @@ const port int = 9090
 
 // const modelAddrTemplate string = "http://localhost:8000/%v/predict"
 
-const modelAddrTemplate string = "http://35.163.225.179:1337/%v/predict"
+const modelAddrTemplate string = "http://mock-backend:8000/%v/predict"
 
 var avaiableModels = []*services.GetModelsResp_Model{
-	{ModelName: "res50-pytorch", ModelCategory: services.ModelCategory_VisionClassification},
-	{ModelName: "squeezenet-pytorch", ModelCategory: services.ModelCategory_VisionClassification},
-	{ModelName: "rise-pytorch", ModelCategory: services.ModelCategory_TextGeneration},
-	{ModelName: "marvel-pytorch", ModelCategory: services.ModelCategory_TextGeneration},
+	{ModelName: "res50-pytorch", ModelCategory: services.ModelCategory_VISIONCLASSIFICATION},
+	{ModelName: "squeezenet-pytorch", ModelCategory: services.ModelCategory_VISIONCLASSIFICATION},
+	{ModelName: "rise-pytorch", ModelCategory: services.ModelCategory_TEXTGENERATION},
+	{ModelName: "marvel-pytorch", ModelCategory: services.ModelCategory_TEXTGENERATION},
 }
 
 func panicIf(e interface{}) {
@@ -133,7 +133,7 @@ func (s *mockModelServer) TextGeneration(
 }
 
 func main() {
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", port))
+	lis, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%d", port))
 	if err != nil {
 		panic(err)
 	}
