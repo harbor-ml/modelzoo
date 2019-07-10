@@ -21,9 +21,9 @@ import (
 
 const port int = 9090
 
-// const modelAddrTemplate string = "http://localhost:8000/%v/predict"
+const modelAddrTemplate string = "http://54.213.2.210:1337/%v/predict"
 
-const modelAddrTemplate string = "http://mock-backend:8000/%v/predict"
+// const modelAddrTemplate string = "http://mock-backend:8000/%v/predict"
 
 var avaiableModels = []*services.GetModelsResp_Model{
 	{ModelName: "res50-pytorch", ModelCategory: services.ModelCategory_VISIONCLASSIFICATION},
