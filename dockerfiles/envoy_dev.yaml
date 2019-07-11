@@ -37,13 +37,6 @@ static_resources:
                   cluster: js_service
           http_filters:
           - name: envoy.router
-      tls_context:
-        common_tls_context:
-          tls_certificates:
-          - certificate_chain:
-              filename: /etc/fullchain.pem
-            private_key:
-              filename: /etc/privkey.pem
   - name: listener_0
     address:
       socket_address:
