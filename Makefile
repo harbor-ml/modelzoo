@@ -41,7 +41,7 @@ envoyProd:
 
 .PHONY: envoyDev
 envoyDev:
-	docker build -t modelzoo/envoyDev -f ./dockerfiles/envoy_dev.Dockerfile
+	docker build -t modelzoo/envoydev -f ./dockerfiles/envoy_dev.Dockerfile
 
 format-yaml:
 	fd 'y[a]*ml' . | xargs -n 1 -I {} bash -c "yq r '{}' | sponge '{}'"
