@@ -25,23 +25,23 @@ link:
 
 .PHONY: base
 base:
-	docker build -t modelzoo/base -f ./dockerfiles/base.Dockerfile .
+	docker build -t modelzoolive/base -f ./dockerfiles/base.Dockerfile .
 
 .PHONY: go
 go:
-	docker build -t modelzoo/go -f ./dockerfiles/go.Dockerfile .
+	docker build -t modelzoolive/go -f ./dockerfiles/go.Dockerfile .
 
 .PHONY: js
 js:
-	docker build -t modelzoo/js -f ./dockerfiles/js.Dockerfile .
+	docker build -t modelzoolive/js -f ./dockerfiles/js.Dockerfile .
 
 .PHONY: envoyProd
 envoyProd:
-	docker build -t modelzoo/envoy -f ./dockerfiles/envoy_prod.Dockerfile .
+	docker build -t modelzoolive/envoy -f ./dockerfiles/envoy_prod.Dockerfile .
 
 .PHONY: envoyDev
 envoyDev:
-	docker build -t modelzoo/envoydev -f ./dockerfiles/envoy_dev.Dockerfile
+	docker build -t modelzoolive/envoydev -f ./dockerfiles/envoy_dev.Dockerfile
 
 format-yaml:
 	fd 'y[a]*ml' . | xargs -n 1 -I {} bash -c "yq r '{}' | sponge '{}'"
