@@ -26,20 +26,22 @@ link:
 .PHONY: base
 base:
 	docker build -t modelzoo/base -f ./dockerfiles/base.Dockerfile .
-	docker push modelzoo/base
 
-# To me (RSD) it seems that the default make of docker should be private unless otherwise specified.
-.PHONY: docker
-docker:
-	cd dockerfiles; make all
+.PHONY: go
+go:
+	docker build -t modelzoo/go -f ./dockerfiles/go.Dockerfile .
 
-.PHONY: dockerPublic
-dockerPublic:
-	cd dockerfiles; make public
+.PHONY: js
+js:
+	docker build -t modelzoo/js -f ./dockerfiles/js.Dockerfile .
 
-.PHONY: k8s
-k8s:
-	cd k8s; make all
+.PHONY: envoyProd
+envoyProd:
+	docker build -t modelzoo/envoy -f ./dockerfiles/envoy_prod.Dockerfile .
+
+.PHONY: envoyDev
+envoyDev:
+	docker build -t modelzoo/envoyDev -f ./dockerfiles/envoy_dev.Dockerfile
 
 format-yaml:
 	fd 'y[a]*ml' . | xargs -n 1 -I {} bash -c "yq r '{}' | sponge '{}'"

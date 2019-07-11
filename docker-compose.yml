@@ -1,24 +1,24 @@
 version: "3"
 services:
   envoy:
-    image: modelzoo/envoy
-    build:
-      context: .
-      dockerfile: ./dockerfiles/envoy.Dockerfile
+    image: modelzoolive/envoy
+    # build:
+    #   context: .
+    #   dockerfile: ./dockerfiles/envoy.Dockerfile
     ports:
     - 8080:8080
     - 80:80
     - 443:443
   go-proxy:
-    image: modelzoo/go
-    build:
-      context: .
-      dockerfile: ./dockerfiles/go.Dockerfile
+    image: modelzoolive/go
+    # build:
+    #   context: .
+    #   dockerfile: ./dockerfiles/go.Dockerfile
   js-server:
-    image: modelzoo/js
-    build:
-      context: .
-      dockerfile: ./dockerfiles/js.Dockerfile
+    image: modelzoolive/js
+    # build:
+    #   context: .
+    #   dockerfile: ./dockerfiles/js.Dockerfile
   mock-backend:
     image: modelzoo/mock-clipper
     build:
