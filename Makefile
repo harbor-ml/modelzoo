@@ -25,19 +25,19 @@ link:
 
 .PHONY: base
 base:
-	docker build -t modelzoolive/base -f ./dockerfiles/base.Dockerfile .
+	sudo docker build -t modelzoolive/base -f ./dockerfiles/base.Dockerfile .
 
 .PHONY: go
 go:
-	docker build -t modelzoolive/go -f ./dockerfiles/go.Dockerfile .
+	sudo docker build -t modelzoolive/go -f ./dockerfiles/go.Dockerfile .
 
 .PHONY: js
 js:
-	docker build -t modelzoolive/js -f ./dockerfiles/js.Dockerfile .
+	sudo docker build -t modelzoolive/js -f ./dockerfiles/js.Dockerfile .
 
 .PHONY: envoyProd
 envoyProd:
-	docker build -t modelzoolive/envoy -f ./dockerfiles/envoy_prod.Dockerfile .
+	sudo docker build -t modelzoolive/envoy -f ./dockerfiles/envoy_prod.Dockerfile .
 
 .PHONY: envoyDev
 envoyDev:
