@@ -1,4 +1,4 @@
-FROM modelzoo/base
+FROM modelzoolive/base
 
 RUN go get -u github.com/vincent-petithory/dataurl \
  && go get -u github.com/kazegusuri/grpc-panic-handler 

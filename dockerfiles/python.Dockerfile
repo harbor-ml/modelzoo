@@ -1,4 +1,4 @@
-FROM modelzoo/base
+FROM modelzoolive/base
 
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8

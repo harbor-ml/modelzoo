@@ -1,4 +1,4 @@
-FROM modelzoo/base
+FROM modelzoolive/base
 
 WORKDIR /
 RUN mkdir -p /modelzoo/js
