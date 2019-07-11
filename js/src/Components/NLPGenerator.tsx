@@ -31,7 +31,7 @@ const Filter = require("bad-words"),
 interface TextState {
   inputPhrase: string;
   predResult: TextGenerationResponse | null;
-  predButtomShown: boolean;
+  predbuttonShown: boolean;
   resultCardShown: boolean;
   temperature: number;
   startInferneceTime?: DOMHighResTimeStamp;
@@ -68,7 +68,7 @@ function initTextState(props: SingleTextProp): TextState {
   return {
     inputPhrase: props.inputPhrase,
     predResult: null,
-    predButtomShown: true,
+    predbuttonShown: true,
     resultCardShown: false,
     temperature: 0.7,
     props: props
@@ -92,7 +92,7 @@ function singleTextReducer(state: TextState, action: ActionPayload): TextState {
     return {
       ...state,
       resultCardShown: true,
-      predButtomShown: false,
+      predbuttonShown: false,
       predResult: action.data as newResultType,
       inferDuration: performance.now() - state.startInferneceTime!
     };
@@ -157,12 +157,12 @@ export const SingleText: FC<SingleTextProp> = props => {
         extra={state.inferDuration ? getCardExtra() : ""}
       >
         <Card.Grid
-          style={{ ...gridStyle, width: state.predButtomShown ? "30%" : "40%" }}
+          style={{ ...gridStyle, width: state.predbuttonShown ? "30%" : "40%" }}
         >
           {state.inputPhrase}
         </Card.Grid>
 
-        {state.predButtomShown && (
+        {state.predbuttonShown && (
           <Card.Grid style={{ ...gridStyle, width: "70%" }}>
             <Tag>Temperature</Tag>
             <InputNumber

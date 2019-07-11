@@ -30,6 +30,7 @@ var avaiableModels = []*services.GetModelsResp_Model{
 	{ModelName: "squeezenet-pytorch", ModelCategory: services.ModelCategory_VISIONCLASSIFICATION},
 	{ModelName: "rise-pytorch", ModelCategory: services.ModelCategory_TEXTGENERATION},
 	{ModelName: "marvel-pytorch", ModelCategory: services.ModelCategory_TEXTGENERATION},
+	{ModelName: "image-segmentation", ModelCategory: services.ModelCategory_IMAGESEGMENTATION}
 }
 
 func panicIf(e interface{}) {
@@ -103,6 +104,25 @@ func (s *mockModelServer) VisionClassification(
 	panicIf(err)
 	proto.Unmarshal(decoded, val)
 	s.reqID++
+
+	return val, nil
+}
+
+func (s *mockModelServer) ImageSegmentation(
+	c context.Context, req *services.ImageSegmentationRequest) (
+	*services.ImageSegmentationResponse, error) {
+	
+	serializedReq, err := proto.Marshal(req)
+	panicIf(err)
+	encodedReq := base64.StdEncoding.EncodeToString(serializedReq)
+	payload := map[string]string{"input": encodedReq}
+	modelAddr := fmt.Sprintf(modelAddrTemplate, req.GetModelName())
+	resp := postJSON(modelAddr, payload)
+	val := &services.ImageSegmentationResponse{}
+	decoded, err := base64.StdEncoding.DecodeString(resp["output"].(string))
+	panicIf(err)
+	proto.Unmarshal(decoded, val)
+	s.reqID++;
 
 	return val, nil
 }
