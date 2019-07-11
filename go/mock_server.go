@@ -14,23 +14,24 @@ import (
 	panichandler "github.com/kazegusuri/grpc-panic-handler"
 	dataurl "github.com/vincent-petithory/dataurl"
 
-	proto "github.com/golang/protobuf/proto"
 	services "modelzoo/go/protos"
+
+	proto "github.com/golang/protobuf/proto"
 	"google.golang.org/grpc"
 )
 
 const port int = 9090
 
-const modelAddrTemplate string = "http://54.213.2.210:1337/%v/predict"
+// const modelAddrTemplate string = "http://54.213.2.210:1337/%v/predict"
 
-// const modelAddrTemplate string = "http://mock-backend:8000/%v/predict"
+const modelAddrTemplate string = "http://mock-backend:8000/%v/predict"
 
 var avaiableModels = []*services.GetModelsResp_Model{
 	{ModelName: "res50-pytorch", ModelCategory: services.ModelCategory_VISIONCLASSIFICATION},
 	{ModelName: "squeezenet-pytorch", ModelCategory: services.ModelCategory_VISIONCLASSIFICATION},
 	{ModelName: "rise-pytorch", ModelCategory: services.ModelCategory_TEXTGENERATION},
 	{ModelName: "marvel-pytorch", ModelCategory: services.ModelCategory_TEXTGENERATION},
-	{ModelName: "image-segmentation", ModelCategory: services.ModelCategory_IMAGESEGMENTATION}
+	{ModelName: "image-segmentation", ModelCategory: services.ModelCategory_IMAGESEGMENTATION},
 }
 
 func panicIf(e interface{}) {
@@ -111,7 +112,7 @@ func (s *mockModelServer) VisionClassification(
 func (s *mockModelServer) ImageSegmentation(
 	c context.Context, req *services.ImageSegmentationRequest) (
 	*services.ImageSegmentationResponse, error) {
-	
+
 	serializedReq, err := proto.Marshal(req)
 	panicIf(err)
 	encodedReq := base64.StdEncoding.EncodeToString(serializedReq)
@@ -122,7 +123,7 @@ func (s *mockModelServer) ImageSegmentation(
 	decoded, err := base64.StdEncoding.DecodeString(resp["output"].(string))
 	panicIf(err)
 	proto.Unmarshal(decoded, val)
-	s.reqID++;
+	s.reqID++
 
 	return val, nil
 }
