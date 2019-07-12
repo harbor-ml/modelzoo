@@ -178,7 +178,7 @@ import React, {
                       if (err == null) {
                         dispatch({
                           type: ImageAction.ShowResult,
-                          data: response.getResult()
+                          data: response.getOutputImage()
                         });
                       } else {
                         console.log(err);
@@ -200,7 +200,7 @@ import React, {
             <Card.Grid style={{ ...gridStyle, width: "60%" }}>
               {state.predResult != null ? (
                 <img
-                src={state.predResult.getResult()}
+                src={state.predResult.getOutputImage()}
                 height="auto"
                 width="80%"
                 alt=""

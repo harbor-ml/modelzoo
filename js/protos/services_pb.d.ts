@@ -199,8 +199,8 @@ export namespace ImageSegmentationRequest {
 }
 
 export class ImageSegmentationResponse extends jspb.Message {
-  getResult(): string;
-  setResult(value: string): void;
+  getOutputImage(): string;
+  setOutputImage(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ImageSegmentationResponse.AsObject;
@@ -212,7 +212,7 @@ export class ImageSegmentationResponse extends jspb.Message {
 
 export namespace ImageSegmentationResponse {
   export type AsObject = {
-    result: string,
+    outputImage: string,
   }
 }
 
@@ -255,4 +255,5 @@ export namespace ImageDownloadResponse {
 export enum ModelCategory { 
   VISIONCLASSIFICATION = 0,
   TEXTGENERATION = 1,
+  IMAGESEGMENTATION = 2,
 }

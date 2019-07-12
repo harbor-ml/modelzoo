@@ -5,12 +5,12 @@ import {
   GetModelsResp,
   ImageDownloadRequest,
   ImageDownloadResponse,
+  ImageSegmentationRequest,
+  ImageSegmentationResponse,
   TextGenerationRequest,
   TextGenerationResponse,
   VisionClassificationRequest,
-  VisionClassificationResponse,
-  ImageSegmentationRequest,
-  ImageSegmentationResponse} from './services_pb';
+  VisionClassificationResponse} from './services_pb';
 
 export class ModelClient {
   constructor (hostname: string,

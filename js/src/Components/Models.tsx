@@ -4,6 +4,7 @@ import { GetModelsReq, GetModelsResp, ModelCategory } from "protos/services_pb";
 import { ClientContext } from "../App";
 import { CVInferencePage } from "./CVInferencePage";
 import { NLPInferencePage } from "./NLPInferencePage";
+import { ImSegInferencePage } from "./ImSegInferencePage";
 
 function getCategoryHumanName(cat: ModelCategory): string {
   if (cat === ModelCategory.TEXTGENERATION) {
@@ -22,6 +23,7 @@ export const Models: FC = () => {
   useMemo(() => {
     let req = new GetModelsReq();
     client.listModels(req, undefined, (err, resp) => {
+      console.log(err)
       setModelList(resp.getModelsList());
     });
   }, [client]);
@@ -42,6 +44,8 @@ export const Models: FC = () => {
                 setInferencePage(<CVInferencePage modelNameSelected={val} />);
               } else if (cat === ModelCategory.TEXTGENERATION) {
                 setInferencePage(<NLPInferencePage modelNameSelected={val} />);
+              } else if (cat === ModelCategory.IMAGESEGMENTATION) {
+                setInferencePage(<ImSegInferencePage modelNameSelected={val} />);
               }
             }}
           >

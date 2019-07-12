@@ -11,11 +11,11 @@ interface IDImgTuple {
   comp: JSX.Element;
 }
 
-interface InferecePageProp {
+interface ImSegInferencePage {
   modelNameSelected: string;
 }
 
-export const CVInferencePage: FC<InferecePageProp> = props => {
+export const ImSegInferencePage: FC<ImSegInferencePage> = props => {
   const [addedImages, setAddedImages] = useState<IDImgTuple[]>([]);
   const [imageIDCoutner, setImageIDCounter] = useState(0);
   const [imageURL, setImageURL] = useState("");

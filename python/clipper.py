@@ -2,6 +2,7 @@ import base64
 import io
 import json
 
+import mimetypes
 import numpy as np
 from data import CATEGORIES
 from PIL import Image
@@ -95,7 +96,8 @@ async def handle_segmentation(request: Request, app_name: str):
     buffered = io.BytesIO()
     img.save(buffered, format="JPEG")
     img_str = base64.b64encode(buffered.getvalue())
-    r = ImageSegmentationResponse(output_image=img_str)
+    string = u'data:%s;base64,%s' % (mimetypes.types_map['.jpg'], img_str)
+    r = ImageSegmentationResponse(output_image=string)
     encoded = base64.b64encode(r.SerializeToString()).decode()
 
     resp = responses[app_name].copy()
