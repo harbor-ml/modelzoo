@@ -98,7 +98,6 @@ import React, {
         inferDuration: performance.now() - state.startInferneceTime!
       };
     } else if (action.type === ImageAction.Close) {
-      console.log(state.props.imgID);
       state.props.removeFunc(state.props.imgID);
     } else if (action.type === ImageAction.SetClient) {
       return {
@@ -178,10 +177,9 @@ import React, {
                       if (err == null) {
                         dispatch({
                           type: ImageAction.ShowResult,
-                          data: response.getOutputImage()
+                          data: response
                         });
                       } else {
-                        console.log(err);
                         dispatch({
                           type: ImageAction.ShowResult,
                           data: null

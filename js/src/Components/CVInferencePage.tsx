@@ -23,8 +23,6 @@ export const CVInferencePage: FC<InferecePageProp> = props => {
   const client = useContext(ClientContext);
 
   const removeImageComp = (val: number) => {
-    console.log(addedImages);
-    console.log(val);
     setAddedImages(addedImages => addedImages.filter(v => v.id !== val));
   };
   function createImageRow(result: string) {

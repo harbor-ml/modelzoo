@@ -3,7 +3,7 @@ import { Card, Row, Col, Upload, Icon, Button, Input, Alert } from "antd";
 import { DefaultImages } from "./Constants";
 import { b64Encode } from "./Utils";
 import { ImageDownloadRequest } from "protos/services_pb";
-import { SingleImage } from "./CVClassifier";
+import { SingleImage } from "./ImSegGenerator";
 import { ClientContext } from "../App";
 
 interface IDImgTuple {
@@ -23,8 +23,6 @@ export const ImSegInferencePage: FC<ImSegInferencePage> = props => {
   const client = useContext(ClientContext);
 
   const removeImageComp = (val: number) => {
-    console.log(addedImages);
-    console.log(val);
     setAddedImages(addedImages => addedImages.filter(v => v.id !== val));
   };
   function createImageRow(result: string) {

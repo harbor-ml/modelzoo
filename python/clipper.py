@@ -51,6 +51,7 @@ responses = {
     "squeezenet-pytorch": generate_clipper_resp(False, "lalala"),
     "rise-pytorch": generate_clipper_resp(False, ""),
     "marvel-pytorch": generate_clipper_resp(False, ""),
+    "image-segmentation": generate_clipper_resp(False, "")
 }
 
 
@@ -92,10 +93,10 @@ async def handle_segmentation(request: Request, app_name: str):
 
     imgBytes = parse_data_uri(req.input_image).data
     img = Image.open(io.BytesIO(imgBytes)).convert("RGB")
-    img.rotate(90)
+    img = img.rotate(45)
     buffered = io.BytesIO()
     img.save(buffered, format="JPEG")
-    img_str = base64.b64encode(buffered.getvalue())
+    img_str = base64.b64encode(buffered.getvalue()).decode()
     string = u'data:%s;base64,%s' % (mimetypes.types_map['.jpg'], img_str)
     r = ImageSegmentationResponse(output_image=string)
     encoded = base64.b64encode(r.SerializeToString()).decode()

@@ -109,7 +109,6 @@ function singleImageReducer(
       numReturns: action.data as newNumReturnsType
     };
   } else if (action.type === ImageAction.Close) {
-    console.log(state.props.imgID);
     state.props.removeFunc(state.props.imgID);
   } else if (action.type === ImageAction.SetClient) {
     return {
@@ -210,7 +209,6 @@ export const SingleImage: FC<SingleImageProp> = props => {
                         data: response.getResultsList()
                       });
                     } else {
-                      console.log(err);
                       dispatch({
                         type: ImageAction.ShowResult,
                         data: null

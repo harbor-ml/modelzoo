@@ -11,6 +11,8 @@ function getCategoryHumanName(cat: ModelCategory): string {
     return "text-gen";
   } else if (cat === ModelCategory.VISIONCLASSIFICATION) {
     return "vision";
+  } else if (cat === ModelCategory.IMAGESEGMENTATION) {
+    return "img-segmentation"
   }
   return "";
 }
@@ -23,7 +25,6 @@ export const Models: FC = () => {
   useMemo(() => {
     let req = new GetModelsReq();
     client.listModels(req, undefined, (err, resp) => {
-      console.log(err)
       setModelList(resp.getModelsList());
     });
   }, [client]);

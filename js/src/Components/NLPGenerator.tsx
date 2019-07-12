@@ -88,7 +88,6 @@ function singleTextReducer(state: TextState, action: ActionPayload): TextState {
       startInferneceTime: startTS
     };
   } else if (action.type === TextAction.ShowResult) {
-    console.log(action.data);
     return {
       ...state,
       resultCardShown: true,
