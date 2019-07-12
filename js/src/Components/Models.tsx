@@ -4,12 +4,15 @@ import { GetModelsReq, GetModelsResp, ModelCategory } from "protos/services_pb";
 import { ClientContext } from "../App";
 import { CVInferencePage } from "./CVInferencePage";
 import { NLPInferencePage } from "./NLPInferencePage";
+import { ImSegInferencePage } from "./ImSegInferencePage";
 
 function getCategoryHumanName(cat: ModelCategory): string {
   if (cat === ModelCategory.TEXTGENERATION) {
     return "text-gen";
   } else if (cat === ModelCategory.VISIONCLASSIFICATION) {
     return "vision";
+  } else if (cat === ModelCategory.IMAGESEGMENTATION) {
+    return "img-segmentation"
   }
   return "";
 }
@@ -42,6 +45,8 @@ export const Models: FC = () => {
                 setInferencePage(<CVInferencePage modelNameSelected={val} />);
               } else if (cat === ModelCategory.TEXTGENERATION) {
                 setInferencePage(<NLPInferencePage modelNameSelected={val} />);
+              } else if (cat === ModelCategory.IMAGESEGMENTATION) {
+                setInferencePage(<ImSegInferencePage modelNameSelected={val} />);
               }
             }}
           >

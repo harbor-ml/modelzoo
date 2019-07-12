@@ -14,8 +14,9 @@ import (
 	panichandler "github.com/kazegusuri/grpc-panic-handler"
 	dataurl "github.com/vincent-petithory/dataurl"
 
-	proto "github.com/golang/protobuf/proto"
 	services "modelzoo/go/protos"
+
+	proto "github.com/golang/protobuf/proto"
 	"google.golang.org/grpc"
 )
 
@@ -30,6 +31,7 @@ var avaiableModels = []*services.GetModelsResp_Model{
 	{ModelName: "squeezenet-pytorch", ModelCategory: services.ModelCategory_VISIONCLASSIFICATION},
 	{ModelName: "rise-pytorch", ModelCategory: services.ModelCategory_TEXTGENERATION},
 	{ModelName: "marvel-pytorch", ModelCategory: services.ModelCategory_TEXTGENERATION},
+	{ModelName: "image-segmentation", ModelCategory: services.ModelCategory_IMAGESEGMENTATION},
 }
 
 func panicIf(e interface{}) {
@@ -99,6 +101,25 @@ func (s *mockModelServer) VisionClassification(
 	modelAddr := fmt.Sprintf(modelAddrTemplate, req.GetModelName())
 	resp := postJSON(modelAddr, payload)
 	val := &services.VisionClassificationResponse{}
+	decoded, err := base64.StdEncoding.DecodeString(resp["output"].(string))
+	panicIf(err)
+	proto.Unmarshal(decoded, val)
+	s.reqID++
+
+	return val, nil
+}
+
+func (s *mockModelServer) ImageSegmentation(
+	c context.Context, req *services.ImageSegmentationRequest) (
+	*services.ImageSegmentationResponse, error) {
+
+	serializedReq, err := proto.Marshal(req)
+	panicIf(err)
+	encodedReq := base64.StdEncoding.EncodeToString(serializedReq)
+	payload := map[string]string{"input": encodedReq}
+	modelAddr := fmt.Sprintf(modelAddrTemplate, req.GetModelName())
+	resp := postJSON(modelAddr, payload)
+	val := &services.ImageSegmentationResponse{}
 	decoded, err := base64.StdEncoding.DecodeString(resp["output"].(string))
 	panicIf(err)
 	proto.Unmarshal(decoded, val)

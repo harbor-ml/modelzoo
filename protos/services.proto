@@ -3,6 +3,7 @@ syntax = "proto3";
 enum ModelCategory {
   VISIONCLASSIFICATION = 0;
   TEXTGENERATION = 1;
+  IMAGESEGMENTATION = 2;
 }
 
 message GetModelsReq {}
@@ -42,6 +43,16 @@ message VisionClassificationResponse {
   repeated Result results = 1;
 }
 
+message ImageSegmentationRequest {
+  string input_image = 1;
+  
+  string model_name = 2;
+}
+
+message ImageSegmentationResponse {
+  string output_image = 1;
+}    
+
 message ImageDownloadRequest {
   string url = 1;
 }
@@ -55,6 +66,9 @@ service Model {
 
   rpc TextGeneration(TextGenerationRequest)
       returns (TextGenerationResponse) {}
+
+  rpc ImageSegmentation(ImageSegmentationRequest)
+      returns (ImageSegmentationResponse) {}
 
   rpc GetImage(ImageDownloadRequest) returns (ImageDownloadResponse) {}
   rpc ListModels(GetModelsReq) returns (GetModelsResp) {}

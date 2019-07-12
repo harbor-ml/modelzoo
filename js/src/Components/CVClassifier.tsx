@@ -29,7 +29,7 @@ import { ClientContext } from "../App";
 interface ImageState {
   img: string;
   predResult: VisionClassificationResponse.Result[] | null;
-  predButtomShown: boolean;
+  predbuttonShown: boolean;
   resultCardShown: boolean;
   numReturns: number;
   startInferneceTime?: DOMHighResTimeStamp;
@@ -69,7 +69,7 @@ function initImageState(props: SingleImageProp): ImageState {
   return {
     img: props.img,
     predResult: [],
-    predButtomShown: true,
+    predbuttonShown: true,
     resultCardShown: false,
     numReturns: 3,
     props: props
@@ -99,7 +99,7 @@ function singleImageReducer(
     return {
       ...state,
       resultCardShown: true,
-      predButtomShown: false,
+      predbuttonShown: false,
       predResult: action.data as newResultType,
       inferDuration: performance.now() - state.startInferneceTime!
     };
@@ -109,7 +109,6 @@ function singleImageReducer(
       numReturns: action.data as newNumReturnsType
     };
   } else if (action.type === ImageAction.Close) {
-    console.log(state.props.imgID);
     state.props.removeFunc(state.props.imgID);
   } else if (action.type === ImageAction.SetClient) {
     return {
@@ -169,7 +168,7 @@ export const SingleImage: FC<SingleImageProp> = props => {
         extra={state.inferDuration ? getCardExtra() : ""}
       >
         <Card.Grid
-          style={{ ...gridStyle, width: state.predButtomShown ? "30%" : "40%" }}
+          style={{ ...gridStyle, width: state.predbuttonShown ? "30%" : "40%" }}
         >
           <img
             src={state.img}
@@ -180,7 +179,7 @@ export const SingleImage: FC<SingleImageProp> = props => {
           />
         </Card.Grid>
 
-        {state.predButtomShown && (
+        {state.predbuttonShown && (
           <Card.Grid style={{ ...gridStyle, width: "70%" }}>
             <Tag>Topk Classes</Tag>
             <InputNumber
@@ -210,7 +209,6 @@ export const SingleImage: FC<SingleImageProp> = props => {
                         data: response.getResultsList()
                       });
                     } else {
-                      console.log(err);
                       dispatch({
                         type: ImageAction.ShowResult,
                         data: null

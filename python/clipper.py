@@ -2,6 +2,7 @@ import base64
 import io
 import json
 
+import mimetypes
 import numpy as np
 from data import CATEGORIES
 from PIL import Image
@@ -10,6 +11,8 @@ from protos.services_pb2 import (
     TextGenerationResponse,
     VisionClassificationRequest,
     VisionClassificationResponse,
+    ImageSegmentationRequest,
+    ImageSegmentationResponse
 )
 from starlette.applications import Starlette
 from starlette.middleware.cors import CORSMiddleware
@@ -42,13 +45,13 @@ def make_resp(req: VisionClassificationRequest):
         single_result.proba = 0.77
     return base64.b64encode(r.SerializeToString()).decode()
 
-
 responses = {
     "fail": generate_clipper_resp(True, "failed output"),
     "res50-pytorch": generate_clipper_resp(False, "failed"),
     "squeezenet-pytorch": generate_clipper_resp(False, "lalala"),
     "rise-pytorch": generate_clipper_resp(False, ""),
     "marvel-pytorch": generate_clipper_resp(False, ""),
+    "image-segmentation": generate_clipper_resp(False, "")
 }
 
 
@@ -83,12 +86,34 @@ async def handle_vision(request: Request, app_name: str):
     return JSONResponse(resp)
 
 
+async def handle_segmentation(request: Request, app_name: str):
+    inp = await request.json()
+    req = ImageSegmentationRequest()
+    req.ParseFromString(base64.b64decode(inp["input"]))
+
+    imgBytes = parse_data_uri(req.input_image).data
+    img = Image.open(io.BytesIO(imgBytes)).convert("RGB")
+    img = img.rotate(45)
+    buffered = io.BytesIO()
+    img.save(buffered, format="JPEG")
+    img_str = base64.b64encode(buffered.getvalue()).decode()
+    string = u'data:%s;base64,%s' % (mimetypes.types_map['.jpg'], img_str)
+    r = ImageSegmentationResponse(output_image=string)
+    encoded = base64.b64encode(r.SerializeToString()).decode()
+
+    resp = responses[app_name].copy()
+    resp["output"] = encoded
+    return JSONResponse(resp)
+
 @app.route("/{app_name}/predict", methods=["POST"])
 async def homepage(request: Request):
     app_name = request.path_params["app_name"]
 
     if app_name == "rise-pytorch" or app_name == "marvel-pytorch":
         resp = await handle_text(request, app_name)
+        return resp
+    elif app_name == "image-segmentation":
+        resp = await handle_segmentation(request, app_name)
         return resp
     elif app_name in responses:
         resp = await handle_vision(request, app_name)

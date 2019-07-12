@@ -9,7 +9,9 @@ from google.protobuf.internal.containers import (
     RepeatedScalarFieldContainer as google___protobuf___internal___containers___RepeatedScalarFieldContainer,
 )
 
-from google.protobuf.message import Message as google___protobuf___message___Message
+from google.protobuf.message import (
+    Message as google___protobuf___message___Message,
+)
 
 from typing import (
     Iterable as typing___Iterable,
@@ -20,7 +22,10 @@ from typing import (
     cast as typing___cast,
 )
 
-from typing_extensions import Literal as typing_extensions___Literal
+from typing_extensions import (
+    Literal as typing_extensions___Literal,
+)
+
 
 class ModelCategory(int):
     DESCRIPTOR: google___protobuf___descriptor___EnumDescriptor = ...
@@ -34,12 +39,14 @@ class ModelCategory(int):
     def values(cls) -> typing___List[ModelCategory]: ...
     @classmethod
     def items(cls) -> typing___List[typing___Tuple[str, ModelCategory]]: ...
-
-VisionClassification = typing___cast(ModelCategory, 0)
-TextGeneration = typing___cast(ModelCategory, 1)
+VISIONCLASSIFICATION = typing___cast(ModelCategory, 0)
+TEXTGENERATION = typing___cast(ModelCategory, 1)
+IMAGESEGMENTATION = typing___cast(ModelCategory, 2)
 
 class GetModelsReq(google___protobuf___message___Message):
-    def __init__(self,) -> None: ...
+
+    def __init__(self,
+        ) -> None: ...
     @classmethod
     def FromString(cls, s: bytes) -> GetModelsReq: ...
     def MergeFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
@@ -47,218 +54,185 @@ class GetModelsReq(google___protobuf___message___Message):
 
 class GetModelsResp(google___protobuf___message___Message):
     class Model(google___protobuf___message___Message):
-        model_name = ...  # type: typing___Text
-        model_category = ...  # type: ModelCategory
-        def __init__(
-            self,
-            model_name: typing___Optional[typing___Text] = None,
-            model_category: typing___Optional[ModelCategory] = None,
-        ) -> None: ...
+        model_name = ... # type: typing___Text
+        model_category = ... # type: ModelCategory
+
+        def __init__(self,
+            model_name : typing___Optional[typing___Text] = None,
+            model_category : typing___Optional[ModelCategory] = None,
+            ) -> None: ...
         @classmethod
         def FromString(cls, s: bytes) -> GetModelsResp.Model: ...
-        def MergeFrom(
-            self, other_msg: google___protobuf___message___Message
-        ) -> None: ...
-        def CopyFrom(
-            self, other_msg: google___protobuf___message___Message
-        ) -> None: ...
+        def MergeFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
+        def CopyFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
         if sys.version_info >= (3,):
-            def ClearField(
-                self,
-                field_name: typing_extensions___Literal[
-                    u"model_category", u"model_name"
-                ],
-            ) -> None: ...
+            def ClearField(self, field_name: typing_extensions___Literal[u"model_category",u"model_name"]) -> None: ...
         else:
-            def ClearField(
-                self,
-                field_name: typing_extensions___Literal[
-                    b"model_category", b"model_name"
-                ],
-            ) -> None: ...
+            def ClearField(self, field_name: typing_extensions___Literal[b"model_category",b"model_name"]) -> None: ...
+
+
     @property
-    def models(
-        self
-    ) -> google___protobuf___internal___containers___RepeatedCompositeFieldContainer[
-        GetModelsResp.Model
-    ]: ...
-    def __init__(
-        self, models: typing___Optional[typing___Iterable[GetModelsResp.Model]] = None
-    ) -> None: ...
+    def models(self) -> google___protobuf___internal___containers___RepeatedCompositeFieldContainer[GetModelsResp.Model]: ...
+
+    def __init__(self,
+        models : typing___Optional[typing___Iterable[GetModelsResp.Model]] = None,
+        ) -> None: ...
     @classmethod
     def FromString(cls, s: bytes) -> GetModelsResp: ...
     def MergeFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
     def CopyFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
     if sys.version_info >= (3,):
-        def ClearField(
-            self, field_name: typing_extensions___Literal[u"models"]
-        ) -> None: ...
+        def ClearField(self, field_name: typing_extensions___Literal[u"models"]) -> None: ...
     else:
-        def ClearField(
-            self, field_name: typing_extensions___Literal[b"models"]
-        ) -> None: ...
+        def ClearField(self, field_name: typing_extensions___Literal[b"models"]) -> None: ...
 
 class TextGenerationRequest(google___protobuf___message___Message):
-    input_phrase = ...  # type: typing___Text
-    temperature = ...  # type: float
-    model_name = ...  # type: typing___Text
-    def __init__(
-        self,
-        input_phrase: typing___Optional[typing___Text] = None,
-        temperature: typing___Optional[float] = None,
-        model_name: typing___Optional[typing___Text] = None,
-    ) -> None: ...
+    input_phrase = ... # type: typing___Text
+    temperature = ... # type: float
+    model_name = ... # type: typing___Text
+
+    def __init__(self,
+        input_phrase : typing___Optional[typing___Text] = None,
+        temperature : typing___Optional[float] = None,
+        model_name : typing___Optional[typing___Text] = None,
+        ) -> None: ...
     @classmethod
     def FromString(cls, s: bytes) -> TextGenerationRequest: ...
     def MergeFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
     def CopyFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
     if sys.version_info >= (3,):
-        def ClearField(
-            self,
-            field_name: typing_extensions___Literal[
-                u"input_phrase", u"model_name", u"temperature"
-            ],
-        ) -> None: ...
+        def ClearField(self, field_name: typing_extensions___Literal[u"input_phrase",u"model_name",u"temperature"]) -> None: ...
     else:
-        def ClearField(
-            self,
-            field_name: typing_extensions___Literal[
-                b"input_phrase", b"model_name", b"temperature"
-            ],
-        ) -> None: ...
+        def ClearField(self, field_name: typing_extensions___Literal[b"input_phrase",b"model_name",b"temperature"]) -> None: ...
 
 class TextGenerationResponse(google___protobuf___message___Message):
-    generated_texts = (
-        ...
-    )  # type: google___protobuf___internal___containers___RepeatedScalarFieldContainer[typing___Text]
-    def __init__(
-        self,
-        generated_texts: typing___Optional[typing___Iterable[typing___Text]] = None,
-    ) -> None: ...
+    generated_texts = ... # type: google___protobuf___internal___containers___RepeatedScalarFieldContainer[typing___Text]
+
+    def __init__(self,
+        generated_texts : typing___Optional[typing___Iterable[typing___Text]] = None,
+        ) -> None: ...
     @classmethod
     def FromString(cls, s: bytes) -> TextGenerationResponse: ...
     def MergeFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
     def CopyFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
     if sys.version_info >= (3,):
-        def ClearField(
-            self, field_name: typing_extensions___Literal[u"generated_texts"]
-        ) -> None: ...
+        def ClearField(self, field_name: typing_extensions___Literal[u"generated_texts"]) -> None: ...
     else:
-        def ClearField(
-            self, field_name: typing_extensions___Literal[b"generated_texts"]
-        ) -> None: ...
+        def ClearField(self, field_name: typing_extensions___Literal[b"generated_texts"]) -> None: ...
 
 class VisionClassificationRequest(google___protobuf___message___Message):
-    input_image = ...  # type: typing___Text
-    num_returns = ...  # type: int
-    model_name = ...  # type: typing___Text
-    def __init__(
-        self,
-        input_image: typing___Optional[typing___Text] = None,
-        num_returns: typing___Optional[int] = None,
-        model_name: typing___Optional[typing___Text] = None,
-    ) -> None: ...
+    input_image = ... # type: typing___Text
+    num_returns = ... # type: int
+    model_name = ... # type: typing___Text
+
+    def __init__(self,
+        input_image : typing___Optional[typing___Text] = None,
+        num_returns : typing___Optional[int] = None,
+        model_name : typing___Optional[typing___Text] = None,
+        ) -> None: ...
     @classmethod
     def FromString(cls, s: bytes) -> VisionClassificationRequest: ...
     def MergeFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
     def CopyFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
     if sys.version_info >= (3,):
-        def ClearField(
-            self,
-            field_name: typing_extensions___Literal[
-                u"input_image", u"model_name", u"num_returns"
-            ],
-        ) -> None: ...
+        def ClearField(self, field_name: typing_extensions___Literal[u"input_image",u"model_name",u"num_returns"]) -> None: ...
     else:
-        def ClearField(
-            self,
-            field_name: typing_extensions___Literal[
-                b"input_image", b"model_name", b"num_returns"
-            ],
-        ) -> None: ...
+        def ClearField(self, field_name: typing_extensions___Literal[b"input_image",b"model_name",b"num_returns"]) -> None: ...
 
 class VisionClassificationResponse(google___protobuf___message___Message):
     class Result(google___protobuf___message___Message):
-        rank = ...  # type: int
-        category = ...  # type: typing___Text
-        proba = ...  # type: float
-        def __init__(
-            self,
-            rank: typing___Optional[int] = None,
-            category: typing___Optional[typing___Text] = None,
-            proba: typing___Optional[float] = None,
-        ) -> None: ...
+        rank = ... # type: int
+        category = ... # type: typing___Text
+        proba = ... # type: float
+
+        def __init__(self,
+            rank : typing___Optional[int] = None,
+            category : typing___Optional[typing___Text] = None,
+            proba : typing___Optional[float] = None,
+            ) -> None: ...
         @classmethod
         def FromString(cls, s: bytes) -> VisionClassificationResponse.Result: ...
-        def MergeFrom(
-            self, other_msg: google___protobuf___message___Message
-        ) -> None: ...
-        def CopyFrom(
-            self, other_msg: google___protobuf___message___Message
-        ) -> None: ...
+        def MergeFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
+        def CopyFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
         if sys.version_info >= (3,):
-            def ClearField(
-                self,
-                field_name: typing_extensions___Literal[u"category", u"proba", u"rank"],
-            ) -> None: ...
+            def ClearField(self, field_name: typing_extensions___Literal[u"category",u"proba",u"rank"]) -> None: ...
         else:
-            def ClearField(
-                self,
-                field_name: typing_extensions___Literal[b"category", b"proba", b"rank"],
-            ) -> None: ...
+            def ClearField(self, field_name: typing_extensions___Literal[b"category",b"proba",b"rank"]) -> None: ...
+
+
     @property
-    def results(
-        self
-    ) -> google___protobuf___internal___containers___RepeatedCompositeFieldContainer[
-        VisionClassificationResponse.Result
-    ]: ...
-    def __init__(
-        self,
-        results: typing___Optional[
-            typing___Iterable[VisionClassificationResponse.Result]
-        ] = None,
-    ) -> None: ...
+    def results(self) -> google___protobuf___internal___containers___RepeatedCompositeFieldContainer[VisionClassificationResponse.Result]: ...
+
+    def __init__(self,
+        results : typing___Optional[typing___Iterable[VisionClassificationResponse.Result]] = None,
+        ) -> None: ...
     @classmethod
     def FromString(cls, s: bytes) -> VisionClassificationResponse: ...
     def MergeFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
     def CopyFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
     if sys.version_info >= (3,):
-        def ClearField(
-            self, field_name: typing_extensions___Literal[u"results"]
-        ) -> None: ...
+        def ClearField(self, field_name: typing_extensions___Literal[u"results"]) -> None: ...
     else:
-        def ClearField(
-            self, field_name: typing_extensions___Literal[b"results"]
+        def ClearField(self, field_name: typing_extensions___Literal[b"results"]) -> None: ...
+
+class ImageSegmentationRequest(google___protobuf___message___Message):
+    input_image = ... # type: typing___Text
+    model_name = ... # type: typing___Text
+
+    def __init__(self,
+        input_image : typing___Optional[typing___Text] = None,
+        model_name : typing___Optional[typing___Text] = None,
         ) -> None: ...
+    @classmethod
+    def FromString(cls, s: bytes) -> ImageSegmentationRequest: ...
+    def MergeFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
+    def CopyFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
+    if sys.version_info >= (3,):
+        def ClearField(self, field_name: typing_extensions___Literal[u"input_image",u"model_name"]) -> None: ...
+    else:
+        def ClearField(self, field_name: typing_extensions___Literal[b"input_image",b"model_name"]) -> None: ...
+
+class ImageSegmentationResponse(google___protobuf___message___Message):
+    output_image = ... # type: typing___Text
+
+    def __init__(self,
+        output_image : typing___Optional[typing___Text] = None,
+        ) -> None: ...
+    @classmethod
+    def FromString(cls, s: bytes) -> ImageSegmentationResponse: ...
+    def MergeFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
+    def CopyFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
+    if sys.version_info >= (3,):
+        def ClearField(self, field_name: typing_extensions___Literal[u"output_image"]) -> None: ...
+    else:
+        def ClearField(self, field_name: typing_extensions___Literal[b"output_image"]) -> None: ...
 
 class ImageDownloadRequest(google___protobuf___message___Message):
-    url = ...  # type: typing___Text
-    def __init__(self, url: typing___Optional[typing___Text] = None) -> None: ...
+    url = ... # type: typing___Text
+
+    def __init__(self,
+        url : typing___Optional[typing___Text] = None,
+        ) -> None: ...
     @classmethod
     def FromString(cls, s: bytes) -> ImageDownloadRequest: ...
     def MergeFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
     def CopyFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
     if sys.version_info >= (3,):
-        def ClearField(
-            self, field_name: typing_extensions___Literal[u"url"]
-        ) -> None: ...
+        def ClearField(self, field_name: typing_extensions___Literal[u"url"]) -> None: ...
     else:
-        def ClearField(
-            self, field_name: typing_extensions___Literal[b"url"]
-        ) -> None: ...
+        def ClearField(self, field_name: typing_extensions___Literal[b"url"]) -> None: ...
 
 class ImageDownloadResponse(google___protobuf___message___Message):
-    image = ...  # type: typing___Text
-    def __init__(self, image: typing___Optional[typing___Text] = None) -> None: ...
+    image = ... # type: typing___Text
+
+    def __init__(self,
+        image : typing___Optional[typing___Text] = None,
+        ) -> None: ...
     @classmethod
     def FromString(cls, s: bytes) -> ImageDownloadResponse: ...
     def MergeFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
     def CopyFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
     if sys.version_info >= (3,):
-        def ClearField(
-            self, field_name: typing_extensions___Literal[u"image"]
-        ) -> None: ...
+        def ClearField(self, field_name: typing_extensions___Literal[u"image"]) -> None: ...
     else:
-        def ClearField(
-            self, field_name: typing_extensions___Literal[b"image"]
-        ) -> None: ...
+        def ClearField(self, field_name: typing_extensions___Literal[b"image"]) -> None: ...

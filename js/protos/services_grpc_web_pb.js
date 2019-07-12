@@ -198,6 +198,61 @@ proto.ModelPromiseClient.prototype.textGeneration =
 /**
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.ImageSegmentationRequest,
+ *   !proto.ImageSegmentationResponse>}
+ */
+const methodInfo_Model_ImageSegmentation = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.ImageSegmentationResponse,
+  /** @param {!proto.ImageSegmentationRequest} request */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.ImageSegmentationResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.ImageSegmentationRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.Error, ?proto.ImageSegmentationResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.ImageSegmentationResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.ModelClient.prototype.imageSegmentation =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/Model/ImageSegmentation',
+      request,
+      metadata || {},
+      methodInfo_Model_ImageSegmentation,
+      callback);
+};
+
+
+/**
+ * @param {!proto.ImageSegmentationRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.ImageSegmentationResponse>}
+ *     A native promise that resolves to the response
+ */
+proto.ModelPromiseClient.prototype.imageSegmentation =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/Model/ImageSegmentation',
+      request,
+      metadata || {},
+      methodInfo_Model_ImageSegmentation);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
  *   !proto.ImageDownloadRequest,
  *   !proto.ImageDownloadResponse>}
  */

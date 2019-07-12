@@ -3,7 +3,7 @@ import { Card, Row, Col, Upload, Icon, Button, Input, Alert } from "antd";
 import { DefaultImages } from "./Constants";
 import { b64Encode } from "./Utils";
 import { ImageDownloadRequest } from "protos/services_pb";
-import { SingleImage } from "./CVClassifier";
+import { SingleImage } from "./ImSegGenerator";
 import { ClientContext } from "../App";
 
 interface IDImgTuple {
@@ -11,11 +11,11 @@ interface IDImgTuple {
   comp: JSX.Element;
 }
 
-interface InferecePageProp {
+interface ImSegInferencePage {
   modelNameSelected: string;
 }
 
-export const CVInferencePage: FC<InferecePageProp> = props => {
+export const ImSegInferencePage: FC<ImSegInferencePage> = props => {
   const [addedImages, setAddedImages] = useState<IDImgTuple[]>([]);
   const [imageIDCoutner, setImageIDCounter] = useState(0);
   const [imageURL, setImageURL] = useState("");

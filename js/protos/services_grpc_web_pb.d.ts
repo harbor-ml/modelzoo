@@ -5,6 +5,8 @@ import {
   GetModelsResp,
   ImageDownloadRequest,
   ImageDownloadResponse,
+  ImageSegmentationRequest,
+  ImageSegmentationResponse,
   TextGenerationRequest,
   TextGenerationResponse,
   VisionClassificationRequest,
@@ -28,6 +30,13 @@ export class ModelClient {
     callback: (err: grpcWeb.Error,
                response: TextGenerationResponse) => void
   ): grpcWeb.ClientReadableStream<TextGenerationResponse>;
+
+  imageSegmentation(
+    request: ImageSegmentationRequest,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.Error,
+               response: ImageSegmentationResponse) => void
+  ): grpcWeb.ClientReadableStream<ImageSegmentationResponse>;
 
   getImage(
     request: ImageDownloadRequest,
@@ -59,6 +68,11 @@ export class ModelPromiseClient {
     request: TextGenerationRequest,
     metadata?: grpcWeb.Metadata
   ): Promise<TextGenerationResponse>;
+
+  imageSegmentation(
+    request: ImageSegmentationRequest,
+    metadata?: grpcWeb.Metadata
+  ): Promise<ImageSegmentationResponse>;
 
   getImage(
     request: ImageDownloadRequest,

@@ -29,7 +29,7 @@ static_resources:
             virtual_hosts:
             - name: js_service
               domains:
-              - modelzoo.live
+              - '*'
               routes:
               - match:
                   prefix: /

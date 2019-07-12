@@ -176,6 +176,46 @@ export namespace VisionClassificationResponse {
 
 }
 
+export class ImageSegmentationRequest extends jspb.Message {
+  getInputImage(): string;
+  setInputImage(value: string): void;
+
+  getModelName(): string;
+  setModelName(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ImageSegmentationRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ImageSegmentationRequest): ImageSegmentationRequest.AsObject;
+  static serializeBinaryToWriter(message: ImageSegmentationRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ImageSegmentationRequest;
+  static deserializeBinaryFromReader(message: ImageSegmentationRequest, reader: jspb.BinaryReader): ImageSegmentationRequest;
+}
+
+export namespace ImageSegmentationRequest {
+  export type AsObject = {
+    inputImage: string,
+    modelName: string,
+  }
+}
+
+export class ImageSegmentationResponse extends jspb.Message {
+  getOutputImage(): string;
+  setOutputImage(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ImageSegmentationResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ImageSegmentationResponse): ImageSegmentationResponse.AsObject;
+  static serializeBinaryToWriter(message: ImageSegmentationResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ImageSegmentationResponse;
+  static deserializeBinaryFromReader(message: ImageSegmentationResponse, reader: jspb.BinaryReader): ImageSegmentationResponse;
+}
+
+export namespace ImageSegmentationResponse {
+  export type AsObject = {
+    outputImage: string,
+  }
+}
+
 export class ImageDownloadRequest extends jspb.Message {
   getUrl(): string;
   setUrl(value: string): void;
@@ -215,4 +255,5 @@ export namespace ImageDownloadResponse {
 export enum ModelCategory { 
   VISIONCLASSIFICATION = 0,
   TEXTGENERATION = 1,
+  IMAGESEGMENTATION = 2,
 }
