@@ -19,16 +19,16 @@ import { Error as grpcError } from "grpc-web";
 import { round } from "./Utils";
 import {
   VisionClassificationRequest,
-  VisionClassificationResponse
+  ModelResponse
 } from "protos/services_pb";
-
+import { getResult } from "./Results";
 import { ModelClient } from "protos/services_grpc_web_pb";
 
 import { ClientContext } from "../App";
 
 interface ImageState {
   img: string;
-  predResult: VisionClassificationResponse.Result[] | null;
+  predResult: ModelResponse | null;
   predbuttonShown: boolean;
   resultCardShown: boolean;
   numReturns: number;
@@ -47,10 +47,10 @@ enum ImageAction {
 }
 
 type newImageType = string;
-type newResultType = VisionClassificationResponse.Result[] | null;
+type newResultType = ModelResponse | null;
 type callbackType = (
   err: grpcError,
-  response: VisionClassificationResponse
+  response: ModelResponse
 ) => void;
 type newNumReturnsType = number;
 const NoPayload: string = "No Payload";
@@ -68,7 +68,7 @@ interface ActionPayload {
 function initImageState(props: SingleImageProp): ImageState {
   return {
     img: props.img,
-    predResult: [],
+    predResult: null,
     predbuttonShown: true,
     resultCardShown: false,
     numReturns: 3,
@@ -206,7 +206,7 @@ export const SingleImage: FC<SingleImageProp> = props => {
                     if (err == null) {
                       dispatch({
                         type: ImageAction.ShowResult,
-                        data: response.getResultsList()
+                        data: response
                       });
                     } else {
                       dispatch({
@@ -225,26 +225,7 @@ export const SingleImage: FC<SingleImageProp> = props => {
 
         {state.resultCardShown && (
           <Card.Grid style={{ ...gridStyle, width: "60%" }}>
-            {state.predResult != null ? (
-              <Table
-                dataSource={state.predResult
-                  .slice(0, state.numReturns)
-                  .map(e => e.toObject())}
-                rowKey={"rank"}
-                pagination={{ pageSize: 3 }}
-                columns={[
-                  {
-                    dataIndex: "category",
-                    title: "Category"
-                  },
-                  {
-                    dataIndex: "proba",
-                    title: "Normalized Probability",
-                    render: f => round(f, 4)
-                  }
-                ]}
-              />
-            ) : (
+            {state.predResult != null ? (getResult(state.predResult)) : (
               <div>
                 <Icon type="warning" />
 

@@ -12,8 +12,11 @@ import { Error as grpcError } from "grpc-web";
 import { ModelClient } from "protos/services_grpc_web_pb";
 import {
   TextGenerationRequest,
-  TextGenerationResponse
+  ModelResponse
 } from "protos/services_pb";
+import {
+  getResult
+} from "./Results";
 import React, {
   CSSProperties,
   FC,
@@ -30,7 +33,7 @@ const Filter = require("bad-words"),
 
 interface TextState {
   inputPhrase: string;
-  predResult: TextGenerationResponse | null;
+  predResult: ModelResponse | null;
   predbuttonShown: boolean;
   resultCardShown: boolean;
   temperature: number;
@@ -49,8 +52,8 @@ enum TextAction {
 }
 
 type newTextType = string;
-type newResultType = TextGenerationResponse | null;
-type callbackType = (err: grpcError, response: TextGenerationResponse) => void;
+type newResultType = ModelResponse | null;
+type callbackType = (err: grpcError, response: ModelResponse) => void;
 type temperatureType = number;
 const NoPayload: string = "No Payload";
 interface ActionPayload {
@@ -208,26 +211,7 @@ export const SingleText: FC<SingleTextProp> = props => {
 
         {state.resultCardShown && (
           <Card.Grid style={{ ...gridStyle, width: "60%" }}>
-            {state.predResult != null ? (
-              <Collapse
-                activeKey={state.predResult
-                  .getGeneratedTextsList()
-                  .map((_, i) => i.toString())}
-              >
-                {state.predResult
-                  .getGeneratedTextsList()
-                  .map((paragraph, i) => {
-                    return (
-                      <Collapse.Panel header="" key={i.toString()}>
-
-                        {paragraph.split("\n").map((item, i) => {
-                          return <p key={i}>{filter.clean(item)}</p>;
-                        })}
-                      </Collapse.Panel>
-                    );
-                  })}
-              </Collapse>
-            ) : (
+            {state.predResult != null ? (getResult(state.predResult)) : (
               <div>
                 <Icon type="warning" />
 

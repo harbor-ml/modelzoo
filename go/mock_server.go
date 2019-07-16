@@ -92,7 +92,7 @@ func (s *mockModelServer) ListModels(
 
 func (s *mockModelServer) VisionClassification(
 	c context.Context, req *services.VisionClassificationRequest) (
-	*services.VisionClassificationResponse, error) {
+	*services.ModelResponse, error) {
 
 	serializedReq, err := proto.Marshal(req)
 	panicIf(err)
@@ -100,7 +100,7 @@ func (s *mockModelServer) VisionClassification(
 	payload := map[string]string{"input": encodedReq}
 	modelAddr := fmt.Sprintf(modelAddrTemplate, req.GetModelName())
 	resp := postJSON(modelAddr, payload)
-	val := &services.VisionClassificationResponse{}
+	val := &services.ModelResponse{}
 	decoded, err := base64.StdEncoding.DecodeString(resp["output"].(string))
 	panicIf(err)
 	proto.Unmarshal(decoded, val)
@@ -111,15 +111,16 @@ func (s *mockModelServer) VisionClassification(
 
 func (s *mockModelServer) ImageSegmentation(
 	c context.Context, req *services.ImageSegmentationRequest) (
-	*services.ImageSegmentationResponse, error) {
+	*services.ModelResponse, error) {
 
 	serializedReq, err := proto.Marshal(req)
 	panicIf(err)
 	encodedReq := base64.StdEncoding.EncodeToString(serializedReq)
 	payload := map[string]string{"input": encodedReq}
 	modelAddr := fmt.Sprintf(modelAddrTemplate, req.GetModelName())
+	log.Println(modelAddr)
 	resp := postJSON(modelAddr, payload)
-	val := &services.ImageSegmentationResponse{}
+	val := &services.ModelResponse{}
 	decoded, err := base64.StdEncoding.DecodeString(resp["output"].(string))
 	panicIf(err)
 	proto.Unmarshal(decoded, val)
@@ -130,7 +131,7 @@ func (s *mockModelServer) ImageSegmentation(
 
 func (s *mockModelServer) TextGeneration(
 	c context.Context, req *services.TextGenerationRequest) (
-	*services.TextGenerationResponse, error) {
+	*services.ModelResponse, error) {
 
 	serializedReq, err := proto.Marshal(req)
 	panicIf(err)
@@ -143,7 +144,7 @@ func (s *mockModelServer) TextGeneration(
 	if resp["default"].(bool) {
 		panic(resp["default_reason"])
 	}
-	val := &services.TextGenerationResponse{}
+	val := &services.ModelResponse{}
 
 	decoded, err := base64.StdEncoding.DecodeString(resp["output"].(string))
 	panicIf(err)

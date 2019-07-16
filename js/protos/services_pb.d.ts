@@ -57,6 +57,36 @@ export namespace GetModelsResp {
 
 }
 
+export class ModelResponse extends jspb.Message {
+  getTypestring(): string;
+  setTypeString(value: string): void;
+
+  getText(): TextGenerationResponse;
+  setText(value: TextGenerationResponse): void;
+
+  getVision(): VisionClassificationResponse;
+  setVision(value: VisionClassificationResponse): void;
+
+  getSegment(): ImageSegmentationResponse;
+  setSegment(value: ImageSegmentationResponse): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ModelResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ModelResponse): ModelResponse.AsObject;
+  static serializeBinaryToWriter(message: ModelResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ModelResponse;
+  static deserializeBinaryFromReader(message: ModelResponse, reader: jspb.BinaryReader): ModelResponse;
+}
+
+export namespace ModelResponse {
+  export type AsObject = {
+    typeString: string,
+    text: TextGenerationResponse.AsObject,
+    vision: VisionClassificationResponse.AsObject,
+    segment: ImageSegmentationResponse.AsObject
+  }
+}
+
 export class TextGenerationRequest extends jspb.Message {
   getInputPhrase(): string;
   setInputPhrase(value: string): void;
@@ -101,6 +131,7 @@ export namespace TextGenerationResponse {
   export type AsObject = {
     generatedTextsList: Array<string>,
   }
+
 }
 
 export class VisionClassificationRequest extends jspb.Message {
