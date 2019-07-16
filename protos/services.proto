@@ -8,6 +8,13 @@ enum ModelCategory {
 
 message GetModelsReq {}
 
+message ModelResponse {
+  string typeString = 1;
+    TextGenerationResponse text = 2;
+    VisionClassificationResponse vision = 3;
+    ImageSegmentationResponse segment = 4;
+}
+
 message GetModelsResp {
   message Model {
     string model_name = 1;
@@ -62,13 +69,13 @@ message ImageDownloadResponse {
 
 service Model {
   rpc VisionClassification(VisionClassificationRequest)
-      returns (VisionClassificationResponse) {}
+      returns (ModelResponse) {}
 
   rpc TextGeneration(TextGenerationRequest)
-      returns (TextGenerationResponse) {}
+      returns (ModelResponse) {}
 
   rpc ImageSegmentation(ImageSegmentationRequest)
-      returns (ImageSegmentationResponse) {}
+      returns (ModelResponse) {}
 
   rpc GetImage(ImageDownloadRequest) returns (ImageDownloadResponse) {}
   rpc ListModels(GetModelsReq) returns (GetModelsResp) {}

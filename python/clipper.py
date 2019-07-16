@@ -12,7 +12,8 @@ from protos.services_pb2 import (
     VisionClassificationRequest,
     VisionClassificationResponse,
     ImageSegmentationRequest,
-    ImageSegmentationResponse
+    ImageSegmentationResponse,
+    ModelResponse
 )
 from starlette.applications import Starlette
 from starlette.middleware.cors import CORSMiddleware
@@ -43,7 +44,8 @@ def make_resp(req: VisionClassificationRequest):
         single_result.rank = i + 1
         single_result.category = np.random.choice(CATEGORIES)
         single_result.proba = 0.77
-    return base64.b64encode(r.SerializeToString()).decode()
+    resp = ModelResponse(typeString="vision", vision=r)
+    return base64.b64encode(resp.SerializeToString()).decode()
 
 responses = {
     "fail": generate_clipper_resp(True, "failed output"),
@@ -64,7 +66,8 @@ async def handle_text(request: Request, app_name: str):
         f"This is generated text for {req.input_phrase}, temp: {req.temperature:.2f}"
     )
     r = TextGenerationResponse(generated_texts=[generated_text for _ in range(3)])
-    encoded = base64.b64encode(r.SerializeToString()).decode()
+    resp = ModelResponse(typeString="text", text=r)
+    encoded = base64.b64encode(resp.SerializeToString()).decode()
 
     resp = responses[app_name].copy()
     resp["output"] = encoded
@@ -99,7 +102,8 @@ async def handle_segmentation(request: Request, app_name: str):
     img_str = base64.b64encode(buffered.getvalue()).decode()
     string = u'data:%s;base64,%s' % (mimetypes.types_map['.jpg'], img_str)
     r = ImageSegmentationResponse(output_image=string)
-    encoded = base64.b64encode(r.SerializeToString()).decode()
+    resp = ModelResponse(typeString="segment", segment=r)
+    encoded = base64.b64encode(resp.SerializeToString()).decode()
 
     resp = responses[app_name].copy()
     resp["output"] = encoded
@@ -116,7 +120,7 @@ async def homepage(request: Request):
         resp = await handle_segmentation(request, app_name)
         return resp
     elif app_name in responses:
-        resp = await handle_vision(request, app_name)
+        resp = await handle_segmentation(request, app_name)
         return resp
     else:
         return JSONResponse({"avaiable_apps": list(responses.keys())})

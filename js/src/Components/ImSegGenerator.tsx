@@ -19,16 +19,18 @@ import React, {
   import { round } from "./Utils";
   import {
     ImageSegmentationRequest,
-    ImageSegmentationResponse
+    ModelResponse
   } from "protos/services_pb";
   
+import { getResult } from "./Results";
+
   import { ModelClient } from "protos/services_grpc_web_pb";
   
   import { ClientContext } from "../App";
   
   interface ImageState {
     img: string;
-    predResult: ImageSegmentationResponse | null;
+    predResult: ModelResponse | null;
     predbuttonShown: boolean;
     resultCardShown: boolean;
     startInferneceTime?: DOMHighResTimeStamp;
@@ -45,10 +47,10 @@ import React, {
   }
   
   type newImageType = string;
-  type newResultType = ImageSegmentationResponse | null;
+  type newResultType = ModelResponse | null;
   type callbackType = (
     err: grpcError,
-    response: ImageSegmentationResponse
+    response: ModelResponse
   ) => void;
   const NoPayload: string = "No Payload";
   interface ActionPayload {
@@ -196,15 +198,7 @@ import React, {
   
           {state.resultCardShown && (
             <Card.Grid style={{ ...gridStyle, width: "60%" }}>
-              {state.predResult != null ? (
-                <img
-                src={state.predResult.getOutputImage()}
-                height="auto"
-                width="80%"
-                alt=""
-                vertical-align="middle"
-              />
-              ) : (
+              {state.predResult != null ? (getResult(state.predResult)) : (
                 <div>
                   <Icon type="warning" />
   

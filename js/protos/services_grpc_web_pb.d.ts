@@ -6,11 +6,9 @@ import {
   ImageDownloadRequest,
   ImageDownloadResponse,
   ImageSegmentationRequest,
-  ImageSegmentationResponse,
   TextGenerationRequest,
-  TextGenerationResponse,
   VisionClassificationRequest,
-  VisionClassificationResponse} from './services_pb';
+  ModelResponse} from './services_pb';
 
 export class ModelClient {
   constructor (hostname: string,
@@ -21,22 +19,22 @@ export class ModelClient {
     request: VisionClassificationRequest,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
-               response: VisionClassificationResponse) => void
-  ): grpcWeb.ClientReadableStream<VisionClassificationResponse>;
+               response: ModelResponse) => void
+  ): grpcWeb.ClientReadableStream<ModelResponse>;
 
   textGeneration(
     request: TextGenerationRequest,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
-               response: TextGenerationResponse) => void
-  ): grpcWeb.ClientReadableStream<TextGenerationResponse>;
+               response: ModelResponse) => void
+  ): grpcWeb.ClientReadableStream<ModelResponse>;
 
   imageSegmentation(
     request: ImageSegmentationRequest,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
-               response: ImageSegmentationResponse) => void
-  ): grpcWeb.ClientReadableStream<ImageSegmentationResponse>;
+               response: ModelResponse) => void
+  ): grpcWeb.ClientReadableStream<ModelResponse>;
 
   getImage(
     request: ImageDownloadRequest,
@@ -62,17 +60,17 @@ export class ModelPromiseClient {
   visionClassification(
     request: VisionClassificationRequest,
     metadata?: grpcWeb.Metadata
-  ): Promise<VisionClassificationResponse>;
+  ): Promise<ModelResponse>;
 
   textGeneration(
     request: TextGenerationRequest,
     metadata?: grpcWeb.Metadata
-  ): Promise<TextGenerationResponse>;
+  ): Promise<ModelResponse>;
 
   imageSegmentation(
     request: ImageSegmentationRequest,
     metadata?: grpcWeb.Metadata
-  ): Promise<ImageSegmentationResponse>;
+  ): Promise<ModelResponse>;
 
   getImage(
     request: ImageDownloadRequest,
