@@ -118,7 +118,6 @@ func (s *mockModelServer) ImageSegmentation(
 	encodedReq := base64.StdEncoding.EncodeToString(serializedReq)
 	payload := map[string]string{"input": encodedReq}
 	modelAddr := fmt.Sprintf(modelAddrTemplate, req.GetModelName())
-	log.Println(modelAddr)
 	resp := postJSON(modelAddr, payload)
 	val := &services.ModelResponse{}
 	decoded, err := base64.StdEncoding.DecodeString(resp["output"].(string))
