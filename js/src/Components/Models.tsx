@@ -13,6 +13,8 @@ function getCategoryHumanName(cat: ModelCategory): string {
     return "vision";
   } else if (cat === ModelCategory.IMAGESEGMENTATION) {
     return "img-segmentation"
+  } else if (cat === ModelCategory.IMAGECAPTIONING) {
+    return "img-captioning"
   }
   return "";
 }
@@ -45,7 +47,7 @@ export const Models: FC = () => {
                 setInferencePage(<CVInferencePage modelNameSelected={val} />);
               } else if (cat === ModelCategory.TEXTGENERATION) {
                 setInferencePage(<NLPInferencePage modelNameSelected={val} />);
-              } else if (cat === ModelCategory.IMAGESEGMENTATION) {
+              } else if (cat === ModelCategory.IMAGESEGMENTATION || cat === ModelCategory.IMAGECAPTIONING) {
                 setInferencePage(<ImSegInferencePage modelNameSelected={val} />);
               }
             }}

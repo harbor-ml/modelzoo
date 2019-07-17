@@ -32,6 +32,7 @@ var avaiableModels = []*services.GetModelsResp_Model{
 	{ModelName: "rise-pytorch", ModelCategory: services.ModelCategory_TEXTGENERATION},
 	{ModelName: "marvel-pytorch", ModelCategory: services.ModelCategory_TEXTGENERATION},
 	{ModelName: "image-segmentation", ModelCategory: services.ModelCategory_IMAGESEGMENTATION},
+	{ModelName: "image-captioning", ModelCategory: services.ModelCategory_IMAGECAPTIONING},
 }
 
 func panicIf(e interface{}) {
