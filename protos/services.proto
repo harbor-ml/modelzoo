@@ -4,6 +4,7 @@ enum ModelCategory {
   VISIONCLASSIFICATION = 0;
   TEXTGENERATION = 1;
   IMAGESEGMENTATION = 2;
+  IMAGECAPTIONING = 3;
 }
 
 message GetModelsReq {}
