@@ -1,7 +1,7 @@
 import {
   Button,
   Card,
-  Collapse,
+  Input,
   Divider,
   Icon,
   InputNumber,
@@ -41,12 +41,14 @@ interface TextState {
   inferDuration?: number;
   props: SingleTextProp;
   client?: ModelClient;
+  token: string;
 }
 
 enum TextAction {
   Predict,
   ShowResult,
   SetTemperature,
+  SetToken,
   Close,
   SetClient
 }
@@ -74,7 +76,8 @@ function initTextState(props: SingleTextProp): TextState {
     predbuttonShown: true,
     resultCardShown: false,
     temperature: 0.7,
-    props: props
+    props: props,
+    token: ""
   };
 }
 
@@ -83,7 +86,8 @@ function singleTextReducer(state: TextState, action: ActionPayload): TextState {
     let request = new TextGenerationRequest();
     request.setInputPhrase(state.inputPhrase);
     request.setTemperature(state.temperature);
-    request.setModelName(state.props.modelName);
+    request.setModelUuid(state.props.uuid);
+    request.setToken(state.token);
     let startTS = performance.now();
     state.client!.textGeneration(request, {}, action.data as callbackType);
     return {
@@ -110,6 +114,11 @@ function singleTextReducer(state: TextState, action: ActionPayload): TextState {
       ...state,
       client: action.data as ModelClient
     };
+  } else if (action.type === TextAction.SetToken) {
+    return {
+      ...state,
+      token: action.data as newTextType
+    };
   }
   return { ...state };
 }
@@ -119,6 +128,7 @@ interface SingleTextProp {
   compID: number;
   removeFunc: Function;
   modelName: string;
+  uuid: string;
 }
 
 export const SingleText: FC<SingleTextProp> = props => {
@@ -181,7 +191,18 @@ export const SingleText: FC<SingleTextProp> = props => {
                 }
               }}
             />
-
+            <Divider />
+            <Tag>Token</Tag>
+            <Input
+              style={{ marginBottom: 32, width: 200 }}
+              onChange={val => {
+                if (val !== undefined) {
+                  dispatch({
+                    type: TextAction.SetToken,
+                    data: val.target.value
+                  });
+                }
+              }}/>
             <Divider />
 
             <Button

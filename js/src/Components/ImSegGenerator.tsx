@@ -9,9 +9,8 @@ import React, {
     Card,
     Row,
     Icon,
-    Table,
+    Input,
     Button,
-    InputNumber,
     Divider,
     Tag
   } from "antd";
@@ -37,11 +36,13 @@ import { getResult } from "./Results";
     inferDuration?: number;
     props: SingleImageProp;
     client?: ModelClient;
+    token: string;
   }
   
   enum ImageAction {
     Predict,
     ShowResult,
+    SetToken,
     Close,
     SetClient
   }
@@ -69,7 +70,8 @@ import { getResult } from "./Results";
       predResult: null,
       predbuttonShown: true,
       resultCardShown: false,
-      props: props
+      props: props,
+      token: ""
     };
   }
   
@@ -80,7 +82,8 @@ import { getResult } from "./Results";
     if (action.type === ImageAction.Predict) {
       let request = new ImageSegmentationRequest();
       request.setInputImage(state.img);
-      request.setModelName(state.props.modelName);
+      request.setModelUuid(state.props.uuid);
+      request.setToken(state.token);
       let startTS = performance.now();
       state.client!.imageSegmentation(
         request,
@@ -106,6 +109,11 @@ import { getResult } from "./Results";
         ...state,
         client: action.data as ModelClient
       };
+    } else if (action.type === ImageAction.SetToken) {
+      return {
+        ...state,
+        token: action.data as string
+      };
     }
     return { ...state };
   }
@@ -115,6 +123,7 @@ import { getResult } from "./Results";
     imgID: number;
     removeFunc: Function;
     modelName: string;
+    uuid: string;
   }
   
   export const SingleImage: FC<SingleImageProp> = props => {
@@ -171,6 +180,18 @@ import { getResult } from "./Results";
   
           {state.predbuttonShown && (
             <Card.Grid style={{ ...gridStyle, width: "70%" }}>
+            <Tag>Token</Tag>
+            <Input
+              style={{ marginBottom: 32, width: 200 }}
+              onChange={val => {
+                if (val !== undefined) {
+                  dispatch({
+                    type: ImageAction.SetToken,
+                    data: val.target.value
+                  });
+                }
+              }}/>
+              <Divider />
               <Button
                 onClick={() => {
                   dispatch({

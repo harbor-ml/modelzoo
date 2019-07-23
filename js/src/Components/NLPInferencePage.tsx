@@ -13,6 +13,7 @@ interface IDImgTuple {
 
 interface InferecePageProp {
   modelNameSelected: string;
+  modelUUID: string;
 }
 
 const defaultPhrase = "Serverless ";
@@ -37,6 +38,7 @@ export const NLPInferencePage: FC<InferecePageProp> = props => {
           compID={textIDCounter}
           removeFunc={removeTextComp}
           modelName={props.modelNameSelected}
+          uuid={props.modelUUID}
         />
       </Row>
     );

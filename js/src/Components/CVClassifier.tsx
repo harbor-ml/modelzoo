@@ -9,9 +9,9 @@ import {
   Card,
   Row,
   Icon,
-  Table,
   Button,
   InputNumber,
+  Input,
   Divider,
   Tag
 } from "antd";
@@ -36,12 +36,14 @@ interface ImageState {
   inferDuration?: number;
   props: SingleImageProp;
   client?: ModelClient;
+  token: string;
 }
 
 enum ImageAction {
   Predict,
   ShowResult,
   SetNumReturns,
+  SetToken,
   Close,
   SetClient
 }
@@ -72,7 +74,8 @@ function initImageState(props: SingleImageProp): ImageState {
     predbuttonShown: true,
     resultCardShown: false,
     numReturns: 3,
-    props: props
+    props: props,
+    token: ""
   };
 }
 
@@ -84,7 +87,8 @@ function singleImageReducer(
     let request = new VisionClassificationRequest();
     request.setInputImage(state.img);
     request.setNumReturns(state.numReturns);
-    request.setModelName(state.props.modelName);
+    request.setModelUuid(state.props.uuid);
+    request.setToken(state.token);
     let startTS = performance.now();
     state.client!.visionClassification(
       request,
@@ -115,6 +119,11 @@ function singleImageReducer(
       ...state,
       client: action.data as ModelClient
     };
+  } else if (action.type === ImageAction.SetToken) {
+    return {
+      ...state,
+      token: action.data as string
+    };
   }
   return { ...state };
 }
@@ -124,6 +133,7 @@ interface SingleImageProp {
   imgID: number;
   removeFunc: Function;
   modelName: string;
+  uuid: string;
 }
 
 export const SingleImage: FC<SingleImageProp> = props => {
@@ -195,7 +205,18 @@ export const SingleImage: FC<SingleImageProp> = props => {
                 }
               }}
             />
-
+            <Divider />
+            <Tag>Token</Tag>
+            <Input
+              style={{ marginBottom: 32, width: 200 }}
+              onChange={val => {
+                if (val !== undefined) {
+                  dispatch({
+                    type: ImageAction.SetToken,
+                    data: val.target.value
+                  });
+                }
+              }}/>
             <Divider />
 
             <Button

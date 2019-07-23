@@ -5,16 +5,23 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
 
+	"github.com/google/uuid"
+
 	panichandler "github.com/kazegusuri/grpc-panic-handler"
 	dataurl "github.com/vincent-petithory/dataurl"
 
+	dbtypes "modelzoo/go/dbtypes"
 	services "modelzoo/go/protos"
+
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 
 	proto "github.com/golang/protobuf/proto"
 	"google.golang.org/grpc"
@@ -26,14 +33,16 @@ const modelAddrTemplate string = "http://54.213.2.210:1337/%v/predict"
 
 // const modelAddrTemplate string = "http://mock-backend:8000/%v/predict"
 
-var avaiableModels = []*services.GetModelsResp_Model{
-	{ModelName: "res50-pytorch", ModelCategory: services.ModelCategory_VISIONCLASSIFICATION},
-	{ModelName: "squeezenet-pytorch", ModelCategory: services.ModelCategory_VISIONCLASSIFICATION},
-	{ModelName: "rise-pytorch", ModelCategory: services.ModelCategory_TEXTGENERATION},
-	{ModelName: "marvel-pytorch", ModelCategory: services.ModelCategory_TEXTGENERATION},
-	{ModelName: "image-segmentation", ModelCategory: services.ModelCategory_IMAGESEGMENTATION},
-	{ModelName: "image-captioning", ModelCategory: services.ModelCategory_IMAGECAPTIONING},
-}
+// var availableModels = []*services.GetModelsResp_Model{
+// 	{ModelName: "res50-pytorch", ModelCategory: services.ModelCategory_VISIONCLASSIFICATION},
+// 	{ModelName: "squeezenet-pytorch", ModelCategory: services.ModelCategory_VISIONCLASSIFICATION},
+// 	{ModelName: "rise-pytorch", ModelCategory: services.ModelCategory_TEXTGENERATION},
+// 	{ModelName: "marvel-pytorch", ModelCategory: services.ModelCategory_TEXTGENERATION},
+// 	{ModelName: "image-segmentation", ModelCategory: services.ModelCategory_IMAGESEGMENTATION},
+// 	{ModelName: "image-captioning", ModelCategory: services.ModelCategory_IMAGECAPTIONING},
+// }
+var availableModels = []dbtypes.Model{}
+var db *gorm.DB
 
 func panicIf(e interface{}) {
 	if e != nil {
@@ -85,12 +94,67 @@ func (s *mockModelServer) GetImage(
 func (s *mockModelServer) ListModels(
 	c context.Context, req *services.GetModelsReq) (
 	*services.GetModelsResp, error) {
+	models := make([]*services.GetModelsResp_Model, len(availableModels))
+	for ind, mod := range availableModels {
+		models[ind] = &services.GetModelsResp_Model{ModelName: mod.Name, ModelCategory: services.ModelCategory(mod.ModelCategory), Uuid: mod.ID.String()}
+	}
 	resp := &services.GetModelsResp{
-		Models: avaiableModels,
+		Models: models,
 	}
 	return resp, nil
 }
 
+func GetModel(idstring string) (dbtypes.Model, error) {
+	var m dbtypes.Model
+	id, err := uuid.Parse(idstring)
+	if err != nil {
+		return m, err
+	}
+	newdb := db.Where("id = ?", id).First(&m)
+	if newdb.Error != nil {
+		return m, err
+	}
+	return m, nil
+}
+
+func GetUserFromToken(token string) (dbtypes.User, error) {
+	var auth dbtypes.User
+	newdb := db.Where("token = ?", token).First(&auth)
+	if newdb.Error != nil {
+		return auth, newdb.Error
+	}
+	return auth, nil
+}
+
+func Authorize(token string, model dbtypes.Model) (bool, error) {
+	issuer, err := GetUserFromToken(token)
+	if token != "" && err != nil {
+		return false, err
+	}
+	if !model.Private || (err == nil && (issuer.Email == "rdurrani@berkeley.edu" || issuer.Email == "xmo@berkeley.edu")) {
+		return true, nil
+	}
+	var auth dbtypes.User
+	newdb := db.Where("id = ?", model.Author).First(&auth)
+	if newdb.Error != nil {
+		return false, newdb.Error
+	}
+	return auth.Token == token, nil
+}
+func GetModelName(token string, idstring string) (string, error) {
+	m, err := GetModel(idstring)
+	if err != nil {
+		return "Model does not exist", err
+	}
+	auth, nerr := Authorize(token, m)
+	if nerr != nil {
+		return "User does not exist", nerr
+	}
+	if !auth {
+		return "Failed to authorize", errors.New("Token incorrect or invalid!")
+	}
+	return m.Name, nil
+}
 func (s *mockModelServer) VisionClassification(
 	c context.Context, req *services.VisionClassificationRequest) (
 	*services.ModelResponse, error) {
@@ -99,7 +163,12 @@ func (s *mockModelServer) VisionClassification(
 	panicIf(err)
 	encodedReq := base64.StdEncoding.EncodeToString(serializedReq)
 	payload := map[string]string{"input": encodedReq}
-	modelAddr := fmt.Sprintf(modelAddrTemplate, req.GetModelName())
+	name, err := GetModelName(req.GetToken(), req.GetModelUuid())
+	if err != nil {
+		v := &services.TextGenerationResponse{GeneratedTexts: []string{name}}
+		return &services.ModelResponse{TypeString: "text", Text: v}, nil
+	}
+	modelAddr := fmt.Sprintf(modelAddrTemplate, name)
 	resp := postJSON(modelAddr, payload)
 	val := &services.ModelResponse{}
 	decoded, err := base64.StdEncoding.DecodeString(resp["output"].(string))
@@ -118,7 +187,12 @@ func (s *mockModelServer) ImageSegmentation(
 	panicIf(err)
 	encodedReq := base64.StdEncoding.EncodeToString(serializedReq)
 	payload := map[string]string{"input": encodedReq}
-	modelAddr := fmt.Sprintf(modelAddrTemplate, req.GetModelName())
+	name, err := GetModelName(req.GetToken(), req.GetModelUuid())
+	if err != nil {
+		v := &services.TextGenerationResponse{GeneratedTexts: []string{name}}
+		return &services.ModelResponse{TypeString: "text", Text: v}, nil
+	}
+	modelAddr := fmt.Sprintf(modelAddrTemplate, name)
 	resp := postJSON(modelAddr, payload)
 	val := &services.ModelResponse{}
 	decoded, err := base64.StdEncoding.DecodeString(resp["output"].(string))
@@ -137,7 +211,12 @@ func (s *mockModelServer) TextGeneration(
 	panicIf(err)
 	encodedReq := base64.StdEncoding.EncodeToString(serializedReq)
 	payload := map[string]string{"input": encodedReq}
-	modelAddr := fmt.Sprintf(modelAddrTemplate, req.GetModelName())
+	name, err := GetModelName(req.GetToken(), req.GetModelUuid())
+	if err != nil {
+		v := &services.TextGenerationResponse{GeneratedTexts: []string{name}}
+		return &services.ModelResponse{TypeString: "text", Text: v}, nil
+	}
+	modelAddr := fmt.Sprintf(modelAddrTemplate, name)
 	resp := postJSON(modelAddr, payload)
 	// log.Println(resp)
 
@@ -160,7 +239,14 @@ func main() {
 		panic(err)
 	}
 	log.Println("Server started, listening to port", port)
-
+	// Change this to whatever database you want to use.
+	db, err = gorm.Open("postgres", "host=34.213.216.228 port=5432 user=modelzoo")
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	log.Println("Database connection established")
+	db.Order("model_category, output_type, name").Find(&availableModels)
 	panichandler.InstallPanicHandler(panichandler.LogPanicDump)
 	uIntOpt := grpc.UnaryInterceptor(panichandler.UnaryPanicHandler)
 	sIntOpt := grpc.StreamInterceptor(panichandler.StreamPanicHandler)

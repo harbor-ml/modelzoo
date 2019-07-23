@@ -14,6 +14,42 @@ export namespace GetModelsReq {
   }
 }
 
+export class ModelResponse extends jspb.Message {
+  getTypestring(): string;
+  setTypestring(value: string): void;
+
+  getText(): TextGenerationResponse | undefined;
+  setText(value?: TextGenerationResponse): void;
+  hasText(): boolean;
+  clearText(): void;
+
+  getVision(): VisionClassificationResponse | undefined;
+  setVision(value?: VisionClassificationResponse): void;
+  hasVision(): boolean;
+  clearVision(): void;
+
+  getSegment(): ImageSegmentationResponse | undefined;
+  setSegment(value?: ImageSegmentationResponse): void;
+  hasSegment(): boolean;
+  clearSegment(): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ModelResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ModelResponse): ModelResponse.AsObject;
+  static serializeBinaryToWriter(message: ModelResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ModelResponse;
+  static deserializeBinaryFromReader(message: ModelResponse, reader: jspb.BinaryReader): ModelResponse;
+}
+
+export namespace ModelResponse {
+  export type AsObject = {
+    typestring: string,
+    text?: TextGenerationResponse.AsObject,
+    vision?: VisionClassificationResponse.AsObject,
+    segment?: ImageSegmentationResponse.AsObject,
+  }
+}
+
 export class GetModelsResp extends jspb.Message {
   getModelsList(): Array<GetModelsResp.Model>;
   setModelsList(value: Array<GetModelsResp.Model>): void;
@@ -40,6 +76,9 @@ export namespace GetModelsResp {
     getModelCategory(): ModelCategory;
     setModelCategory(value: ModelCategory): void;
 
+    getUuid(): string;
+    setUuid(value: string): void;
+
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): Model.AsObject;
     static toObject(includeInstance: boolean, msg: Model): Model.AsObject;
@@ -52,39 +91,10 @@ export namespace GetModelsResp {
     export type AsObject = {
       modelName: string,
       modelCategory: ModelCategory,
+      uuid: string,
     }
   }
 
-}
-
-export class ModelResponse extends jspb.Message {
-  getTypestring(): string;
-  setTypeString(value: string): void;
-
-  getText(): TextGenerationResponse;
-  setText(value: TextGenerationResponse): void;
-
-  getVision(): VisionClassificationResponse;
-  setVision(value: VisionClassificationResponse): void;
-
-  getSegment(): ImageSegmentationResponse;
-  setSegment(value: ImageSegmentationResponse): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ModelResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: ModelResponse): ModelResponse.AsObject;
-  static serializeBinaryToWriter(message: ModelResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ModelResponse;
-  static deserializeBinaryFromReader(message: ModelResponse, reader: jspb.BinaryReader): ModelResponse;
-}
-
-export namespace ModelResponse {
-  export type AsObject = {
-    typeString: string,
-    text: TextGenerationResponse.AsObject,
-    vision: VisionClassificationResponse.AsObject,
-    segment: ImageSegmentationResponse.AsObject
-  }
 }
 
 export class TextGenerationRequest extends jspb.Message {
@@ -94,8 +104,11 @@ export class TextGenerationRequest extends jspb.Message {
   getTemperature(): number;
   setTemperature(value: number): void;
 
-  getModelName(): string;
-  setModelName(value: string): void;
+  getModelUuid(): string;
+  setModelUuid(value: string): void;
+
+  getToken(): string;
+  setToken(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TextGenerationRequest.AsObject;
@@ -109,7 +122,8 @@ export namespace TextGenerationRequest {
   export type AsObject = {
     inputPhrase: string,
     temperature: number,
-    modelName: string,
+    modelUuid: string,
+    token: string,
   }
 }
 
@@ -131,7 +145,6 @@ export namespace TextGenerationResponse {
   export type AsObject = {
     generatedTextsList: Array<string>,
   }
-
 }
 
 export class VisionClassificationRequest extends jspb.Message {
@@ -141,8 +154,11 @@ export class VisionClassificationRequest extends jspb.Message {
   getNumReturns(): number;
   setNumReturns(value: number): void;
 
-  getModelName(): string;
-  setModelName(value: string): void;
+  getModelUuid(): string;
+  setModelUuid(value: string): void;
+
+  getToken(): string;
+  setToken(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): VisionClassificationRequest.AsObject;
@@ -156,7 +172,8 @@ export namespace VisionClassificationRequest {
   export type AsObject = {
     inputImage: string,
     numReturns: number,
-    modelName: string,
+    modelUuid: string,
+    token: string,
   }
 }
 
@@ -211,8 +228,11 @@ export class ImageSegmentationRequest extends jspb.Message {
   getInputImage(): string;
   setInputImage(value: string): void;
 
-  getModelName(): string;
-  setModelName(value: string): void;
+  getModelUuid(): string;
+  setModelUuid(value: string): void;
+
+  getToken(): string;
+  setToken(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ImageSegmentationRequest.AsObject;
@@ -225,7 +245,8 @@ export class ImageSegmentationRequest extends jspb.Message {
 export namespace ImageSegmentationRequest {
   export type AsObject = {
     inputImage: string,
-    modelName: string,
+    modelUuid: string,
+    token: string,
   }
 }
 

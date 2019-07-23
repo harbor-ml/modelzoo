@@ -1,11 +1,15 @@
 FROM modelzoolive/base
 
 RUN go get -u github.com/vincent-petithory/dataurl \
- && go get -u github.com/kazegusuri/grpc-panic-handler 
+ && go get -u github.com/kazegusuri/grpc-panic-handler \
+ && go get github.com/lib/pq \
+ && go get -u github.com/jinzhu/gorm \
+ && go get github.com/google/uuid
 
 RUN mkdir /go/src/modelzoo
 COPY go /go/src/modelzoo/go
 COPY protos /go/src/modelzoo/protos
+COPY go/dbtypes /go/src/modelzoo/dbtypes
 COPY Makefile /go/src/modelzoo
 
 WORKDIR /go/src/modelzoo
