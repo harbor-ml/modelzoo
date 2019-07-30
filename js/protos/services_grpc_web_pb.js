@@ -89,15 +89,15 @@ proto.ModelPromiseClient =
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
  *   !proto.VisionClassificationRequest,
- *   !proto.VisionClassificationResponse>}
+ *   !proto.ModelResponse>}
  */
 const methodInfo_Model_VisionClassification = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.VisionClassificationResponse,
+  proto.ModelResponse,
   /** @param {!proto.VisionClassificationRequest} request */
   function(request) {
     return request.serializeBinary();
   },
-  proto.VisionClassificationResponse.deserializeBinary
+  proto.ModelResponse.deserializeBinary
 );
 
 
@@ -106,9 +106,9 @@ const methodInfo_Model_VisionClassification = new grpc.web.AbstractClientBase.Me
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.VisionClassificationResponse)}
+ * @param {function(?grpc.web.Error, ?proto.ModelResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.VisionClassificationResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.ModelResponse>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.ModelClient.prototype.visionClassification =
@@ -127,7 +127,7 @@ proto.ModelClient.prototype.visionClassification =
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.VisionClassificationResponse>}
+ * @return {!Promise<!proto.ModelResponse>}
  *     A native promise that resolves to the response
  */
 proto.ModelPromiseClient.prototype.visionClassification =
@@ -144,15 +144,15 @@ proto.ModelPromiseClient.prototype.visionClassification =
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
  *   !proto.TextGenerationRequest,
- *   !proto.TextGenerationResponse>}
+ *   !proto.ModelResponse>}
  */
 const methodInfo_Model_TextGeneration = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.TextGenerationResponse,
+  proto.ModelResponse,
   /** @param {!proto.TextGenerationRequest} request */
   function(request) {
     return request.serializeBinary();
   },
-  proto.TextGenerationResponse.deserializeBinary
+  proto.ModelResponse.deserializeBinary
 );
 
 
@@ -161,9 +161,9 @@ const methodInfo_Model_TextGeneration = new grpc.web.AbstractClientBase.MethodIn
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.TextGenerationResponse)}
+ * @param {function(?grpc.web.Error, ?proto.ModelResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.TextGenerationResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.ModelResponse>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.ModelClient.prototype.textGeneration =
@@ -182,7 +182,7 @@ proto.ModelClient.prototype.textGeneration =
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.TextGenerationResponse>}
+ * @return {!Promise<!proto.ModelResponse>}
  *     A native promise that resolves to the response
  */
 proto.ModelPromiseClient.prototype.textGeneration =
@@ -199,15 +199,15 @@ proto.ModelPromiseClient.prototype.textGeneration =
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
  *   !proto.ImageSegmentationRequest,
- *   !proto.ImageSegmentationResponse>}
+ *   !proto.ModelResponse>}
  */
 const methodInfo_Model_ImageSegmentation = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.ImageSegmentationResponse,
+  proto.ModelResponse,
   /** @param {!proto.ImageSegmentationRequest} request */
   function(request) {
     return request.serializeBinary();
   },
-  proto.ImageSegmentationResponse.deserializeBinary
+  proto.ModelResponse.deserializeBinary
 );
 
 
@@ -216,9 +216,9 @@ const methodInfo_Model_ImageSegmentation = new grpc.web.AbstractClientBase.Metho
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.ImageSegmentationResponse)}
+ * @param {function(?grpc.web.Error, ?proto.ModelResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.ImageSegmentationResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.ModelResponse>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.ModelClient.prototype.imageSegmentation =
@@ -237,7 +237,7 @@ proto.ModelClient.prototype.imageSegmentation =
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.ImageSegmentationResponse>}
+ * @return {!Promise<!proto.ModelResponse>}
  *     A native promise that resolves to the response
  */
 proto.ModelPromiseClient.prototype.imageSegmentation =

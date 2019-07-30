@@ -13,6 +13,7 @@ interface IDImgTuple {
 
 interface InferecePageProp {
   modelNameSelected: string;
+  modelUUID: string;
 }
 
 export const CVInferencePage: FC<InferecePageProp> = props => {
@@ -34,6 +35,7 @@ export const CVInferencePage: FC<InferecePageProp> = props => {
           imgID={imageIDCoutner}
           removeFunc={removeImageComp}
           modelName={props.modelNameSelected}
+          uuid={props.modelUUID}
         />
       </Row>
     );

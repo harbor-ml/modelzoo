@@ -6,9 +6,9 @@ import {
   ImageDownloadRequest,
   ImageDownloadResponse,
   ImageSegmentationRequest,
+  ModelResponse,
   TextGenerationRequest,
-  VisionClassificationRequest,
-  ModelResponse} from './services_pb';
+  VisionClassificationRequest} from './services_pb';
 
 export class ModelClient {
   constructor (hostname: string,

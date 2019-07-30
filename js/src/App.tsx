@@ -11,6 +11,8 @@ const { Title } = Typography;
 const client = new ModelClient(`${window.location.protocol}//${window.location.hostname}:8080`, null, null);
 export const ClientContext = React.createContext(client);
 
+
+
 const App: FC = () => {
   return (
     <ClientContext.Provider value={client}>
@@ -33,7 +35,7 @@ const App: FC = () => {
           <Models />
         </Layout.Content>
         <Layout.Footer style={{ textAlign: "center" }}>
-          Created by RISELab
+          &copy; RISELab 2019
         </Layout.Footer>
       </Layout>
     </ClientContext.Provider>

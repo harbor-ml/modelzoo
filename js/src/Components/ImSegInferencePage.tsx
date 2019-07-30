@@ -13,6 +13,7 @@ interface IDImgTuple {
 
 interface ImSegInferencePage {
   modelNameSelected: string;
+  modelUUID: string;
 }
 
 export const ImSegInferencePage: FC<ImSegInferencePage> = props => {
@@ -34,6 +35,7 @@ export const ImSegInferencePage: FC<ImSegInferencePage> = props => {
           imgID={imageIDCoutner}
           removeFunc={removeImageComp}
           modelName={props.modelNameSelected}
+          uuid={props.modelUUID}
         />
       </Row>
     );

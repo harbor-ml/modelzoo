@@ -43,12 +43,13 @@ export const Models: FC = () => {
             onChange={v => {
               const cat = v.target.value.getModelCategory();
               const val = v.target.value.getModelName();
+              const uuid = v.target.value.getUuid();
               if (cat === ModelCategory.VISIONCLASSIFICATION) {
-                setInferencePage(<CVInferencePage modelNameSelected={val} />);
+                setInferencePage(<CVInferencePage modelNameSelected={val} modelUUID={uuid}/>);
               } else if (cat === ModelCategory.TEXTGENERATION) {
-                setInferencePage(<NLPInferencePage modelNameSelected={val} />);
+                setInferencePage(<NLPInferencePage modelNameSelected={val} modelUUID={uuid}/>);
               } else if (cat === ModelCategory.IMAGESEGMENTATION || cat === ModelCategory.IMAGECAPTIONING) {
-                setInferencePage(<ImSegInferencePage modelNameSelected={val} />);
+                setInferencePage(<ImSegInferencePage modelNameSelected={val} modelUUID={uuid}/>);
               }
             }}
           >
