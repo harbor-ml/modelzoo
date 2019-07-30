@@ -131,7 +131,7 @@ func Authorize(token string, model dbtypes.Model) (bool, error) {
 	if token != "" && err != nil {
 		return false, err
 	}
-	if !model.Private || (err == nil && (issuer.Email == "rdurrani@berkeley.edu" || issuer.Email == "xmo@berkeley.edu")) {
+	if !model.Private || (err == nil && issuer.Email == "admin@modelzoo.live") {
 		return true, nil
 	}
 	var auth dbtypes.User
