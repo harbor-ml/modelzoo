@@ -80,6 +80,6 @@ def _img_inp_types_to_uri(input_image: typing.Union[type(Image), str]) -> str:
         return img_to_uri(input_image)
     elif os.path.isfile(input_image):
         return img_file_to_uri(input_image)
-    elif not _validate_data_uri(data_uri):
+    elif not _validate_data_uri(input_image):
         raise ValueError("Input Image must be of type PIL.Image, data uri (str), or file path")
     return input_image
