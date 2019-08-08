@@ -233,6 +233,23 @@ func (s *mockModelServer) TextGeneration(
 	return val, nil
 }
 
+func (s *mockModelServer) ModelUUID(
+	c context.Context, req *services.ModelUUIDRequest) (
+	*services.ModelUUIDResponse, error) {
+
+	var m dbtypes.Model
+	newdb := db.Where("name = ?", req.GetModelName()).First(&m)
+	if newdb.Error != nil {
+		return nil, newdb.Error
+	}
+	b, e := Authorize(token, m)
+	if !b {
+		return nil, e
+	}
+	val := &services.ModelUUIDResponse{model_uuid=m.ID.String()}
+	return val, nil
+}
+
 func main() {
 	lis, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%d", port))
 	if err != nil {

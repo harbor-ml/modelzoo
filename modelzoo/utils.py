@@ -6,10 +6,13 @@ from w3lib.url import parse_data_uri
 import mimetypes
 from PIL import Image
 from pathlib import Path
-from _protos._services_pb2 import (
+from query import _query_for_model_uuid
+from _protos.services_pb2 import (
     TextGenerationRequest,
     ImageSegmentationRequest,
     VisionClassificationRequest,
+    ModelUUIDRequest,
+    ModelUUIDResponse
 )
 
 class UnauthorizedException(Exception):
@@ -64,9 +67,6 @@ def _authorize(model: str, token: str) -> str:
     if id is None:
         raise UnauthorizedException("User with token %s is not authorized for model %s" % (token, model))
     return id
-
-def _query_for_model_uuid(model: str, token: str) -> typing.Union[str, None] :
-    return None
 
 def _validate_data_uri(data_uri: str) -> bool:
     try:

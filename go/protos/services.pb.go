@@ -28,18 +28,24 @@ const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 type ModelCategory int32
 
 const (
-	ModelCategory_VisionClassification ModelCategory = 0
-	ModelCategory_TextGeneration       ModelCategory = 1
+	ModelCategory_VISIONCLASSIFICATION ModelCategory = 0
+	ModelCategory_TEXTGENERATION       ModelCategory = 1
+	ModelCategory_IMAGESEGMENTATION    ModelCategory = 2
+	ModelCategory_IMAGECAPTIONING      ModelCategory = 3
 )
 
 var ModelCategory_name = map[int32]string{
-	0: "VisionClassification",
-	1: "TextGeneration",
+	0: "VISIONCLASSIFICATION",
+	1: "TEXTGENERATION",
+	2: "IMAGESEGMENTATION",
+	3: "IMAGECAPTIONING",
 }
 
 var ModelCategory_value = map[string]int32{
-	"VisionClassification": 0,
-	"TextGeneration":       1,
+	"VISIONCLASSIFICATION": 0,
+	"TEXTGENERATION":       1,
+	"IMAGESEGMENTATION":    2,
+	"IMAGECAPTIONING":      3,
 }
 
 func (x ModelCategory) String() string {
@@ -81,6 +87,69 @@ func (m *GetModelsReq) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GetModelsReq proto.InternalMessageInfo
 
+type ModelResponse struct {
+	TypeString           string                        `protobuf:"bytes,1,opt,name=typeString,proto3" json:"typeString,omitempty"`
+	Text                 *TextGenerationResponse       `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"`
+	Vision               *VisionClassificationResponse `protobuf:"bytes,3,opt,name=vision,proto3" json:"vision,omitempty"`
+	Segment              *ImageSegmentationResponse    `protobuf:"bytes,4,opt,name=segment,proto3" json:"segment,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                      `json:"-"`
+	XXX_unrecognized     []byte                        `json:"-"`
+	XXX_sizecache        int32                         `json:"-"`
+}
+
+func (m *ModelResponse) Reset()         { *m = ModelResponse{} }
+func (m *ModelResponse) String() string { return proto.CompactTextString(m) }
+func (*ModelResponse) ProtoMessage()    {}
+func (*ModelResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_edd031a16b9fa047, []int{1}
+}
+
+func (m *ModelResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ModelResponse.Unmarshal(m, b)
+}
+func (m *ModelResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ModelResponse.Marshal(b, m, deterministic)
+}
+func (m *ModelResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ModelResponse.Merge(m, src)
+}
+func (m *ModelResponse) XXX_Size() int {
+	return xxx_messageInfo_ModelResponse.Size(m)
+}
+func (m *ModelResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ModelResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ModelResponse proto.InternalMessageInfo
+
+func (m *ModelResponse) GetTypeString() string {
+	if m != nil {
+		return m.TypeString
+	}
+	return ""
+}
+
+func (m *ModelResponse) GetText() *TextGenerationResponse {
+	if m != nil {
+		return m.Text
+	}
+	return nil
+}
+
+func (m *ModelResponse) GetVision() *VisionClassificationResponse {
+	if m != nil {
+		return m.Vision
+	}
+	return nil
+}
+
+func (m *ModelResponse) GetSegment() *ImageSegmentationResponse {
+	if m != nil {
+		return m.Segment
+	}
+	return nil
+}
+
 type GetModelsResp struct {
 	Models               []*GetModelsResp_Model `protobuf:"bytes,1,rep,name=models,proto3" json:"models,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}               `json:"-"`
@@ -92,7 +161,7 @@ func (m *GetModelsResp) Reset()         { *m = GetModelsResp{} }
 func (m *GetModelsResp) String() string { return proto.CompactTextString(m) }
 func (*GetModelsResp) ProtoMessage()    {}
 func (*GetModelsResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edd031a16b9fa047, []int{1}
+	return fileDescriptor_edd031a16b9fa047, []int{2}
 }
 
 func (m *GetModelsResp) XXX_Unmarshal(b []byte) error {
@@ -123,6 +192,7 @@ func (m *GetModelsResp) GetModels() []*GetModelsResp_Model {
 type GetModelsResp_Model struct {
 	ModelName            string        `protobuf:"bytes,1,opt,name=model_name,json=modelName,proto3" json:"model_name,omitempty"`
 	ModelCategory        ModelCategory `protobuf:"varint,2,opt,name=model_category,json=modelCategory,proto3,enum=ModelCategory" json:"model_category,omitempty"`
+	Uuid                 string        `protobuf:"bytes,3,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
 	XXX_unrecognized     []byte        `json:"-"`
 	XXX_sizecache        int32         `json:"-"`
@@ -132,7 +202,7 @@ func (m *GetModelsResp_Model) Reset()         { *m = GetModelsResp_Model{} }
 func (m *GetModelsResp_Model) String() string { return proto.CompactTextString(m) }
 func (*GetModelsResp_Model) ProtoMessage()    {}
 func (*GetModelsResp_Model) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edd031a16b9fa047, []int{1, 0}
+	return fileDescriptor_edd031a16b9fa047, []int{2, 0}
 }
 
 func (m *GetModelsResp_Model) XXX_Unmarshal(b []byte) error {
@@ -164,13 +234,107 @@ func (m *GetModelsResp_Model) GetModelCategory() ModelCategory {
 	if m != nil {
 		return m.ModelCategory
 	}
-	return ModelCategory_VisionClassification
+	return ModelCategory_VISIONCLASSIFICATION
+}
+
+func (m *GetModelsResp_Model) GetUuid() string {
+	if m != nil {
+		return m.Uuid
+	}
+	return ""
+}
+
+type ModelUUIDRequest struct {
+	ModelName            string   `protobuf:"bytes,1,opt,name=model_name,json=modelName,proto3" json:"model_name,omitempty"`
+	Token                string   `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ModelUUIDRequest) Reset()         { *m = ModelUUIDRequest{} }
+func (m *ModelUUIDRequest) String() string { return proto.CompactTextString(m) }
+func (*ModelUUIDRequest) ProtoMessage()    {}
+func (*ModelUUIDRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_edd031a16b9fa047, []int{3}
+}
+
+func (m *ModelUUIDRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ModelUUIDRequest.Unmarshal(m, b)
+}
+func (m *ModelUUIDRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ModelUUIDRequest.Marshal(b, m, deterministic)
+}
+func (m *ModelUUIDRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ModelUUIDRequest.Merge(m, src)
+}
+func (m *ModelUUIDRequest) XXX_Size() int {
+	return xxx_messageInfo_ModelUUIDRequest.Size(m)
+}
+func (m *ModelUUIDRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ModelUUIDRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ModelUUIDRequest proto.InternalMessageInfo
+
+func (m *ModelUUIDRequest) GetModelName() string {
+	if m != nil {
+		return m.ModelName
+	}
+	return ""
+}
+
+func (m *ModelUUIDRequest) GetToken() string {
+	if m != nil {
+		return m.Token
+	}
+	return ""
+}
+
+type ModelUUIDResponse struct {
+	ModelUuid            string   `protobuf:"bytes,1,opt,name=model_uuid,json=modelUuid,proto3" json:"model_uuid,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ModelUUIDResponse) Reset()         { *m = ModelUUIDResponse{} }
+func (m *ModelUUIDResponse) String() string { return proto.CompactTextString(m) }
+func (*ModelUUIDResponse) ProtoMessage()    {}
+func (*ModelUUIDResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_edd031a16b9fa047, []int{4}
+}
+
+func (m *ModelUUIDResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ModelUUIDResponse.Unmarshal(m, b)
+}
+func (m *ModelUUIDResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ModelUUIDResponse.Marshal(b, m, deterministic)
+}
+func (m *ModelUUIDResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ModelUUIDResponse.Merge(m, src)
+}
+func (m *ModelUUIDResponse) XXX_Size() int {
+	return xxx_messageInfo_ModelUUIDResponse.Size(m)
+}
+func (m *ModelUUIDResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ModelUUIDResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ModelUUIDResponse proto.InternalMessageInfo
+
+func (m *ModelUUIDResponse) GetModelUuid() string {
+	if m != nil {
+		return m.ModelUuid
+	}
+	return ""
 }
 
 type TextGenerationRequest struct {
 	InputPhrase          string   `protobuf:"bytes,1,opt,name=input_phrase,json=inputPhrase,proto3" json:"input_phrase,omitempty"`
 	Temperature          float32  `protobuf:"fixed32,2,opt,name=temperature,proto3" json:"temperature,omitempty"`
-	ModelName            string   `protobuf:"bytes,3,opt,name=model_name,json=modelName,proto3" json:"model_name,omitempty"`
+	ModelUuid            string   `protobuf:"bytes,3,opt,name=model_uuid,json=modelUuid,proto3" json:"model_uuid,omitempty"`
+	Token                string   `protobuf:"bytes,4,opt,name=token,proto3" json:"token,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -180,7 +344,7 @@ func (m *TextGenerationRequest) Reset()         { *m = TextGenerationRequest{} }
 func (m *TextGenerationRequest) String() string { return proto.CompactTextString(m) }
 func (*TextGenerationRequest) ProtoMessage()    {}
 func (*TextGenerationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edd031a16b9fa047, []int{2}
+	return fileDescriptor_edd031a16b9fa047, []int{5}
 }
 
 func (m *TextGenerationRequest) XXX_Unmarshal(b []byte) error {
@@ -215,9 +379,16 @@ func (m *TextGenerationRequest) GetTemperature() float32 {
 	return 0
 }
 
-func (m *TextGenerationRequest) GetModelName() string {
+func (m *TextGenerationRequest) GetModelUuid() string {
 	if m != nil {
-		return m.ModelName
+		return m.ModelUuid
+	}
+	return ""
+}
+
+func (m *TextGenerationRequest) GetToken() string {
+	if m != nil {
+		return m.Token
 	}
 	return ""
 }
@@ -233,7 +404,7 @@ func (m *TextGenerationResponse) Reset()         { *m = TextGenerationResponse{}
 func (m *TextGenerationResponse) String() string { return proto.CompactTextString(m) }
 func (*TextGenerationResponse) ProtoMessage()    {}
 func (*TextGenerationResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edd031a16b9fa047, []int{3}
+	return fileDescriptor_edd031a16b9fa047, []int{6}
 }
 
 func (m *TextGenerationResponse) XXX_Unmarshal(b []byte) error {
@@ -264,7 +435,8 @@ func (m *TextGenerationResponse) GetGeneratedTexts() []string {
 type VisionClassificationRequest struct {
 	InputImage           string   `protobuf:"bytes,1,opt,name=input_image,json=inputImage,proto3" json:"input_image,omitempty"`
 	NumReturns           uint32   `protobuf:"varint,2,opt,name=num_returns,json=numReturns,proto3" json:"num_returns,omitempty"`
-	ModelName            string   `protobuf:"bytes,3,opt,name=model_name,json=modelName,proto3" json:"model_name,omitempty"`
+	ModelUuid            string   `protobuf:"bytes,3,opt,name=model_uuid,json=modelUuid,proto3" json:"model_uuid,omitempty"`
+	Token                string   `protobuf:"bytes,4,opt,name=token,proto3" json:"token,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -274,7 +446,7 @@ func (m *VisionClassificationRequest) Reset()         { *m = VisionClassificatio
 func (m *VisionClassificationRequest) String() string { return proto.CompactTextString(m) }
 func (*VisionClassificationRequest) ProtoMessage()    {}
 func (*VisionClassificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edd031a16b9fa047, []int{4}
+	return fileDescriptor_edd031a16b9fa047, []int{7}
 }
 
 func (m *VisionClassificationRequest) XXX_Unmarshal(b []byte) error {
@@ -309,9 +481,16 @@ func (m *VisionClassificationRequest) GetNumReturns() uint32 {
 	return 0
 }
 
-func (m *VisionClassificationRequest) GetModelName() string {
+func (m *VisionClassificationRequest) GetModelUuid() string {
 	if m != nil {
-		return m.ModelName
+		return m.ModelUuid
+	}
+	return ""
+}
+
+func (m *VisionClassificationRequest) GetToken() string {
+	if m != nil {
+		return m.Token
 	}
 	return ""
 }
@@ -327,7 +506,7 @@ func (m *VisionClassificationResponse) Reset()         { *m = VisionClassificati
 func (m *VisionClassificationResponse) String() string { return proto.CompactTextString(m) }
 func (*VisionClassificationResponse) ProtoMessage()    {}
 func (*VisionClassificationResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edd031a16b9fa047, []int{5}
+	return fileDescriptor_edd031a16b9fa047, []int{8}
 }
 
 func (m *VisionClassificationResponse) XXX_Unmarshal(b []byte) error {
@@ -368,7 +547,7 @@ func (m *VisionClassificationResponse_Result) Reset()         { *m = VisionClass
 func (m *VisionClassificationResponse_Result) String() string { return proto.CompactTextString(m) }
 func (*VisionClassificationResponse_Result) ProtoMessage()    {}
 func (*VisionClassificationResponse_Result) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edd031a16b9fa047, []int{5, 0}
+	return fileDescriptor_edd031a16b9fa047, []int{8, 0}
 }
 
 func (m *VisionClassificationResponse_Result) XXX_Unmarshal(b []byte) error {
@@ -410,6 +589,100 @@ func (m *VisionClassificationResponse_Result) GetProba() float32 {
 	return 0
 }
 
+type ImageSegmentationRequest struct {
+	InputImage           string   `protobuf:"bytes,1,opt,name=input_image,json=inputImage,proto3" json:"input_image,omitempty"`
+	ModelUuid            string   `protobuf:"bytes,2,opt,name=model_uuid,json=modelUuid,proto3" json:"model_uuid,omitempty"`
+	Token                string   `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ImageSegmentationRequest) Reset()         { *m = ImageSegmentationRequest{} }
+func (m *ImageSegmentationRequest) String() string { return proto.CompactTextString(m) }
+func (*ImageSegmentationRequest) ProtoMessage()    {}
+func (*ImageSegmentationRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_edd031a16b9fa047, []int{9}
+}
+
+func (m *ImageSegmentationRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ImageSegmentationRequest.Unmarshal(m, b)
+}
+func (m *ImageSegmentationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ImageSegmentationRequest.Marshal(b, m, deterministic)
+}
+func (m *ImageSegmentationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ImageSegmentationRequest.Merge(m, src)
+}
+func (m *ImageSegmentationRequest) XXX_Size() int {
+	return xxx_messageInfo_ImageSegmentationRequest.Size(m)
+}
+func (m *ImageSegmentationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ImageSegmentationRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ImageSegmentationRequest proto.InternalMessageInfo
+
+func (m *ImageSegmentationRequest) GetInputImage() string {
+	if m != nil {
+		return m.InputImage
+	}
+	return ""
+}
+
+func (m *ImageSegmentationRequest) GetModelUuid() string {
+	if m != nil {
+		return m.ModelUuid
+	}
+	return ""
+}
+
+func (m *ImageSegmentationRequest) GetToken() string {
+	if m != nil {
+		return m.Token
+	}
+	return ""
+}
+
+type ImageSegmentationResponse struct {
+	OutputImage          string   `protobuf:"bytes,1,opt,name=output_image,json=outputImage,proto3" json:"output_image,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ImageSegmentationResponse) Reset()         { *m = ImageSegmentationResponse{} }
+func (m *ImageSegmentationResponse) String() string { return proto.CompactTextString(m) }
+func (*ImageSegmentationResponse) ProtoMessage()    {}
+func (*ImageSegmentationResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_edd031a16b9fa047, []int{10}
+}
+
+func (m *ImageSegmentationResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ImageSegmentationResponse.Unmarshal(m, b)
+}
+func (m *ImageSegmentationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ImageSegmentationResponse.Marshal(b, m, deterministic)
+}
+func (m *ImageSegmentationResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ImageSegmentationResponse.Merge(m, src)
+}
+func (m *ImageSegmentationResponse) XXX_Size() int {
+	return xxx_messageInfo_ImageSegmentationResponse.Size(m)
+}
+func (m *ImageSegmentationResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ImageSegmentationResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ImageSegmentationResponse proto.InternalMessageInfo
+
+func (m *ImageSegmentationResponse) GetOutputImage() string {
+	if m != nil {
+		return m.OutputImage
+	}
+	return ""
+}
+
 type ImageDownloadRequest struct {
 	Url                  string   `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -421,7 +694,7 @@ func (m *ImageDownloadRequest) Reset()         { *m = ImageDownloadRequest{} }
 func (m *ImageDownloadRequest) String() string { return proto.CompactTextString(m) }
 func (*ImageDownloadRequest) ProtoMessage()    {}
 func (*ImageDownloadRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edd031a16b9fa047, []int{6}
+	return fileDescriptor_edd031a16b9fa047, []int{11}
 }
 
 func (m *ImageDownloadRequest) XXX_Unmarshal(b []byte) error {
@@ -460,7 +733,7 @@ func (m *ImageDownloadResponse) Reset()         { *m = ImageDownloadResponse{} }
 func (m *ImageDownloadResponse) String() string { return proto.CompactTextString(m) }
 func (*ImageDownloadResponse) ProtoMessage()    {}
 func (*ImageDownloadResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edd031a16b9fa047, []int{7}
+	return fileDescriptor_edd031a16b9fa047, []int{12}
 }
 
 func (m *ImageDownloadResponse) XXX_Unmarshal(b []byte) error {
@@ -491,13 +764,18 @@ func (m *ImageDownloadResponse) GetImage() string {
 func init() {
 	proto.RegisterEnum("ModelCategory", ModelCategory_name, ModelCategory_value)
 	proto.RegisterType((*GetModelsReq)(nil), "GetModelsReq")
+	proto.RegisterType((*ModelResponse)(nil), "ModelResponse")
 	proto.RegisterType((*GetModelsResp)(nil), "GetModelsResp")
 	proto.RegisterType((*GetModelsResp_Model)(nil), "GetModelsResp.Model")
+	proto.RegisterType((*ModelUUIDRequest)(nil), "ModelUUIDRequest")
+	proto.RegisterType((*ModelUUIDResponse)(nil), "ModelUUIDResponse")
 	proto.RegisterType((*TextGenerationRequest)(nil), "TextGenerationRequest")
 	proto.RegisterType((*TextGenerationResponse)(nil), "TextGenerationResponse")
 	proto.RegisterType((*VisionClassificationRequest)(nil), "VisionClassificationRequest")
 	proto.RegisterType((*VisionClassificationResponse)(nil), "VisionClassificationResponse")
 	proto.RegisterType((*VisionClassificationResponse_Result)(nil), "VisionClassificationResponse.Result")
+	proto.RegisterType((*ImageSegmentationRequest)(nil), "ImageSegmentationRequest")
+	proto.RegisterType((*ImageSegmentationResponse)(nil), "ImageSegmentationResponse")
 	proto.RegisterType((*ImageDownloadRequest)(nil), "ImageDownloadRequest")
 	proto.RegisterType((*ImageDownloadResponse)(nil), "ImageDownloadResponse")
 }
@@ -505,39 +783,55 @@ func init() {
 func init() { proto.RegisterFile("protos/services.proto", fileDescriptor_edd031a16b9fa047) }
 
 var fileDescriptor_edd031a16b9fa047 = []byte{
-	// 514 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x94, 0xe1, 0x8a, 0xd3, 0x40,
-	0x10, 0xc7, 0x9b, 0x9e, 0xad, 0xd7, 0xe9, 0x25, 0x96, 0xa5, 0xad, 0x25, 0xde, 0x61, 0x5d, 0x04,
-	0x8b, 0x78, 0x2b, 0x54, 0xfc, 0x24, 0x0a, 0x52, 0xa1, 0x08, 0x7a, 0xc8, 0xa2, 0x7e, 0x93, 0xb2,
-	0xd7, 0x8e, 0x35, 0xd8, 0xec, 0xa6, 0xbb, 0x1b, 0x3d, 0x11, 0x7c, 0x05, 0x5f, 0xc0, 0x67, 0xf0,
-	0x19, 0xa5, 0x9b, 0xe4, 0x68, 0x42, 0xa8, 0xdf, 0x76, 0x7e, 0x99, 0xc9, 0xcc, 0x7f, 0x66, 0x76,
-	0x61, 0x90, 0x68, 0x65, 0x95, 0x79, 0x6c, 0x50, 0x7f, 0x8b, 0x96, 0x68, 0x98, 0xb3, 0x69, 0x00,
-	0x27, 0x73, 0xb4, 0x6f, 0xd5, 0x0a, 0x37, 0x86, 0xe3, 0x96, 0xfe, 0xf1, 0xc0, 0xdf, 0x03, 0x26,
-	0x21, 0x8f, 0xa0, 0x1d, 0x3b, 0x6b, 0xe4, 0x8d, 0x8f, 0x26, 0xdd, 0x69, 0x9f, 0x95, 0xbe, 0x33,
-	0x77, 0xe4, 0xb9, 0x4f, 0xf8, 0x09, 0x5a, 0x0e, 0x90, 0x33, 0x00, 0x87, 0x16, 0x52, 0xc4, 0x38,
-	0xf2, 0xc6, 0xde, 0xa4, 0xc3, 0x3b, 0x8e, 0x5c, 0x88, 0x18, 0xc9, 0x53, 0x08, 0xb2, 0xcf, 0x4b,
-	0x61, 0x71, 0xad, 0xf4, 0x8f, 0x51, 0x73, 0xec, 0x4d, 0x82, 0x69, 0x90, 0xfd, 0x6f, 0x96, 0x53,
-	0xee, 0xc7, 0xfb, 0x26, 0xfd, 0x09, 0x83, 0xf7, 0x78, 0x65, 0xe7, 0x28, 0x51, 0x0b, 0x1b, 0x29,
-	0xc9, 0x71, 0x9b, 0xa2, 0xb1, 0xe4, 0x1e, 0x9c, 0x44, 0x32, 0x49, 0xed, 0x22, 0xf9, 0xa2, 0x85,
-	0x29, 0x12, 0x76, 0x1d, 0x7b, 0xe7, 0x10, 0x19, 0x43, 0xd7, 0x62, 0x9c, 0xec, 0x02, 0x53, 0x8d,
-	0x2e, 0x5f, 0x93, 0xef, 0xa3, 0x4a, 0xcd, 0x47, 0x95, 0x9a, 0xe9, 0x4b, 0x18, 0x56, 0x93, 0x9b,
-	0x44, 0x49, 0x83, 0xe4, 0x01, 0xdc, 0x5a, 0x67, 0x14, 0x57, 0x0b, 0x8b, 0x57, 0x36, 0x6b, 0x56,
-	0x87, 0x07, 0xd7, 0x78, 0x17, 0x69, 0xe8, 0x2f, 0xb8, 0xf3, 0x31, 0x32, 0x91, 0x92, 0xb3, 0x8d,
-	0x30, 0x26, 0xfa, 0x1c, 0x2d, 0x4b, 0x2a, 0xee, 0x42, 0x56, 0xf1, 0x22, 0x8a, 0xc5, 0xba, 0x10,
-	0x01, 0x0e, 0xbd, 0xde, 0x91, 0x9d, 0x83, 0x4c, 0xe3, 0x85, 0x46, 0x9b, 0x6a, 0x69, 0x9c, 0x06,
-	0x9f, 0x83, 0x4c, 0x63, 0x9e, 0x91, 0xff, 0x49, 0xf8, 0xeb, 0xc1, 0x69, 0x7d, 0x01, 0xb9, 0x92,
-	0x17, 0x70, 0x53, 0xa3, 0x49, 0x37, 0xb6, 0x18, 0xf7, 0x7d, 0x76, 0xc8, 0x9f, 0x71, 0xe7, 0xcc,
-	0x8b, 0xa0, 0xf0, 0x02, 0xda, 0x19, 0x22, 0x04, 0x6e, 0x68, 0x21, 0xbf, 0x3a, 0x11, 0x3e, 0x77,
-	0x67, 0x12, 0xc2, 0x71, 0x69, 0xde, 0x1d, 0x7e, 0x6d, 0x93, 0x3e, 0xb4, 0x12, 0xad, 0x2e, 0x85,
-	0x2b, 0xba, 0xc9, 0x33, 0x83, 0x4e, 0xa0, 0xef, 0x94, 0xbf, 0x52, 0xdf, 0xe5, 0x46, 0x89, 0x55,
-	0xd1, 0xa9, 0x1e, 0x1c, 0xa5, 0x7a, 0x93, 0x77, 0x68, 0x77, 0xa4, 0xe7, 0x30, 0xa8, 0x78, 0xe6,
-	0x92, 0xfa, 0xd0, 0xda, 0x6f, 0x67, 0x66, 0x3c, 0x7c, 0x0e, 0x7e, 0x69, 0xd3, 0xc8, 0x08, 0xfa,
-	0x75, 0x4a, 0x7b, 0x0d, 0x42, 0x20, 0x28, 0xcf, 0xbd, 0xe7, 0x4d, 0x7f, 0x37, 0x8b, 0x45, 0xff,
-	0x50, 0x1f, 0x47, 0x4e, 0xd9, 0x81, 0x49, 0x87, 0x67, 0x07, 0xdb, 0x4a, 0x1b, 0x64, 0x56, 0x4d,
-	0x4a, 0x86, 0xac, 0x76, 0xf5, 0xc3, 0xdb, 0xac, 0x7e, 0x2b, 0x69, 0x83, 0x3c, 0x83, 0xe3, 0x39,
-	0xe6, 0xab, 0x33, 0x60, 0x75, 0x8d, 0x0c, 0x87, 0xac, 0xb6, 0x6b, 0xb4, 0x41, 0xce, 0x01, 0xde,
-	0x44, 0x26, 0xbf, 0xea, 0xc4, 0xdf, 0xbf, 0xf6, 0xdb, 0x30, 0x28, 0xbf, 0x02, 0xb4, 0x71, 0xd9,
-	0x76, 0x0f, 0xca, 0x93, 0x7f, 0x01, 0x00, 0x00, 0xff, 0xff, 0xa0, 0xfa, 0x7c, 0x7a, 0x69, 0x04,
+	// 770 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x55, 0xdd, 0x4e, 0xdb, 0x48,
+	0x14, 0x8e, 0x93, 0x10, 0xc8, 0x09, 0x31, 0xc9, 0x6c, 0xc2, 0x06, 0x2f, 0xec, 0x66, 0xad, 0x4a,
+	0x8d, 0xda, 0xe2, 0x4a, 0x29, 0xdc, 0xb4, 0x12, 0x6a, 0x14, 0x82, 0x65, 0x09, 0x02, 0x9a, 0x04,
+	0xd4, 0xbb, 0xc8, 0x90, 0x69, 0x6a, 0x11, 0xff, 0xc4, 0x33, 0xa6, 0xf0, 0x18, 0x95, 0xfa, 0x1c,
+	0x55, 0x5f, 0xa3, 0x4f, 0xd3, 0x57, 0xa8, 0x3c, 0x63, 0xa7, 0x4e, 0x30, 0xb4, 0xea, 0xdd, 0x9c,
+	0xcf, 0xe7, 0x67, 0xbe, 0x73, 0xbe, 0x39, 0x86, 0xba, 0xe7, 0xbb, 0xcc, 0xa5, 0x2f, 0x29, 0xf1,
+	0x6f, 0xac, 0x2b, 0x42, 0x35, 0x6e, 0xab, 0x32, 0xac, 0xeb, 0x84, 0x9d, 0xb8, 0x63, 0x32, 0xa5,
+	0x98, 0xcc, 0xd4, 0x6f, 0x12, 0x94, 0xb9, 0x85, 0x09, 0xf5, 0x5c, 0x87, 0x12, 0xf4, 0x2f, 0x00,
+	0xbb, 0xf3, 0xc8, 0x80, 0xf9, 0x96, 0x33, 0x69, 0x48, 0x4d, 0xa9, 0x55, 0xc4, 0x09, 0x04, 0x3d,
+	0x87, 0x3c, 0x23, 0xb7, 0xac, 0x91, 0x6d, 0x4a, 0xad, 0x52, 0xfb, 0x6f, 0x6d, 0x48, 0x6e, 0x99,
+	0x4e, 0x1c, 0xe2, 0x9b, 0xcc, 0x72, 0x9d, 0x38, 0x0d, 0xe6, 0x4e, 0x68, 0x1f, 0x0a, 0x37, 0x16,
+	0xb5, 0x5c, 0xa7, 0x91, 0xe3, 0xee, 0x3b, 0xda, 0x05, 0x37, 0xbb, 0x53, 0x93, 0x52, 0xeb, 0xbd,
+	0x75, 0xb5, 0x18, 0x14, 0x39, 0xa3, 0x3d, 0x58, 0xa5, 0x64, 0x62, 0x13, 0x87, 0x35, 0xf2, 0x3c,
+	0x4e, 0xd1, 0x0c, 0xdb, 0x9c, 0x90, 0x81, 0x00, 0x17, 0x83, 0x62, 0x57, 0xf5, 0xab, 0x04, 0xe5,
+	0x04, 0x39, 0xea, 0xa1, 0x17, 0x50, 0xb0, 0xb9, 0xd5, 0x90, 0x9a, 0xb9, 0x56, 0xa9, 0x5d, 0xd3,
+	0x16, 0xbe, 0x6b, 0x82, 0x79, 0xe4, 0xa3, 0xcc, 0x60, 0x85, 0x03, 0x68, 0x07, 0x80, 0x43, 0x23,
+	0xc7, 0xb4, 0x49, 0xd4, 0x82, 0x22, 0x47, 0xfa, 0xa6, 0x4d, 0xd0, 0x3e, 0xc8, 0xe2, 0xf3, 0x95,
+	0xc9, 0xc8, 0xc4, 0xf5, 0xef, 0x78, 0x2f, 0xe4, 0xb6, 0x2c, 0xf2, 0x75, 0x23, 0x14, 0x97, 0xed,
+	0xa4, 0x89, 0x10, 0xe4, 0x83, 0xc0, 0x1a, 0xf3, 0x4e, 0x14, 0x31, 0x3f, 0xab, 0x3a, 0x54, 0x78,
+	0xcc, 0xf9, 0xb9, 0x71, 0x88, 0xc9, 0x2c, 0x20, 0x94, 0xfd, 0xaa, 0x7a, 0x0d, 0x56, 0x98, 0x7b,
+	0x4d, 0x1c, 0x5e, 0xb4, 0x88, 0x85, 0xa1, 0xb6, 0xa1, 0x9a, 0x48, 0x14, 0x8d, 0x72, 0x9e, 0x89,
+	0xd7, 0x4d, 0x66, 0x3a, 0x0f, 0x8b, 0x7f, 0x92, 0xa0, 0xbe, 0x3c, 0x3d, 0x71, 0x85, 0xff, 0x61,
+	0xdd, 0x72, 0xbc, 0x80, 0x8d, 0xbc, 0x0f, 0xbe, 0x49, 0xe3, 0x4b, 0x94, 0x38, 0x76, 0xc6, 0x21,
+	0xd4, 0x84, 0x12, 0x23, 0xb6, 0x17, 0x06, 0x06, 0x3e, 0xe1, 0x97, 0xc9, 0xe2, 0x24, 0xb4, 0x54,
+	0x3d, 0xb7, 0x54, 0xfd, 0x27, 0x8f, 0x7c, 0x92, 0x47, 0x07, 0x36, 0xd3, 0x05, 0x85, 0x9e, 0xc2,
+	0xc6, 0x44, 0xa0, 0x64, 0x3c, 0x0a, 0xc5, 0x25, 0x86, 0x5a, 0xc4, 0xf2, 0x1c, 0x0e, 0x23, 0xa9,
+	0xfa, 0x59, 0x82, 0x7f, 0xd2, 0x55, 0x26, 0xc8, 0xfd, 0x07, 0x82, 0xc8, 0xc8, 0x0a, 0x25, 0x15,
+	0x2b, 0x9c, 0x43, 0x5c, 0x64, 0xa1, 0x83, 0x13, 0xd8, 0x23, 0x9f, 0xb0, 0xc0, 0x77, 0x28, 0xa7,
+	0x56, 0xc6, 0xe0, 0x04, 0x36, 0x16, 0xc8, 0x9f, 0x31, 0xfb, 0x22, 0xc1, 0xf6, 0x63, 0xe2, 0x47,
+	0x07, 0xb0, 0xea, 0x13, 0x1a, 0x4c, 0x59, 0xac, 0xd6, 0x27, 0x8f, 0x3e, 0x16, 0x0d, 0x73, 0x67,
+	0x1c, 0x07, 0x29, 0x7d, 0x28, 0x08, 0x28, 0x54, 0x9a, 0x6f, 0x3a, 0xd7, 0x9c, 0x5a, 0x19, 0xf3,
+	0x33, 0x52, 0x60, 0x6d, 0x41, 0xae, 0x45, 0x3c, 0xb7, 0xc3, 0x0b, 0x7b, 0xbe, 0x7b, 0x69, 0x72,
+	0x2a, 0x59, 0x2c, 0x0c, 0xd5, 0x83, 0x46, 0xca, 0xa3, 0xfb, 0xcd, 0x1e, 0x2e, 0xb6, 0x28, 0xfb,
+	0x60, 0x8b, 0x72, 0xc9, 0x16, 0x1d, 0xc0, 0xd6, 0x83, 0xcf, 0x3c, 0xd4, 0xa4, 0x1b, 0xb0, 0xe5,
+	0x9a, 0x25, 0x81, 0xf1, 0x30, 0xb5, 0x05, 0x35, 0x7e, 0x38, 0x74, 0x3f, 0x3a, 0x53, 0xd7, 0x1c,
+	0xc7, 0xb7, 0xad, 0x40, 0x2e, 0xf0, 0xa7, 0x51, 0x44, 0x78, 0x54, 0x77, 0xa1, 0xbe, 0xe4, 0x19,
+	0x55, 0xa9, 0xc1, 0x4a, 0x32, 0xbd, 0x30, 0x9e, 0x59, 0xd1, 0x92, 0x9c, 0xbf, 0xe5, 0x06, 0xd4,
+	0x2e, 0x8c, 0x81, 0x71, 0xda, 0xef, 0x1e, 0x77, 0x06, 0x03, 0xe3, 0xc8, 0xe8, 0x76, 0x86, 0xc6,
+	0x69, 0xbf, 0x92, 0x41, 0x08, 0xe4, 0x61, 0xef, 0xdd, 0x50, 0xef, 0xf5, 0x7b, 0x58, 0x60, 0x12,
+	0xaa, 0x43, 0xd5, 0x38, 0xe9, 0xe8, 0xbd, 0x41, 0x4f, 0x3f, 0xe9, 0xf5, 0x87, 0x02, 0xce, 0xa2,
+	0xbf, 0x60, 0x83, 0xc3, 0xdd, 0xce, 0x59, 0x88, 0x18, 0x7d, 0xbd, 0x92, 0x6b, 0x7f, 0xcf, 0xc6,
+	0x5b, 0xe8, 0x08, 0x6a, 0x69, 0xf3, 0x47, 0xdb, 0xda, 0x23, 0xea, 0x56, 0xa2, 0x25, 0x14, 0x13,
+	0x52, 0x33, 0xe8, 0x35, 0xc8, 0x8b, 0x4f, 0x0a, 0x6d, 0x6a, 0xa9, 0xcf, 0x3e, 0x25, 0xf6, 0x2d,
+	0x54, 0xef, 0x4d, 0x04, 0x6d, 0x69, 0x0f, 0xe9, 0x22, 0x25, 0xc3, 0x1b, 0x58, 0xd3, 0x49, 0x24,
+	0x8a, 0xba, 0x96, 0x36, 0x1e, 0x65, 0x53, 0x4b, 0x9d, 0x85, 0x9a, 0x41, 0xbb, 0x00, 0xc7, 0x16,
+	0x8d, 0x36, 0x36, 0x2a, 0x27, 0xb7, 0xf7, 0x4c, 0x91, 0x17, 0x97, 0xb9, 0x9a, 0x41, 0x7b, 0x50,
+	0x9c, 0x2f, 0x41, 0x54, 0xd5, 0x96, 0x37, 0xab, 0x82, 0xb4, 0x7b, 0x3b, 0x52, 0xcd, 0x5c, 0x16,
+	0xf8, 0x9f, 0xf1, 0xd5, 0x8f, 0x00, 0x00, 0x00, 0xff, 0xff, 0xd0, 0x27, 0x47, 0xe2, 0x32, 0x07,
 	0x00, 0x00,
 }
 
@@ -553,10 +847,12 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ModelClient interface {
-	VisionClassification(ctx context.Context, in *VisionClassificationRequest, opts ...grpc.CallOption) (*VisionClassificationResponse, error)
-	TextGeneration(ctx context.Context, in *TextGenerationRequest, opts ...grpc.CallOption) (*TextGenerationResponse, error)
+	VisionClassification(ctx context.Context, in *VisionClassificationRequest, opts ...grpc.CallOption) (*ModelResponse, error)
+	TextGeneration(ctx context.Context, in *TextGenerationRequest, opts ...grpc.CallOption) (*ModelResponse, error)
+	ImageSegmentation(ctx context.Context, in *ImageSegmentationRequest, opts ...grpc.CallOption) (*ModelResponse, error)
 	GetImage(ctx context.Context, in *ImageDownloadRequest, opts ...grpc.CallOption) (*ImageDownloadResponse, error)
 	ListModels(ctx context.Context, in *GetModelsReq, opts ...grpc.CallOption) (*GetModelsResp, error)
+	ModelUUID(ctx context.Context, in *ModelUUIDRequest, opts ...grpc.CallOption) (*ModelUUIDResponse, error)
 }
 
 type modelClient struct {
@@ -567,8 +863,8 @@ func NewModelClient(cc *grpc.ClientConn) ModelClient {
 	return &modelClient{cc}
 }
 
-func (c *modelClient) VisionClassification(ctx context.Context, in *VisionClassificationRequest, opts ...grpc.CallOption) (*VisionClassificationResponse, error) {
-	out := new(VisionClassificationResponse)
+func (c *modelClient) VisionClassification(ctx context.Context, in *VisionClassificationRequest, opts ...grpc.CallOption) (*ModelResponse, error) {
+	out := new(ModelResponse)
 	err := c.cc.Invoke(ctx, "/Model/VisionClassification", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -576,9 +872,18 @@ func (c *modelClient) VisionClassification(ctx context.Context, in *VisionClassi
 	return out, nil
 }
 
-func (c *modelClient) TextGeneration(ctx context.Context, in *TextGenerationRequest, opts ...grpc.CallOption) (*TextGenerationResponse, error) {
-	out := new(TextGenerationResponse)
+func (c *modelClient) TextGeneration(ctx context.Context, in *TextGenerationRequest, opts ...grpc.CallOption) (*ModelResponse, error) {
+	out := new(ModelResponse)
 	err := c.cc.Invoke(ctx, "/Model/TextGeneration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *modelClient) ImageSegmentation(ctx context.Context, in *ImageSegmentationRequest, opts ...grpc.CallOption) (*ModelResponse, error) {
+	out := new(ModelResponse)
+	err := c.cc.Invoke(ctx, "/Model/ImageSegmentation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -603,29 +908,46 @@ func (c *modelClient) ListModels(ctx context.Context, in *GetModelsReq, opts ...
 	return out, nil
 }
 
+func (c *modelClient) ModelUUID(ctx context.Context, in *ModelUUIDRequest, opts ...grpc.CallOption) (*ModelUUIDResponse, error) {
+	out := new(ModelUUIDResponse)
+	err := c.cc.Invoke(ctx, "/Model/ModelUUID", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ModelServer is the server API for Model service.
 type ModelServer interface {
-	VisionClassification(context.Context, *VisionClassificationRequest) (*VisionClassificationResponse, error)
-	TextGeneration(context.Context, *TextGenerationRequest) (*TextGenerationResponse, error)
+	VisionClassification(context.Context, *VisionClassificationRequest) (*ModelResponse, error)
+	TextGeneration(context.Context, *TextGenerationRequest) (*ModelResponse, error)
+	ImageSegmentation(context.Context, *ImageSegmentationRequest) (*ModelResponse, error)
 	GetImage(context.Context, *ImageDownloadRequest) (*ImageDownloadResponse, error)
 	ListModels(context.Context, *GetModelsReq) (*GetModelsResp, error)
+	ModelUUID(context.Context, *ModelUUIDRequest) (*ModelUUIDResponse, error)
 }
 
 // UnimplementedModelServer can be embedded to have forward compatible implementations.
 type UnimplementedModelServer struct {
 }
 
-func (*UnimplementedModelServer) VisionClassification(ctx context.Context, req *VisionClassificationRequest) (*VisionClassificationResponse, error) {
+func (*UnimplementedModelServer) VisionClassification(ctx context.Context, req *VisionClassificationRequest) (*ModelResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VisionClassification not implemented")
 }
-func (*UnimplementedModelServer) TextGeneration(ctx context.Context, req *TextGenerationRequest) (*TextGenerationResponse, error) {
+func (*UnimplementedModelServer) TextGeneration(ctx context.Context, req *TextGenerationRequest) (*ModelResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TextGeneration not implemented")
+}
+func (*UnimplementedModelServer) ImageSegmentation(ctx context.Context, req *ImageSegmentationRequest) (*ModelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ImageSegmentation not implemented")
 }
 func (*UnimplementedModelServer) GetImage(ctx context.Context, req *ImageDownloadRequest) (*ImageDownloadResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetImage not implemented")
 }
 func (*UnimplementedModelServer) ListModels(ctx context.Context, req *GetModelsReq) (*GetModelsResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListModels not implemented")
+}
+func (*UnimplementedModelServer) ModelUUID(ctx context.Context, req *ModelUUIDRequest) (*ModelUUIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ModelUUID not implemented")
 }
 
 func RegisterModelServer(s *grpc.Server, srv ModelServer) {
@@ -668,6 +990,24 @@ func _Model_TextGeneration_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Model_ImageSegmentation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ImageSegmentationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ModelServer).ImageSegmentation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Model/ImageSegmentation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ModelServer).ImageSegmentation(ctx, req.(*ImageSegmentationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Model_GetImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ImageDownloadRequest)
 	if err := dec(in); err != nil {
@@ -704,6 +1044,24 @@ func _Model_ListModels_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Model_ModelUUID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ModelUUIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ModelServer).ModelUUID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Model/ModelUUID",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ModelServer).ModelUUID(ctx, req.(*ModelUUIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Model_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "Model",
 	HandlerType: (*ModelServer)(nil),
@@ -717,12 +1075,20 @@ var _Model_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Model_TextGeneration_Handler,
 		},
 		{
+			MethodName: "ImageSegmentation",
+			Handler:    _Model_ImageSegmentation_Handler,
+		},
+		{
 			MethodName: "GetImage",
 			Handler:    _Model_GetImage_Handler,
 		},
 		{
 			MethodName: "ListModels",
 			Handler:    _Model_ListModels_Handler,
+		},
+		{
+			MethodName: "ModelUUID",
+			Handler:    _Model_ModelUUID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

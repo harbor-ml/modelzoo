@@ -13,6 +13,10 @@ proto-py:
 	protoc \
 		--python_out=python --mypy_out=python \
 		./protos/*.proto
+
+proto-py-pkg:
+	python -m grpc_tools.protoc -I protos --python_out=modelzoo/_protos --grpc_python_out=modelzoo/_protos protos/services.proto
+
 proto-go:
 	protoc --go_out=plugins=grpc,paths=source_relative:go ./protos/*.proto
 

@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x15protos/services.proto\"\x0e\n\x0cGetModelsReq\"\xa6\x01\n\rModelResponse\x12\x12\n\ntypeString\x18\x01 \x01(\t\x12%\n\x04text\x18\x02 \x01(\x0b\x32\x17.TextGenerationResponse\x12-\n\x06vision\x18\x03 \x01(\x0b\x32\x1d.VisionClassificationResponse\x12+\n\x07segment\x18\x04 \x01(\x0b\x32\x1a.ImageSegmentationResponse\"\x88\x01\n\rGetModelsResp\x12$\n\x06models\x18\x01 \x03(\x0b\x32\x14.GetModelsResp.Model\x1aQ\n\x05Model\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12&\n\x0emodel_category\x18\x02 \x01(\x0e\x32\x0e.ModelCategory\x12\x0c\n\x04uuid\x18\x03 \x01(\t\"e\n\x15TextGenerationRequest\x12\x14\n\x0cinput_phrase\x18\x01 \x01(\t\x12\x13\n\x0btemperature\x18\x02 \x01(\x02\x12\x12\n\nmodel_uuid\x18\x03 \x01(\t\x12\r\n\x05token\x18\x04 \x01(\t\"1\n\x16TextGenerationResponse\x12\x17\n\x0fgenerated_texts\x18\x01 \x03(\t\"j\n\x1bVisionClassificationRequest\x12\x13\n\x0binput_image\x18\x01 \x01(\t\x12\x13\n\x0bnum_returns\x18\x02 \x01(\r\x12\x12\n\nmodel_uuid\x18\x03 \x01(\t\x12\r\n\x05token\x18\x04 \x01(\t\"\x8e\x01\n\x1cVisionClassificationResponse\x12\x35\n\x07results\x18\x01 \x03(\x0b\x32$.VisionClassificationResponse.Result\x1a\x37\n\x06Result\x12\x0c\n\x04rank\x18\x01 \x01(\r\x12\x10\n\x08\x63\x61tegory\x18\x02 \x01(\t\x12\r\n\x05proba\x18\x03 \x01(\x02\"R\n\x18ImageSegmentationRequest\x12\x13\n\x0binput_image\x18\x01 \x01(\t\x12\x12\n\nmodel_uuid\x18\x02 \x01(\t\x12\r\n\x05token\x18\x03 \x01(\t\"1\n\x19ImageSegmentationResponse\x12\x14\n\x0coutput_image\x18\x01 \x01(\t\"#\n\x14ImageDownloadRequest\x12\x0b\n\x03url\x18\x01 \x01(\t\"&\n\x15ImageDownloadResponse\x12\r\n\x05image\x18\x01 \x01(\t*i\n\rModelCategory\x12\x18\n\x14VISIONCLASSIFICATION\x10\x00\x12\x12\n\x0eTEXTGENERATION\x10\x01\x12\x15\n\x11IMAGESEGMENTATION\x10\x02\x12\x13\n\x0fIMAGECAPTIONING\x10\x03\x32\xb9\x02\n\x05Model\x12\x46\n\x14VisionClassification\x12\x1c.VisionClassificationRequest\x1a\x0e.ModelResponse\"\x00\x12:\n\x0eTextGeneration\x12\x16.TextGenerationRequest\x1a\x0e.ModelResponse\"\x00\x12@\n\x11ImageSegmentation\x12\x19.ImageSegmentationRequest\x1a\x0e.ModelResponse\"\x00\x12;\n\x08GetImage\x12\x15.ImageDownloadRequest\x1a\x16.ImageDownloadResponse\"\x00\x12-\n\nListModels\x12\r.GetModelsReq\x1a\x0e.GetModelsResp\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x15protos/services.proto\"\x0e\n\x0cGetModelsReq\"\xa6\x01\n\rModelResponse\x12\x12\n\ntypeString\x18\x01 \x01(\t\x12%\n\x04text\x18\x02 \x01(\x0b\x32\x17.TextGenerationResponse\x12-\n\x06vision\x18\x03 \x01(\x0b\x32\x1d.VisionClassificationResponse\x12+\n\x07segment\x18\x04 \x01(\x0b\x32\x1a.ImageSegmentationResponse\"\x88\x01\n\rGetModelsResp\x12$\n\x06models\x18\x01 \x03(\x0b\x32\x14.GetModelsResp.Model\x1aQ\n\x05Model\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12&\n\x0emodel_category\x18\x02 \x01(\x0e\x32\x0e.ModelCategory\x12\x0c\n\x04uuid\x18\x03 \x01(\t\"5\n\x10ModelUUIDRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\r\n\x05token\x18\x02 \x01(\t\"\'\n\x11ModelUUIDResponse\x12\x12\n\nmodel_uuid\x18\x01 \x01(\t\"e\n\x15TextGenerationRequest\x12\x14\n\x0cinput_phrase\x18\x01 \x01(\t\x12\x13\n\x0btemperature\x18\x02 \x01(\x02\x12\x12\n\nmodel_uuid\x18\x03 \x01(\t\x12\r\n\x05token\x18\x04 \x01(\t\"1\n\x16TextGenerationResponse\x12\x17\n\x0fgenerated_texts\x18\x01 \x03(\t\"j\n\x1bVisionClassificationRequest\x12\x13\n\x0binput_image\x18\x01 \x01(\t\x12\x13\n\x0bnum_returns\x18\x02 \x01(\r\x12\x12\n\nmodel_uuid\x18\x03 \x01(\t\x12\r\n\x05token\x18\x04 \x01(\t\"\x8e\x01\n\x1cVisionClassificationResponse\x12\x35\n\x07results\x18\x01 \x03(\x0b\x32$.VisionClassificationResponse.Result\x1a\x37\n\x06Result\x12\x0c\n\x04rank\x18\x01 \x01(\r\x12\x10\n\x08\x63\x61tegory\x18\x02 \x01(\t\x12\r\n\x05proba\x18\x03 \x01(\x02\"R\n\x18ImageSegmentationRequest\x12\x13\n\x0binput_image\x18\x01 \x01(\t\x12\x12\n\nmodel_uuid\x18\x02 \x01(\t\x12\r\n\x05token\x18\x03 \x01(\t\"1\n\x19ImageSegmentationResponse\x12\x14\n\x0coutput_image\x18\x01 \x01(\t\"#\n\x14ImageDownloadRequest\x12\x0b\n\x03url\x18\x01 \x01(\t\"&\n\x15ImageDownloadResponse\x12\r\n\x05image\x18\x01 \x01(\t*i\n\rModelCategory\x12\x18\n\x14VISIONCLASSIFICATION\x10\x00\x12\x12\n\x0eTEXTGENERATION\x10\x01\x12\x15\n\x11IMAGESEGMENTATION\x10\x02\x12\x13\n\x0fIMAGECAPTIONING\x10\x03\x32\xef\x02\n\x05Model\x12\x46\n\x14VisionClassification\x12\x1c.VisionClassificationRequest\x1a\x0e.ModelResponse\"\x00\x12:\n\x0eTextGeneration\x12\x16.TextGenerationRequest\x1a\x0e.ModelResponse\"\x00\x12@\n\x11ImageSegmentation\x12\x19.ImageSegmentationRequest\x1a\x0e.ModelResponse\"\x00\x12;\n\x08GetImage\x12\x15.ImageDownloadRequest\x1a\x16.ImageDownloadResponse\"\x00\x12-\n\nListModels\x12\r.GetModelsReq\x1a\x0e.GetModelsResp\"\x00\x12\x34\n\tModelUUID\x12\x11.ModelUUIDRequest\x1a\x12.ModelUUIDResponse\"\x00\x62\x06proto3')
 )
 
 _MODELCATEGORY = _descriptor.EnumDescriptor(
@@ -49,8 +49,8 @@ _MODELCATEGORY = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=968,
-  serialized_end=1073,
+  serialized_start=1064,
+  serialized_end=1169,
 )
 _sym_db.RegisterEnumDescriptor(_MODELCATEGORY)
 
@@ -213,6 +213,75 @@ _GETMODELSRESP = _descriptor.Descriptor(
 )
 
 
+_MODELUUIDREQUEST = _descriptor.Descriptor(
+  name='ModelUUIDRequest',
+  full_name='ModelUUIDRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='model_name', full_name='ModelUUIDRequest.model_name', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='token', full_name='ModelUUIDRequest.token', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=349,
+  serialized_end=402,
+)
+
+
+_MODELUUIDRESPONSE = _descriptor.Descriptor(
+  name='ModelUUIDResponse',
+  full_name='ModelUUIDResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='model_uuid', full_name='ModelUUIDResponse.model_uuid', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=404,
+  serialized_end=443,
+)
+
+
 _TEXTGENERATIONREQUEST = _descriptor.Descriptor(
   name='TextGenerationRequest',
   full_name='TextGenerationRequest',
@@ -260,8 +329,8 @@ _TEXTGENERATIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=349,
-  serialized_end=450,
+  serialized_start=445,
+  serialized_end=546,
 )
 
 
@@ -291,8 +360,8 @@ _TEXTGENERATIONRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=452,
-  serialized_end=501,
+  serialized_start=548,
+  serialized_end=597,
 )
 
 
@@ -343,8 +412,8 @@ _VISIONCLASSIFICATIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=503,
-  serialized_end=609,
+  serialized_start=599,
+  serialized_end=705,
 )
 
 
@@ -388,8 +457,8 @@ _VISIONCLASSIFICATIONRESPONSE_RESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=699,
-  serialized_end=754,
+  serialized_start=795,
+  serialized_end=850,
 )
 
 _VISIONCLASSIFICATIONRESPONSE = _descriptor.Descriptor(
@@ -418,8 +487,8 @@ _VISIONCLASSIFICATIONRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=612,
-  serialized_end=754,
+  serialized_start=708,
+  serialized_end=850,
 )
 
 
@@ -463,8 +532,8 @@ _IMAGESEGMENTATIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=756,
-  serialized_end=838,
+  serialized_start=852,
+  serialized_end=934,
 )
 
 
@@ -494,8 +563,8 @@ _IMAGESEGMENTATIONRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=840,
-  serialized_end=889,
+  serialized_start=936,
+  serialized_end=985,
 )
 
 
@@ -525,8 +594,8 @@ _IMAGEDOWNLOADREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=891,
-  serialized_end=926,
+  serialized_start=987,
+  serialized_end=1022,
 )
 
 
@@ -556,8 +625,8 @@ _IMAGEDOWNLOADRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=928,
-  serialized_end=966,
+  serialized_start=1024,
+  serialized_end=1062,
 )
 
 _MODELRESPONSE.fields_by_name['text'].message_type = _TEXTGENERATIONRESPONSE
@@ -571,6 +640,8 @@ _VISIONCLASSIFICATIONRESPONSE.fields_by_name['results'].message_type = _VISIONCL
 DESCRIPTOR.message_types_by_name['GetModelsReq'] = _GETMODELSREQ
 DESCRIPTOR.message_types_by_name['ModelResponse'] = _MODELRESPONSE
 DESCRIPTOR.message_types_by_name['GetModelsResp'] = _GETMODELSRESP
+DESCRIPTOR.message_types_by_name['ModelUUIDRequest'] = _MODELUUIDREQUEST
+DESCRIPTOR.message_types_by_name['ModelUUIDResponse'] = _MODELUUIDRESPONSE
 DESCRIPTOR.message_types_by_name['TextGenerationRequest'] = _TEXTGENERATIONREQUEST
 DESCRIPTOR.message_types_by_name['TextGenerationResponse'] = _TEXTGENERATIONRESPONSE
 DESCRIPTOR.message_types_by_name['VisionClassificationRequest'] = _VISIONCLASSIFICATIONREQUEST
@@ -610,6 +681,20 @@ GetModelsResp = _reflection.GeneratedProtocolMessageType('GetModelsResp', (_mess
   ))
 _sym_db.RegisterMessage(GetModelsResp)
 _sym_db.RegisterMessage(GetModelsResp.Model)
+
+ModelUUIDRequest = _reflection.GeneratedProtocolMessageType('ModelUUIDRequest', (_message.Message,), dict(
+  DESCRIPTOR = _MODELUUIDREQUEST,
+  __module__ = 'protos.services_pb2'
+  # @@protoc_insertion_point(class_scope:ModelUUIDRequest)
+  ))
+_sym_db.RegisterMessage(ModelUUIDRequest)
+
+ModelUUIDResponse = _reflection.GeneratedProtocolMessageType('ModelUUIDResponse', (_message.Message,), dict(
+  DESCRIPTOR = _MODELUUIDRESPONSE,
+  __module__ = 'protos.services_pb2'
+  # @@protoc_insertion_point(class_scope:ModelUUIDResponse)
+  ))
+_sym_db.RegisterMessage(ModelUUIDResponse)
 
 TextGenerationRequest = _reflection.GeneratedProtocolMessageType('TextGenerationRequest', (_message.Message,), dict(
   DESCRIPTOR = _TEXTGENERATIONREQUEST,
@@ -683,8 +768,8 @@ _MODEL = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=1076,
-  serialized_end=1389,
+  serialized_start=1172,
+  serialized_end=1539,
   methods=[
   _descriptor.MethodDescriptor(
     name='VisionClassification',
@@ -729,6 +814,15 @@ _MODEL = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_GETMODELSREQ,
     output_type=_GETMODELSRESP,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='ModelUUID',
+    full_name='Model.ModelUUID',
+    index=5,
+    containing_service=None,
+    input_type=_MODELUUIDREQUEST,
+    output_type=_MODELUUIDRESPONSE,
     serialized_options=None,
   ),
 ])
