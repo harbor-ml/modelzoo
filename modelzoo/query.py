@@ -16,7 +16,7 @@ from _protos.services_pb2 import (
 )
 import grpc
 
-channel = grpc.insecure_channel('http://modelzoo.live:8080')
+channel = grpc.insecure_channel('52.40.213.134:9091')
 serve = ModelStub(channel)
 
 def _query_for_model_uuid(model: str, token: str) -> typing.Union[str, None] :
