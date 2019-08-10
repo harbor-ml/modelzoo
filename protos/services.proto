@@ -25,6 +25,15 @@ message GetModelsResp {
   repeated Model models = 1;
 }
 
+message ModelUUIDRequest {
+  string model_name = 1;
+  string token = 2;
+}
+
+message ModelUUIDResponse {
+  string model_uuid = 1;
+}
+
 message TextGenerationRequest {
   string input_phrase = 1;
   float temperature = 2; 
@@ -84,4 +93,6 @@ service Model {
 
   rpc GetImage(ImageDownloadRequest) returns (ImageDownloadResponse) {}
   rpc ListModels(GetModelsReq) returns (GetModelsResp) {}
+
+  rpc ModelUUID(ModelUUIDRequest) returns (ModelUUIDResponse) {}
 }
