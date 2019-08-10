@@ -242,7 +242,7 @@ func (s *mockModelServer) ModelUUID(
 	if newdb.Error != nil {
 		return nil, newdb.Error
 	}
-	b, e := Authorize(token, m)
+	b, e := Authorize(req.GetToken(), m)
 	if !b {
 		return nil, e
 	}
