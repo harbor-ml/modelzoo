@@ -246,7 +246,7 @@ func (s *mockModelServer) ModelUUID(
 	if !b {
 		return nil, e
 	}
-	val := &services.ModelUUIDResponse{model_uuid=m.ID.String()}
+	val := &services.ModelUUIDResponse{ModelUuid=m.ID.String()}
 	return val, nil
 }
 
