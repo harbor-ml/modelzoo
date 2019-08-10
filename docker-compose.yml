@@ -9,6 +9,7 @@ services:
     - 8080:8080
     - 80:80
     - 443:443
+    - 9091:9091
   go-proxy:
     image: modelzoolive/go
     build:
