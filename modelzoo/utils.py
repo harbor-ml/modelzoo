@@ -6,7 +6,6 @@ from w3lib.url import parse_data_uri
 import mimetypes
 from PIL import Image
 from pathlib import Path
-from query import _query_for_model_uuid
 from _protos.services_pb2 import (
     TextGenerationRequest,
     ImageSegmentationRequest,
@@ -17,6 +16,8 @@ from _protos.services_pb2 import (
 
 class UnauthorizedException(Exception):
     pass
+
+ImgLike = typing.NewType('ImgLike', typing.Union[type(Image), str])
 
 def img_file_to_uri(filepath: str) -> str:
     """
@@ -48,26 +49,6 @@ def uri_to_img_file(data_uri: str, filepath: typing.Union[str, Path]) -> None :
     """
     uri_to_img(data_uri).save(filepath)
 
-def create_text_gen_req(input_phrase: str, temp: float, model: str, token: str) -> TextGenerationRequest :
-    uuid = _authorize(model, token)
-    return TextGenerationRequest(input_phrase=input_phrase, temperature=temp, model_uuid=uuid, token=token)
-
-def create_vision_gen_req(input_image: typing.Union[type(Image), str], model: str, token: str, num_returns: typing.Optional[int] = 3) -> VisionClassificationRequest:
-    uuid = _authorize(model, token)
-    input_image = _img_inp_types_to_uri(input_image)
-    return VisionClassificationRequest(input_image=input_image, num_returns=num_returns, model_uuid=uuid, token=token)
-
-def create_image_seg_req(input_image: typing.Union[type(Image), str], model: str, token: str) -> ImageSegmentationRequest:
-    uuid = _authorize(model, token)
-    input_image = _img_inp_types_to_uri(input_image)
-    return ImageSegmentationRequest(input_image=input_image, model_uuid=uuid, token=token)
-
-def _authorize(model: str, token: str) -> str:
-    id = _query_for_model_uuid(model, token)
-    if id is None:
-        raise UnauthorizedException("User with token %s is not authorized for model %s" % (token, model))
-    return id
-
 def _validate_data_uri(data_uri: str) -> bool:
     try:
         uri_to_img(data_uri)
@@ -75,7 +56,7 @@ def _validate_data_uri(data_uri: str) -> bool:
     except Exception:
         return False
 
-def _img_inp_types_to_uri(input_image: typing.Union[type(Image), str]) -> str:
+def _img_inp_types_to_uri(input_image: ImgLike) -> str:
     if isinstance(input_image, Image):
         return img_to_uri(input_image)
     elif os.path.isfile(input_image):
