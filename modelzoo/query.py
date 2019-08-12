@@ -18,6 +18,7 @@ from _protos.services_pb2 import (
 from utils import (
     ImgLike,
     _img_inp_types_to_uri,
+    uri_to_img,
     UnauthorizedException
 )
 import grpc
@@ -36,7 +37,7 @@ def _process(resp: ModelResponse) -> ModelOutput:
     if resp.typeString == 'text':
         return resp.text.generated_texts
     elif resp.typeString == 'segment':
-        return resp.segment.output_image
+        return uri_to_img(resp.segment.output_image)
     elif resp.typeString == 'vision':
         r = []
         for res in resp.vision.results:
