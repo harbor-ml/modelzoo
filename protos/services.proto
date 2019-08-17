@@ -83,16 +83,36 @@ message ImageDownloadResponse {
 
 service Model {
   rpc VisionClassification(VisionClassificationRequest)
-      returns (ModelResponse) {}
+      returns (ModelResponse) {
+        option (google.api.http) = {
+          post: "/vision"
+          body: "*"
+        };
+      }
 
   rpc TextGeneration(TextGenerationRequest)
-      returns (ModelResponse) {}
+      returns (ModelResponse) {
+         option (google.api.http) = {
+          post: "/text"
+          body: "*"
+        };
+      }
 
   rpc ImageSegmentation(ImageSegmentationRequest)
-      returns (ModelResponse) {}
+      returns (ModelResponse) {
+        option (google.api.http) = {
+          post: "/image"
+          body: "*"
+        };
+      }
 
   rpc GetImage(ImageDownloadRequest) returns (ImageDownloadResponse) {}
   rpc ListModels(GetModelsReq) returns (GetModelsResp) {}
 
-  rpc ModelUUID(ModelUUIDRequest) returns (ModelUUIDResponse) {}
+  rpc ModelUUID(ModelUUIDRequest) returns (ModelUUIDResponse) {
+    option (google.api.http) = {
+      post: "/models"
+      body: "*"
+    };
+  }
 }
