@@ -11,6 +11,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 
 	"github.com/google/uuid"
 
@@ -22,6 +23,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 
 	proto "github.com/golang/protobuf/proto"
 	"google.golang.org/grpc"
@@ -29,7 +31,7 @@ import (
 
 const port int = 9090
 
-const modelAddrTemplate string = "http://54.213.2.210:1337/%v/predict"
+var modelAddrTemplate string
 
 // const modelAddrTemplate string = "http://mock-backend:8000/%v/predict"
 
@@ -256,8 +258,14 @@ func main() {
 		panic(err)
 	}
 	log.Println("Server started, listening to port", port)
-	// Change this to whatever database you want to use.
-	db, err = gorm.Open("postgres", "host=34.213.216.228 port=5432 user=modelzoo")
+	log.Println("Running in", os.Args[1], "mode.")
+	if os.Args[1] == "public" {
+		db, err = gorm.Open("postgres", "host=34.213.216.228 port=5432 user=modelzoo")
+		modelAddrTemplate = "http://54.213.2.210:1337/%v/predict"
+	} else {
+		db, err = gorm.Open("sqlite3", "/tmp/modelzoo.db")
+		modelAddrTemplate = "http://mock-backend:8000/%v/predict"
+	}
 	if err != nil {
 		panic(err)
 	}
