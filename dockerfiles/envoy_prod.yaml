@@ -51,6 +51,14 @@ static_resources:
           route_config:
             name: js_route
             virtual_hosts:
+            - name: grpc_service
+              domains:
+              - grpc.modelzoo.live
+              routes:
+              - match:
+                  prefix: /
+                route:
+                  cluster: grpc_service
             - name: js_service
               domains:
               - modelzoo.live
