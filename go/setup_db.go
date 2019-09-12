@@ -11,6 +11,15 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
+// Define base models
+const models = [...]string{"res50-pytorch", "squeezenet-pytorch", "rise-pytorch", "marvel-pytorch", "image-segmentation", "image-captioning"}
+
+// Define base outputs
+const outputs = [...]string{"vision", "text", "segment"}
+
+// Define base categories
+const categories = [...]string{"VisionClassification", "TextGeneration", "ImageSegmentation", "ImageCaptioning"}
+
 func main() {
 	// Open SQLite3 DB on local
 	db, err := gorm.Open("sqlite3", "/tmp/modelzoo.db")
@@ -26,7 +35,7 @@ func main() {
 	db.AutoMigrate(&dbtypes.Category{})
 	db.AutoMigrate(&dbtypes.Query{})
 	db.AutoMigrate(&dbtypes.MetaData{})
-	populate_cats(db)
+	populate_categories(db)
 	populate_outputs(db)
 
 	// Define FK constraints within SQLite3
@@ -36,25 +45,25 @@ func main() {
 	iuid := uuid.New()
 	db.Create(&dbtypes.User{ID: iuid, UserName: "admin", Email: "admin@admin.com", Token: "admin_token", LastUsed: time.Now()})
 
-	// Define base models
-	var models = [...]string{"res50-pytorch", "squeezenet-pytorch", "rise-pytorch", "marvel-pytorch", "image-segmentation", "image-captioning"}
+	// Enter base models into DB
 	for _, mod := range models {
-		cat, out := cats(mod)
-		db.Create(&dbtypes.Model{ID: uuid.New(), Name: mod, Author: iuid, ModelCategory: cat, OutputType: out, Private: false})
+		category, out := categories(mod)
+		db.Create(&dbtypes.Model{ID: uuid.New(), Name: mod, Author: iuid, ModelCategory: category, OutputType: out, Private: false})
 	}
 }
-func populate_cats(db *gorm.DB) {
-	db.Exec("INSERT INTO categories VALUES (0, \"VisionClassification\")")
-	db.Exec("INSERT INTO categories VALUES (1,  \"TextGeneration\")")
-	db.Exec("INSERT INTO categories VALUES (2, \"ImageSegmentation\")")
-	db.Exec("INSERT INTO categories VALUES (3,\"ImageCaptioning\")")
+func populate_categories(db *gorm.DB) {
+	for index, category := range categories {
+		cmd := fmt.Sprintf("INSERT INTO categories VALUES (%d, \"%s\")", index, category)
+		db.Exec(cmd)
+	}
 }
 func populate_outputs(db *gorm.DB) {
-	db.Exec("INSERT INTO output_types VALUES (0, \"vision\")")
-	db.Exec("INSERT INTO output_types VALUES (1, \"text\")")
-	db.Exec("INSERT INTO output_types VALUES (2, \"segment\")")
+	for index, output := range outputs {
+		cmd := fmt.Sprintf("INSERT INTO output_types VALUES (%d, \"%s\")", index, output)
+		db.Exec(cmd)
+	}
 }
-func cats(m string) (int, int) {
+func categories(m string) (int, int) {
 	switch m {
 	case "res50-pytorch":
 		return 0, 0

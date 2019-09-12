@@ -258,6 +258,7 @@ func main() {
 		panic(err)
 	}
 	log.Println("Server started, listening to port", port)
+	// TODO(Rehan): This should not be hard coded. Should also use flags.
 	log.Println("Running in", os.Args[1], "mode.")
 	if os.Args[1] == "public" {
 		db, err = gorm.Open("postgres", "host=34.213.216.228 port=5432 user=modelzoo")
