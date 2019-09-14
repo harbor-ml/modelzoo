@@ -6,12 +6,12 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
-	"os"
 
 	"github.com/google/uuid"
 
@@ -32,6 +32,8 @@ import (
 const port int = 9090
 
 var modelAddrTemplate string
+
+var public bool
 
 // const modelAddrTemplate string = "http://mock-backend:8000/%v/predict"
 
@@ -253,14 +255,22 @@ func (s *mockModelServer) ModelUUID(
 }
 
 func main() {
+	flag.BoolVar(&public, "public", false, "Flag to indicate whether or not to use the public ModelZoo.Live database.")
+	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%d", port))
 	if err != nil {
 		panic(err)
 	}
 	log.Println("Server started, listening to port", port)
-	// TODO(Rehan): This should not be hard coded. Should also use flags.
-	log.Println("Running in", os.Args[1], "mode.")
-	if os.Args[1] == "public" {
+	mode := func() string {
+		if public {
+			return "public"
+		} else {
+			return "private"
+		}
+	}()
+	log.Println("Running in", mode, "mode.")
+	if public {
 		db, err = gorm.Open("postgres", "host=34.213.216.228 port=5432 user=modelzoo")
 		modelAddrTemplate = "http://54.213.2.210:1337/%v/predict"
 	} else {

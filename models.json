@@ -1,0 +1,15 @@
+{
+    "models": [
+        {
+            "name":"Rehan",
+            "category":"VISIONCLASSIFICATION",
+            "output":"ViSIon"
+        },
+        {
+            "name":"aehan",
+            "category":"VISIONCLASSIFICATION",
+            "output":"text",
+            "private": true
+        }
+    ]
+}

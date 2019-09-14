@@ -13,7 +13,7 @@ services:
   go-proxy:
     image: modelzoolive/go
     environment:
-      - backend="private"
+      - backend=""
     volumes:
       - /tmp/modelzoo.db:/tmp/modelzoo.db
     build:

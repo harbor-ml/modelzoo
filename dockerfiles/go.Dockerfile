@@ -1,6 +1,6 @@
 FROM modelzoolive/base
 
-ENV backend="public"
+ENV backend="--public"
 
 RUN go get -u github.com/vincent-petithory/dataurl \
  && go get -u github.com/kazegusuri/grpc-panic-handler \
