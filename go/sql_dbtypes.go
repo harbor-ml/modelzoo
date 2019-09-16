@@ -19,9 +19,9 @@ type User struct {
 type Model struct {
 	ID            uuid.UUID `gorm:"type:uuid;primary_key"`
 	Name          string
-	Author        uuid.UUID `gorm:"type:uuid;index:auth"`
-	ModelCategory int
-	OutputType    int
+	Author        uuid.UUID `gorm:"type:uuid;index:auth"sql:"type:uuid REFERENCES users(id)"`
+	ModelCategory int       `sql:"type:integer REFERENCES categories(id)"`
+	OutputType    int       `sql:"type:integer REFERENCES output_types(id)"`
 	Private       bool
 	MetaData      []MetaData `gorm:"foreignkey:ModelID"`
 	Query         []Query    `gorm:"foreignKey:ModelID"`
@@ -38,15 +38,15 @@ type Category struct {
 }
 
 type Query struct {
-	ModelID   uuid.UUID `gorm:"type:uuid;primary_key"`
-	Issuer    uuid.UUID `gorm:"type:uuid;primary_key"`
+	ModelID   uuid.UUID `gorm:"type:uuid;primary_key"sql:"type:uuid REFERENCES models(id)"`
+	Issuer    uuid.UUID `gorm:"type:uuid;primary_key"sql:"type:uuid REFERENCES users(id)"`
 	CreatedAt time.Time `gorm:"primary_key"`
 	EndedAt   time.Time
 	Status    int
 }
 
 type MetaData struct {
-	ModelID uuid.UUID `gorm:"type:uuid;primary_key"`
+	ModelID uuid.UUID `gorm:"type:uuid;primary_key"sql:"type:uuid REFERENCES models(id)"`
 	Key     string    `gorm:"primary_key"`
 	Value   string
 }

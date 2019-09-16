@@ -1,0 +1,15 @@
+{
+    "models": [
+        {
+            "name":"model1",
+            "category":"VISIONCLASSIFICATION",
+            "output":"ViSIon"
+        },
+        {
+            "name":"model2",
+            "category":"VISIONCLASSIFICATION",
+            "output":"text",
+            "private": true
+        }
+    ]
+}

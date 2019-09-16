@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -22,6 +23,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 
 	proto "github.com/golang/protobuf/proto"
 	"google.golang.org/grpc"
@@ -29,7 +31,9 @@ import (
 
 const port int = 9090
 
-const modelAddrTemplate string = "http://54.213.2.210:1337/%v/predict"
+var modelAddrTemplate string
+
+var public bool
 
 // const modelAddrTemplate string = "http://mock-backend:8000/%v/predict"
 
@@ -251,13 +255,23 @@ func (s *mockModelServer) ModelUUID(
 }
 
 func main() {
+	flag.BoolVar(&public, "public", false, "Flag to indicate whether or not to use the public ModelZoo.Live database.")
+	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%d", port))
 	if err != nil {
 		panic(err)
 	}
 	log.Println("Server started, listening to port", port)
-	// Change this to whatever database you want to use.
-	db, err = gorm.Open("postgres", "host=34.213.216.228 port=5432 user=modelzoo")
+	// TODO(Rehan) make db a cmd line arg, not hard coded.
+	if public {
+		log.Println("Running in public mode.")
+		db, err = gorm.Open("postgres", "host=34.213.216.228 port=5432 user=modelzoo")
+		modelAddrTemplate = "http://54.213.2.210:1337/%v/predict"
+	} else {
+		log.Println("Running in private mode.")
+		db, err = gorm.Open("sqlite3", "/tmp/modelzoo.db")
+		modelAddrTemplate = "http://mock-backend:8000/%v/predict"
+	}
 	if err != nil {
 		panic(err)
 	}
