@@ -262,18 +262,13 @@ func main() {
 		panic(err)
 	}
 	log.Println("Server started, listening to port", port)
-	mode := func() string {
-		if public {
-			return "public"
-		} else {
-			return "private"
-		}
-	}()
-	log.Println("Running in", mode, "mode.")
+	// TODO(Rehan) make db a cmd line arg, not hard coded.
 	if public {
+		log.Println("Running in public mode.")
 		db, err = gorm.Open("postgres", "host=34.213.216.228 port=5432 user=modelzoo")
 		modelAddrTemplate = "http://54.213.2.210:1337/%v/predict"
 	} else {
+		log.Println("Running in private mode.")
 		db, err = gorm.Open("sqlite3", "/tmp/modelzoo.db")
 		modelAddrTemplate = "http://mock-backend:8000/%v/predict"
 	}

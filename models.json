@@ -1,12 +1,12 @@
 {
     "models": [
         {
-            "name":"Rehan",
+            "name":"model1",
             "category":"VISIONCLASSIFICATION",
             "output":"ViSIon"
         },
         {
-            "name":"aehan",
+            "name":"model2",
             "category":"VISIONCLASSIFICATION",
             "output":"text",
             "private": true
