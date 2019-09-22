@@ -12,7 +12,6 @@
     "bad-words": "^3.0.2",
     "google-protobuf": "3.8.0-rc.1",
     "grpc-web": "^1.0.4",
-    "rc-tween-one": "^2.4.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
