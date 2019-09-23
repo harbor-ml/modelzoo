@@ -7,7 +7,9 @@ enum ModelCategory {
   IMAGECAPTIONING = 3;
 }
 
-message GetModelsReq {}
+message GetModelsReq {
+  string token = 1;
+}
 
 message ModelResponse {
   string typeString = 1;
@@ -34,6 +36,42 @@ message ModelUUIDResponse {
   string model_uuid = 1;
 }
 
+message AuthenticationRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message AuthenticationResponse {
+  bool success = 1;
+  string msg = 2;
+  string token = 3;
+}
+
+message RegisterTokenRequest {
+  string adm_token = 1;
+}
+
+message GetTokenPermissionsRequest {
+  string adm_token = 1;
+  string token = 2;
+}
+
+message SetTokenPermissionsRequest {
+  message ModelPermissions {
+    string model_uuid = 1;
+    bool remove = 2;
+  }
+  string adm_token = 1;
+  string token = 2;
+  repeated ModelPermissions models = 3;
+}
+
+message RegisterUserRequest {
+  string username = 1;
+  string password = 2;
+  string email = 3;
+}
+
 message TextGenerationRequest {
   string input_phrase = 1;
   float temperature = 2; 
@@ -41,6 +79,7 @@ message TextGenerationRequest {
   string model_uuid = 3;
   string token = 4;
 }
+
 message TextGenerationResponse {
   repeated string generated_texts = 1;
 }
@@ -95,4 +134,14 @@ service Model {
   rpc ListModels(GetModelsReq) returns (GetModelsResp) {}
 
   rpc ModelUUID(ModelUUIDRequest) returns (ModelUUIDResponse) {}
+
+  rpc Authenticate(AuthenticationRequest) returns (AuthenticationResponse) {}
+
+  rpc RegisterUser(RegisterUserRequest) returns (AuthenticationResponse) {}
+
+  rpc RegisterToken(RegisterTokenRequest) returns (AuthenticationResponse) {}
+
+  rpc SetPermissions(SetTokenPermissionsRequest) returns (AuthenticationResponse) {}
+
+  rpc GetPermissions(GetTokenPermissionsRequest) returns (GetModelsResp) {}
 }
