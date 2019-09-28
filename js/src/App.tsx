@@ -1,8 +1,6 @@
 import React, { FC } from "react";
 import { Layout, Menu, Typography } from "antd";
 
-import "./App.css";
-
 import { ModelClient } from "protos/services_grpc_web_pb";
 import { Models } from "./Components/Models";
 
@@ -10,7 +8,6 @@ const { Title } = Typography;
 
 const client = new ModelClient(`${window.location.protocol}//${window.location.hostname}:8080`, null, null);
 export const ClientContext = React.createContext(client);
-
 
 
 const App: FC = () => {
