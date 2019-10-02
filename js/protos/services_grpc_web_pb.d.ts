@@ -7,6 +7,8 @@ import {
   ImageDownloadResponse,
   ImageSegmentationRequest,
   ModelResponse,
+  ModelUUIDRequest,
+  ModelUUIDResponse,
   TextGenerationRequest,
   VisionClassificationRequest} from './services_pb';
 
@@ -50,6 +52,13 @@ export class ModelClient {
                response: GetModelsResp) => void
   ): grpcWeb.ClientReadableStream<GetModelsResp>;
 
+  modelUUID(
+    request: ModelUUIDRequest,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.Error,
+               response: ModelUUIDResponse) => void
+  ): grpcWeb.ClientReadableStream<ModelUUIDResponse>;
+
 }
 
 export class ModelPromiseClient {
@@ -81,6 +90,11 @@ export class ModelPromiseClient {
     request: GetModelsReq,
     metadata?: grpcWeb.Metadata
   ): Promise<GetModelsResp>;
+
+  modelUUID(
+    request: ModelUUIDRequest,
+    metadata?: grpcWeb.Metadata
+  ): Promise<ModelUUIDResponse>;
 
 }
 

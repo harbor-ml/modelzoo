@@ -3,7 +3,7 @@
         {
             "name":"model1",
             "category":"VISIONCLASSIFICATION",
-            "output":"ViSIon"
+            "output":"vision"
         },
         {
             "name":"model2",

@@ -1,4 +1,4 @@
-package db_types
+package db
 
 import (
 	"time"
@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// User represents a modelzoo user
 type User struct {
 	ID       uuid.UUID `gorm:"type:uuid;primary_key"`
 	UserName string    `gorm:"unique"`
@@ -16,6 +17,7 @@ type User struct {
 	Queries  []Query `gorm:"foreignkey:Issuer"`
 }
 
+// Model represents a single model and its metadata
 type Model struct {
 	ID            uuid.UUID `gorm:"type:uuid;primary_key"`
 	Name          string
@@ -27,16 +29,19 @@ type Model struct {
 	Query         []Query    `gorm:"foreignKey:ModelID"`
 }
 
+// OutputType register the output type of the model
 type OutputType struct {
 	ID   int `gorm:"primary_key"`
 	Type string
 }
 
+// Category register the model category
 type Category struct {
 	ID   int `gorm:"primary_key"`
 	Type string
 }
 
+// Query is a trace of a single query made from client
 type Query struct {
 	ModelID   uuid.UUID `gorm:"type:uuid;primary_key"`
 	Issuer    uuid.UUID `gorm:"type:uuid;primary_key"`
@@ -45,6 +50,7 @@ type Query struct {
 	Status    int
 }
 
+// MetaData represent key-value pairs that can be used to filter models
 type MetaData struct {
 	ModelID uuid.UUID `gorm:"type:uuid;primary_key"`
 	Key     string    `gorm:"primary_key"`

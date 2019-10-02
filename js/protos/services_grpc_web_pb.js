@@ -360,5 +360,60 @@ proto.ModelPromiseClient.prototype.listModels =
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.ModelUUIDRequest,
+ *   !proto.ModelUUIDResponse>}
+ */
+const methodInfo_Model_ModelUUID = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.ModelUUIDResponse,
+  /** @param {!proto.ModelUUIDRequest} request */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.ModelUUIDResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.ModelUUIDRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.Error, ?proto.ModelUUIDResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.ModelUUIDResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.ModelClient.prototype.modelUUID =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/Model/ModelUUID',
+      request,
+      metadata || {},
+      methodInfo_Model_ModelUUID,
+      callback);
+};
+
+
+/**
+ * @param {!proto.ModelUUIDRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.ModelUUIDResponse>}
+ *     A native promise that resolves to the response
+ */
+proto.ModelPromiseClient.prototype.modelUUID =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/Model/ModelUUID',
+      request,
+      metadata || {},
+      methodInfo_Model_ModelUUID);
+};
+
+
 module.exports = proto;
 

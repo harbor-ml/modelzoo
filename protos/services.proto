@@ -1,22 +1,46 @@
 syntax = "proto3";
 
+/* Model Categories are semanically meaningful categoies. Each category
+should be associated with one input type and one output type.
+*/
 enum ModelCategory {
-  VISIONCLASSIFICATION = 0;
-  TEXTGENERATION = 1;
-  IMAGESEGMENTATION = 2;
-  IMAGECAPTIONING = 3;
+  VISION_CLASSIFICATION = 0;
+  TEXT_GENERATION = 1;
+  IMAGE_SEGMENTATION = 2;
+  IMAGE_CAPTIONING = 3;
 }
 
-message GetModelsReq {}
+message Image {
+  map<string, string> metadata = 1;
+  string image_data_url = 2;
 
-message ModelResponse {
-  string typeString = 1;
-    TextGenerationResponse text = 2;
-    VisionClassificationResponse vision = 3;
-    ImageSegmentationResponse segment = 4;
+  string model_uuid = 3;
+  string access_token = 4;
 }
 
-message GetModelsResp {
+message Text {
+  map<string, string> metadata = 1;
+  repeated string texts = 2;
+
+  string model_uuid = 3;
+  string access_token = 4;
+}
+
+message Table {
+  map<string, string> metadata = 1;
+  string model_uuid = 2;
+  string access_token = 3;
+
+  // Inspired from pandas orient="index"
+  // >>> df.to_json(orient='index')
+  // '{"row 1":{"col 1":"a","col 2":"b"},"row 2":{"col 1":"c","col 2":"d"}}'
+  message Row { map<string, string> column_to_value = 1; }
+  map<string, Row> table = 4;
+  repeated string column_names = 5;
+}
+
+message ListModelsRequest {}
+message ListModelsResponse {
   message Model {
     string model_name = 1;
     ModelCategory model_category = 2;
@@ -25,74 +49,30 @@ message GetModelsResp {
   repeated Model models = 1;
 }
 
+/*
+TODO(rehan): plz fix the following a bit for auth
+*/
 message ModelUUIDRequest {
   string model_name = 1;
   string token = 2;
 }
+message ModelUUIDResponse { string model_uuid = 1; }
 
-message ModelUUIDResponse {
-  string model_uuid = 1;
-}
-
-message TextGenerationRequest {
-  string input_phrase = 1;
-  float temperature = 2; 
-
-  string model_uuid = 3;
-  string token = 4;
-}
-message TextGenerationResponse {
-  repeated string generated_texts = 1;
-}
-
-message VisionClassificationRequest {
-  string input_image = 1;
-  uint32 num_returns = 2;
-
-  string model_uuid = 3;
-  string token = 4;
-}
-
-message VisionClassificationResponse {
-  message Result {
-    uint32 rank = 1;
-    string category = 2;
-    float proba = 3;
-  }
-
-  repeated Result results = 1;
-}
-
-message ImageSegmentationRequest {
-  string input_image = 1;
-  
-  string model_uuid = 2;
-  string token = 3;
-}
-
-message ImageSegmentationResponse {
-  string output_image = 1;
-}    
-
-message ImageDownloadRequest {
-  string url = 1;
-}
-message ImageDownloadResponse {
-  string image = 1;
-}
+// Downloader
+message ImageDownloadRequest { string url = 1; }
+message ImageDownloadResponse { string image = 1; }
 
 service Model {
-  rpc VisionClassification(VisionClassificationRequest)
-      returns (ModelResponse) {}
+  // Inference
+  rpc VisionClassification(Image) returns (Table) {}
+  rpc TextGeneration(Text) returns (Text) {}
+  rpc ImageSegmentation(Image) returns (Image) {}
+  rpc ImageCaption(Image) returns (Text) {}
 
-  rpc TextGeneration(TextGenerationRequest)
-      returns (ModelResponse) {}
-
-  rpc ImageSegmentation(ImageSegmentationRequest)
-      returns (ModelResponse) {}
-
+  // Website utils
   rpc GetImage(ImageDownloadRequest) returns (ImageDownloadResponse) {}
-  rpc ListModels(GetModelsReq) returns (GetModelsResp) {}
 
+  // Database
+  rpc ListModels(ListModelsRequest) returns (ListModelsResponse) {}
   rpc ModelUUID(ModelUUIDRequest) returns (ModelUUIDResponse) {}
 }

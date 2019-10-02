@@ -97,6 +97,46 @@ export namespace GetModelsResp {
 
 }
 
+export class ModelUUIDRequest extends jspb.Message {
+  getModelName(): string;
+  setModelName(value: string): void;
+
+  getToken(): string;
+  setToken(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ModelUUIDRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ModelUUIDRequest): ModelUUIDRequest.AsObject;
+  static serializeBinaryToWriter(message: ModelUUIDRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ModelUUIDRequest;
+  static deserializeBinaryFromReader(message: ModelUUIDRequest, reader: jspb.BinaryReader): ModelUUIDRequest;
+}
+
+export namespace ModelUUIDRequest {
+  export type AsObject = {
+    modelName: string,
+    token: string,
+  }
+}
+
+export class ModelUUIDResponse extends jspb.Message {
+  getModelUuid(): string;
+  setModelUuid(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ModelUUIDResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ModelUUIDResponse): ModelUUIDResponse.AsObject;
+  static serializeBinaryToWriter(message: ModelUUIDResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ModelUUIDResponse;
+  static deserializeBinaryFromReader(message: ModelUUIDResponse, reader: jspb.BinaryReader): ModelUUIDResponse;
+}
+
+export namespace ModelUUIDResponse {
+  export type AsObject = {
+    modelUuid: string,
+  }
+}
+
 export class TextGenerationRequest extends jspb.Message {
   getInputPhrase(): string;
   setInputPhrase(value: string): void;
