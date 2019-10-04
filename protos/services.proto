@@ -40,6 +40,10 @@ message Table {
 
 // Web
 message Empty {}
+message Status {
+  bool success = 1;
+  string message = 2;
+}
 message KVPair {
   string key = 1;
   string value = 2;
@@ -94,6 +98,7 @@ service ModelzooService {
 
   // Database
   rpc ListModels(Empty) returns (ListModelsResponse) {}
-  rpc CreateUser(User) returns (Empty) {}
-  rpc CreateModel(Model) returns (Empty) {}
+  rpc CreateUser(User) returns (Status) {}
+  rpc CreateModel(Model) returns (Status) {}
+  rpc GetUser(User) returns (Status) {}
 }

@@ -3,1698 +3,1056 @@
 # source: services.proto
 
 import sys
-
-_b = sys.version_info[0] < 3 and (lambda x: x) or (lambda x: x.encode("latin1"))
+_b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
 from google.protobuf.internal import enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
 from google.protobuf import symbol_database as _symbol_database
-
 # @@protoc_insertion_point(imports)
 
 _sym_db = _symbol_database.Default()
 
 
+
+
 DESCRIPTOR = _descriptor.FileDescriptor(
-    name="services.proto",
-    package="",
-    syntax="proto3",
-    serialized_options=None,
-    serialized_pb=_b(
-        '\n\x0eservices.proto"\x1d\n\x0cGetModelsReq\x12\r\n\x05token\x18\x01 \x01(\t"\xa6\x01\n\rModelResponse\x12\x12\n\ntypeString\x18\x01 \x01(\t\x12%\n\x04text\x18\x02 \x01(\x0b\x32\x17.TextGenerationResponse\x12-\n\x06vision\x18\x03 \x01(\x0b\x32\x1d.VisionClassificationResponse\x12+\n\x07segment\x18\x04 \x01(\x0b\x32\x1a.ImageSegmentationResponse"\x88\x01\n\rGetModelsResp\x12$\n\x06models\x18\x01 \x03(\x0b\x32\x14.GetModelsResp.Model\x1aQ\n\x05Model\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12&\n\x0emodel_category\x18\x02 \x01(\x0e\x32\x0e.ModelCategory\x12\x0c\n\x04uuid\x18\x03 \x01(\t"5\n\x10ModelUUIDRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\r\n\x05token\x18\x02 \x01(\t"\'\n\x11ModelUUIDResponse\x12\x12\n\nmodel_uuid\x18\x01 \x01(\t";\n\x15\x41uthenticationRequest\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t"E\n\x16\x41uthenticationResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0b\n\x03msg\x18\x02 \x01(\t\x12\r\n\x05token\x18\x03 \x01(\t")\n\x14RegisterTokenRequest\x12\x11\n\tadm_token\x18\x01 \x01(\t"\xb4\x01\n\x1aSetTokenPermissionsRequest\x12\x11\n\tadm_token\x18\x01 \x01(\t\x12\r\n\x05token\x18\x02 \x01(\t\x12<\n\x06models\x18\x03 \x03(\x0b\x32,.SetTokenPermissionsRequest.ModelPermissions\x1a\x36\n\x10ModelPermissions\x12\x12\n\nmodel_uuid\x18\x01 \x01(\t\x12\x0e\n\x06remove\x18\x02 \x01(\x08"H\n\x13RegisterUserRequest\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t"e\n\x15TextGenerationRequest\x12\x14\n\x0cinput_phrase\x18\x01 \x01(\t\x12\x13\n\x0btemperature\x18\x02 \x01(\x02\x12\x12\n\nmodel_uuid\x18\x03 \x01(\t\x12\r\n\x05token\x18\x04 \x01(\t"1\n\x16TextGenerationResponse\x12\x17\n\x0fgenerated_texts\x18\x01 \x03(\t"j\n\x1bVisionClassificationRequest\x12\x13\n\x0binput_image\x18\x01 \x01(\t\x12\x13\n\x0bnum_returns\x18\x02 \x01(\r\x12\x12\n\nmodel_uuid\x18\x03 \x01(\t\x12\r\n\x05token\x18\x04 \x01(\t"\x8e\x01\n\x1cVisionClassificationResponse\x12\x35\n\x07results\x18\x01 \x03(\x0b\x32$.VisionClassificationResponse.Result\x1a\x37\n\x06Result\x12\x0c\n\x04rank\x18\x01 \x01(\r\x12\x10\n\x08\x63\x61tegory\x18\x02 \x01(\t\x12\r\n\x05proba\x18\x03 \x01(\x02"R\n\x18ImageSegmentationRequest\x12\x13\n\x0binput_image\x18\x01 \x01(\t\x12\x12\n\nmodel_uuid\x18\x02 \x01(\t\x12\r\n\x05token\x18\x03 \x01(\t"1\n\x19ImageSegmentationResponse\x12\x14\n\x0coutput_image\x18\x01 \x01(\t"#\n\x14ImageDownloadRequest\x12\x0b\n\x03url\x18\x01 \x01(\t"&\n\x15ImageDownloadResponse\x12\r\n\x05image\x18\x01 \x01(\t*i\n\rModelCategory\x12\x18\n\x14VISIONCLASSIFICATION\x10\x00\x12\x12\n\x0eTEXTGENERATION\x10\x01\x12\x15\n\x11IMAGESEGMENTATION\x10\x02\x12\x13\n\x0fIMAGECAPTIONING\x10\x03\x32\x80\x05\n\x05Model\x12\x46\n\x14VisionClassification\x12\x1c.VisionClassificationRequest\x1a\x0e.ModelResponse"\x00\x12:\n\x0eTextGeneration\x12\x16.TextGenerationRequest\x1a\x0e.ModelResponse"\x00\x12@\n\x11ImageSegmentation\x12\x19.ImageSegmentationRequest\x1a\x0e.ModelResponse"\x00\x12;\n\x08GetImage\x12\x15.ImageDownloadRequest\x1a\x16.ImageDownloadResponse"\x00\x12-\n\nListModels\x12\r.GetModelsReq\x1a\x0e.GetModelsResp"\x00\x12\x34\n\tModelUUID\x12\x11.ModelUUIDRequest\x1a\x12.ModelUUIDResponse"\x00\x12\x41\n\x0c\x41uthenticate\x12\x16.AuthenticationRequest\x1a\x17.AuthenticationResponse"\x00\x12?\n\x0cRegisterUser\x12\x14.RegisterUserRequest\x1a\x17.AuthenticationResponse"\x00\x12\x41\n\rRegisterToken\x12\x15.RegisterTokenRequest\x1a\x17.AuthenticationResponse"\x00\x12H\n\x0eSetPermissions\x12\x1b.SetTokenPermissionsRequest\x1a\x17.AuthenticationResponse"\x00\x62\x06proto3'
-    ),
+  name='services.proto',
+  package='modelzoo',
+  syntax='proto3',
+  serialized_options=None,
+  serialized_pb=_b('\n\x0eservices.proto\x12\x08modelzoo\"\xab\x01\n\x05Image\x12/\n\x08metadata\x18\x01 \x03(\x0b\x32\x1d.modelzoo.Image.MetadataEntry\x12\x16\n\x0eimage_data_url\x18\x02 \x01(\t\x12\x12\n\nmodel_name\x18\x03 \x01(\t\x12\x14\n\x0c\x61\x63\x63\x65ss_token\x18\x04 \x01(\t\x1a/\n\rMetadataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\xa0\x01\n\x04Text\x12.\n\x08metadata\x18\x01 \x03(\x0b\x32\x1c.modelzoo.Text.MetadataEntry\x12\r\n\x05texts\x18\x02 \x03(\t\x12\x12\n\nmodel_name\x18\x03 \x01(\t\x12\x14\n\x0c\x61\x63\x63\x65ss_token\x18\x04 \x01(\t\x1a/\n\rMetadataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x95\x03\n\x05Table\x12/\n\x08metadata\x18\x01 \x03(\x0b\x32\x1d.modelzoo.Table.MetadataEntry\x12\x12\n\nmodel_name\x18\x02 \x01(\t\x12\x14\n\x0c\x61\x63\x63\x65ss_token\x18\x03 \x01(\t\x12)\n\x05table\x18\x04 \x03(\x0b\x32\x1a.modelzoo.Table.TableEntry\x12\x14\n\x0c\x63olumn_names\x18\x05 \x03(\t\x1a/\n\rMetadataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x1a|\n\x03Row\x12?\n\x0f\x63olumn_to_value\x18\x01 \x03(\x0b\x32&.modelzoo.Table.Row.ColumnToValueEntry\x1a\x34\n\x12\x43olumnToValueEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x1a\x41\n\nTableEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\"\n\x05value\x18\x02 \x01(\x0b\x32\x13.modelzoo.Table.Row:\x02\x38\x01\"\x07\n\x05\x45mpty\"*\n\x06Status\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"$\n\x06KVPair\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\"?\n\x05Model\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\"\n\x08metadata\x18\x03 \x03(\x0b\x32\x10.modelzoo.KVPair\"\'\n\x04User\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"\x1f\n\x0eRateLimitToken\x12\r\n\x05token\x18\x01 \x01(\t\"5\n\x12ListModelsResponse\x12\x1f\n\x06models\x18\x01 \x03(\x0b\x32\x0f.modelzoo.Model\"#\n\x14ImageDownloadRequest\x12\x0b\n\x03url\x18\x01 \x01(\t\"&\n\x15ImageDownloadResponse\x12\r\n\x05image\x18\x01 \x01(\t\"\x9d\x01\n\x07Payload\x12#\n\x04type\x18\x01 \x01(\x0e\x32\x15.modelzoo.PayloadType\x12 \n\x05image\x18\x02 \x01(\x0b\x32\x0f.modelzoo.ImageH\x00\x12\x1e\n\x04text\x18\x03 \x01(\x0b\x32\x0e.modelzoo.TextH\x00\x12 \n\x05table\x18\x04 \x01(\x0b\x32\x0f.modelzoo.TableH\x00\x42\t\n\x07payload*-\n\x0bPayloadType\x12\t\n\x05IMAGE\x10\x00\x12\x08\n\x04TEXT\x10\x01\x12\t\n\x05TABLE\x10\x02\x32\xa2\x03\n\x0fModelzooService\x12\x33\n\tInference\x12\x11.modelzoo.Payload\x1a\x11.modelzoo.Payload\"\x00\x12M\n\x08GetImage\x12\x1e.modelzoo.ImageDownloadRequest\x1a\x1f.modelzoo.ImageDownloadResponse\"\x00\x12\x37\n\x08GetToken\x12\x0f.modelzoo.Empty\x1a\x18.modelzoo.RateLimitToken\"\x00\x12=\n\nListModels\x12\x0f.modelzoo.Empty\x1a\x1c.modelzoo.ListModelsResponse\"\x00\x12\x30\n\nCreateUser\x12\x0e.modelzoo.User\x1a\x10.modelzoo.Status\"\x00\x12\x32\n\x0b\x43reateModel\x12\x0f.modelzoo.Model\x1a\x10.modelzoo.Status\"\x00\x12-\n\x07GetUser\x12\x0e.modelzoo.User\x1a\x10.modelzoo.Status\"\x00\x62\x06proto3')
 )
 
-_MODELCATEGORY = _descriptor.EnumDescriptor(
-    name="ModelCategory",
-    full_name="ModelCategory",
-    filename=None,
-    file=DESCRIPTOR,
-    values=[
-        _descriptor.EnumValueDescriptor(
-            name="VISIONCLASSIFICATION",
-            index=0,
-            number=0,
-            serialized_options=None,
-            type=None,
-        ),
-        _descriptor.EnumValueDescriptor(
-            name="TEXTGENERATION", index=1, number=1, serialized_options=None, type=None
-        ),
-        _descriptor.EnumValueDescriptor(
-            name="IMAGESEGMENTATION",
-            index=2,
-            number=2,
-            serialized_options=None,
-            type=None,
-        ),
-        _descriptor.EnumValueDescriptor(
-            name="IMAGECAPTIONING",
-            index=3,
-            number=3,
-            serialized_options=None,
-            type=None,
-        ),
-    ],
-    containing_type=None,
-    serialized_options=None,
-    serialized_start=1504,
-    serialized_end=1609,
+_PAYLOADTYPE = _descriptor.EnumDescriptor(
+  name='PayloadType',
+  full_name='modelzoo.PayloadType',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='IMAGE', index=0, number=0,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='TEXT', index=1, number=1,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='TABLE', index=2, number=2,
+      serialized_options=None,
+      type=None),
+  ],
+  containing_type=None,
+  serialized_options=None,
+  serialized_start=1295,
+  serialized_end=1340,
 )
-_sym_db.RegisterEnumDescriptor(_MODELCATEGORY)
+_sym_db.RegisterEnumDescriptor(_PAYLOADTYPE)
 
-ModelCategory = enum_type_wrapper.EnumTypeWrapper(_MODELCATEGORY)
-VISIONCLASSIFICATION = 0
-TEXTGENERATION = 1
-IMAGESEGMENTATION = 2
-IMAGECAPTIONING = 3
+PayloadType = enum_type_wrapper.EnumTypeWrapper(_PAYLOADTYPE)
+IMAGE = 0
+TEXT = 1
+TABLE = 2
 
 
-_GETMODELSREQ = _descriptor.Descriptor(
-    name="GetModelsReq",
-    full_name="GetModelsReq",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="token",
-            full_name="GetModelsReq.token",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        )
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=18,
-    serialized_end=47,
+
+_IMAGE_METADATAENTRY = _descriptor.Descriptor(
+  name='MetadataEntry',
+  full_name='modelzoo.Image.MetadataEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='modelzoo.Image.MetadataEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='modelzoo.Image.MetadataEntry.value', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=_b('8\001'),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=153,
+  serialized_end=200,
 )
 
-
-_MODELRESPONSE = _descriptor.Descriptor(
-    name="ModelResponse",
-    full_name="ModelResponse",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="typeString",
-            full_name="ModelResponse.typeString",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="text",
-            full_name="ModelResponse.text",
-            index=1,
-            number=2,
-            type=11,
-            cpp_type=10,
-            label=1,
-            has_default_value=False,
-            default_value=None,
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="vision",
-            full_name="ModelResponse.vision",
-            index=2,
-            number=3,
-            type=11,
-            cpp_type=10,
-            label=1,
-            has_default_value=False,
-            default_value=None,
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="segment",
-            full_name="ModelResponse.segment",
-            index=3,
-            number=4,
-            type=11,
-            cpp_type=10,
-            label=1,
-            has_default_value=False,
-            default_value=None,
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=50,
-    serialized_end=216,
+_IMAGE = _descriptor.Descriptor(
+  name='Image',
+  full_name='modelzoo.Image',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='metadata', full_name='modelzoo.Image.metadata', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='image_data_url', full_name='modelzoo.Image.image_data_url', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='model_name', full_name='modelzoo.Image.model_name', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='access_token', full_name='modelzoo.Image.access_token', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[_IMAGE_METADATAENTRY, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=29,
+  serialized_end=200,
 )
 
 
-_GETMODELSRESP_MODEL = _descriptor.Descriptor(
-    name="Model",
-    full_name="GetModelsResp.Model",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="model_name",
-            full_name="GetModelsResp.Model.model_name",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="model_category",
-            full_name="GetModelsResp.Model.model_category",
-            index=1,
-            number=2,
-            type=14,
-            cpp_type=8,
-            label=1,
-            has_default_value=False,
-            default_value=0,
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="uuid",
-            full_name="GetModelsResp.Model.uuid",
-            index=2,
-            number=3,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=274,
-    serialized_end=355,
+_TEXT_METADATAENTRY = _descriptor.Descriptor(
+  name='MetadataEntry',
+  full_name='modelzoo.Text.MetadataEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='modelzoo.Text.MetadataEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='modelzoo.Text.MetadataEntry.value', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=_b('8\001'),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=153,
+  serialized_end=200,
 )
 
-_GETMODELSRESP = _descriptor.Descriptor(
-    name="GetModelsResp",
-    full_name="GetModelsResp",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="models",
-            full_name="GetModelsResp.models",
-            index=0,
-            number=1,
-            type=11,
-            cpp_type=10,
-            label=3,
-            has_default_value=False,
-            default_value=[],
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        )
-    ],
-    extensions=[],
-    nested_types=[_GETMODELSRESP_MODEL],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=219,
-    serialized_end=355,
+_TEXT = _descriptor.Descriptor(
+  name='Text',
+  full_name='modelzoo.Text',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='metadata', full_name='modelzoo.Text.metadata', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='texts', full_name='modelzoo.Text.texts', index=1,
+      number=2, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='model_name', full_name='modelzoo.Text.model_name', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='access_token', full_name='modelzoo.Text.access_token', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[_TEXT_METADATAENTRY, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=203,
+  serialized_end=363,
 )
 
 
-_MODELUUIDREQUEST = _descriptor.Descriptor(
-    name="ModelUUIDRequest",
-    full_name="ModelUUIDRequest",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="model_name",
-            full_name="ModelUUIDRequest.model_name",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="token",
-            full_name="ModelUUIDRequest.token",
-            index=1,
-            number=2,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=357,
-    serialized_end=410,
+_TABLE_METADATAENTRY = _descriptor.Descriptor(
+  name='MetadataEntry',
+  full_name='modelzoo.Table.MetadataEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='modelzoo.Table.MetadataEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='modelzoo.Table.MetadataEntry.value', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=_b('8\001'),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=153,
+  serialized_end=200,
+)
+
+_TABLE_ROW_COLUMNTOVALUEENTRY = _descriptor.Descriptor(
+  name='ColumnToValueEntry',
+  full_name='modelzoo.Table.Row.ColumnToValueEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='modelzoo.Table.Row.ColumnToValueEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='modelzoo.Table.Row.ColumnToValueEntry.value', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=_b('8\001'),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=652,
+  serialized_end=704,
+)
+
+_TABLE_ROW = _descriptor.Descriptor(
+  name='Row',
+  full_name='modelzoo.Table.Row',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='column_to_value', full_name='modelzoo.Table.Row.column_to_value', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[_TABLE_ROW_COLUMNTOVALUEENTRY, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=580,
+  serialized_end=704,
+)
+
+_TABLE_TABLEENTRY = _descriptor.Descriptor(
+  name='TableEntry',
+  full_name='modelzoo.Table.TableEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='modelzoo.Table.TableEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='modelzoo.Table.TableEntry.value', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=_b('8\001'),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=706,
+  serialized_end=771,
+)
+
+_TABLE = _descriptor.Descriptor(
+  name='Table',
+  full_name='modelzoo.Table',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='metadata', full_name='modelzoo.Table.metadata', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='model_name', full_name='modelzoo.Table.model_name', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='access_token', full_name='modelzoo.Table.access_token', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='table', full_name='modelzoo.Table.table', index=3,
+      number=4, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='column_names', full_name='modelzoo.Table.column_names', index=4,
+      number=5, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[_TABLE_METADATAENTRY, _TABLE_ROW, _TABLE_TABLEENTRY, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=366,
+  serialized_end=771,
 )
 
 
-_MODELUUIDRESPONSE = _descriptor.Descriptor(
-    name="ModelUUIDResponse",
-    full_name="ModelUUIDResponse",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="model_uuid",
-            full_name="ModelUUIDResponse.model_uuid",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        )
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=412,
-    serialized_end=451,
+_EMPTY = _descriptor.Descriptor(
+  name='Empty',
+  full_name='modelzoo.Empty',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=773,
+  serialized_end=780,
 )
 
 
-_AUTHENTICATIONREQUEST = _descriptor.Descriptor(
-    name="AuthenticationRequest",
-    full_name="AuthenticationRequest",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="username",
-            full_name="AuthenticationRequest.username",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="password",
-            full_name="AuthenticationRequest.password",
-            index=1,
-            number=2,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=453,
-    serialized_end=512,
+_STATUS = _descriptor.Descriptor(
+  name='Status',
+  full_name='modelzoo.Status',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='success', full_name='modelzoo.Status.success', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='message', full_name='modelzoo.Status.message', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=782,
+  serialized_end=824,
 )
 
 
-_AUTHENTICATIONRESPONSE = _descriptor.Descriptor(
-    name="AuthenticationResponse",
-    full_name="AuthenticationResponse",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="success",
-            full_name="AuthenticationResponse.success",
-            index=0,
-            number=1,
-            type=8,
-            cpp_type=7,
-            label=1,
-            has_default_value=False,
-            default_value=False,
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="msg",
-            full_name="AuthenticationResponse.msg",
-            index=1,
-            number=2,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="token",
-            full_name="AuthenticationResponse.token",
-            index=2,
-            number=3,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=514,
-    serialized_end=583,
+_KVPAIR = _descriptor.Descriptor(
+  name='KVPair',
+  full_name='modelzoo.KVPair',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='modelzoo.KVPair.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='modelzoo.KVPair.value', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=826,
+  serialized_end=862,
 )
 
 
-_REGISTERTOKENREQUEST = _descriptor.Descriptor(
-    name="RegisterTokenRequest",
-    full_name="RegisterTokenRequest",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="adm_token",
-            full_name="RegisterTokenRequest.adm_token",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        )
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=585,
-    serialized_end=626,
+_MODEL = _descriptor.Descriptor(
+  name='Model',
+  full_name='modelzoo.Model',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='model_name', full_name='modelzoo.Model.model_name', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='metadata', full_name='modelzoo.Model.metadata', index=1,
+      number=3, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=864,
+  serialized_end=927,
 )
 
 
-_SETTOKENPERMISSIONSREQUEST_MODELPERMISSIONS = _descriptor.Descriptor(
-    name="ModelPermissions",
-    full_name="SetTokenPermissionsRequest.ModelPermissions",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="model_uuid",
-            full_name="SetTokenPermissionsRequest.ModelPermissions.model_uuid",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="remove",
-            full_name="SetTokenPermissionsRequest.ModelPermissions.remove",
-            index=1,
-            number=2,
-            type=8,
-            cpp_type=7,
-            label=1,
-            has_default_value=False,
-            default_value=False,
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=755,
-    serialized_end=809,
-)
-
-_SETTOKENPERMISSIONSREQUEST = _descriptor.Descriptor(
-    name="SetTokenPermissionsRequest",
-    full_name="SetTokenPermissionsRequest",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="adm_token",
-            full_name="SetTokenPermissionsRequest.adm_token",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="token",
-            full_name="SetTokenPermissionsRequest.token",
-            index=1,
-            number=2,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="models",
-            full_name="SetTokenPermissionsRequest.models",
-            index=2,
-            number=3,
-            type=11,
-            cpp_type=10,
-            label=3,
-            has_default_value=False,
-            default_value=[],
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-    ],
-    extensions=[],
-    nested_types=[_SETTOKENPERMISSIONSREQUEST_MODELPERMISSIONS],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=629,
-    serialized_end=809,
+_USER = _descriptor.Descriptor(
+  name='User',
+  full_name='modelzoo.User',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='email', full_name='modelzoo.User.email', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='password', full_name='modelzoo.User.password', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=929,
+  serialized_end=968,
 )
 
 
-_REGISTERUSERREQUEST = _descriptor.Descriptor(
-    name="RegisterUserRequest",
-    full_name="RegisterUserRequest",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="username",
-            full_name="RegisterUserRequest.username",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="password",
-            full_name="RegisterUserRequest.password",
-            index=1,
-            number=2,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="email",
-            full_name="RegisterUserRequest.email",
-            index=2,
-            number=3,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=811,
-    serialized_end=883,
+_RATELIMITTOKEN = _descriptor.Descriptor(
+  name='RateLimitToken',
+  full_name='modelzoo.RateLimitToken',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='token', full_name='modelzoo.RateLimitToken.token', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=970,
+  serialized_end=1001,
 )
 
 
-_TEXTGENERATIONREQUEST = _descriptor.Descriptor(
-    name="TextGenerationRequest",
-    full_name="TextGenerationRequest",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="input_phrase",
-            full_name="TextGenerationRequest.input_phrase",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="temperature",
-            full_name="TextGenerationRequest.temperature",
-            index=1,
-            number=2,
-            type=2,
-            cpp_type=6,
-            label=1,
-            has_default_value=False,
-            default_value=float(0),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="model_uuid",
-            full_name="TextGenerationRequest.model_uuid",
-            index=2,
-            number=3,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="token",
-            full_name="TextGenerationRequest.token",
-            index=3,
-            number=4,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=885,
-    serialized_end=986,
-)
-
-
-_TEXTGENERATIONRESPONSE = _descriptor.Descriptor(
-    name="TextGenerationResponse",
-    full_name="TextGenerationResponse",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="generated_texts",
-            full_name="TextGenerationResponse.generated_texts",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=3,
-            has_default_value=False,
-            default_value=[],
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        )
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=988,
-    serialized_end=1037,
-)
-
-
-_VISIONCLASSIFICATIONREQUEST = _descriptor.Descriptor(
-    name="VisionClassificationRequest",
-    full_name="VisionClassificationRequest",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="input_image",
-            full_name="VisionClassificationRequest.input_image",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="num_returns",
-            full_name="VisionClassificationRequest.num_returns",
-            index=1,
-            number=2,
-            type=13,
-            cpp_type=3,
-            label=1,
-            has_default_value=False,
-            default_value=0,
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="model_uuid",
-            full_name="VisionClassificationRequest.model_uuid",
-            index=2,
-            number=3,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="token",
-            full_name="VisionClassificationRequest.token",
-            index=3,
-            number=4,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=1039,
-    serialized_end=1145,
-)
-
-
-_VISIONCLASSIFICATIONRESPONSE_RESULT = _descriptor.Descriptor(
-    name="Result",
-    full_name="VisionClassificationResponse.Result",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="rank",
-            full_name="VisionClassificationResponse.Result.rank",
-            index=0,
-            number=1,
-            type=13,
-            cpp_type=3,
-            label=1,
-            has_default_value=False,
-            default_value=0,
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="category",
-            full_name="VisionClassificationResponse.Result.category",
-            index=1,
-            number=2,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="proba",
-            full_name="VisionClassificationResponse.Result.proba",
-            index=2,
-            number=3,
-            type=2,
-            cpp_type=6,
-            label=1,
-            has_default_value=False,
-            default_value=float(0),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=1235,
-    serialized_end=1290,
-)
-
-_VISIONCLASSIFICATIONRESPONSE = _descriptor.Descriptor(
-    name="VisionClassificationResponse",
-    full_name="VisionClassificationResponse",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="results",
-            full_name="VisionClassificationResponse.results",
-            index=0,
-            number=1,
-            type=11,
-            cpp_type=10,
-            label=3,
-            has_default_value=False,
-            default_value=[],
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        )
-    ],
-    extensions=[],
-    nested_types=[_VISIONCLASSIFICATIONRESPONSE_RESULT],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=1148,
-    serialized_end=1290,
-)
-
-
-_IMAGESEGMENTATIONREQUEST = _descriptor.Descriptor(
-    name="ImageSegmentationRequest",
-    full_name="ImageSegmentationRequest",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="input_image",
-            full_name="ImageSegmentationRequest.input_image",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="model_uuid",
-            full_name="ImageSegmentationRequest.model_uuid",
-            index=1,
-            number=2,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-        _descriptor.FieldDescriptor(
-            name="token",
-            full_name="ImageSegmentationRequest.token",
-            index=2,
-            number=3,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        ),
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=1292,
-    serialized_end=1374,
-)
-
-
-_IMAGESEGMENTATIONRESPONSE = _descriptor.Descriptor(
-    name="ImageSegmentationResponse",
-    full_name="ImageSegmentationResponse",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="output_image",
-            full_name="ImageSegmentationResponse.output_image",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        )
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=1376,
-    serialized_end=1425,
+_LISTMODELSRESPONSE = _descriptor.Descriptor(
+  name='ListModelsResponse',
+  full_name='modelzoo.ListModelsResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='models', full_name='modelzoo.ListModelsResponse.models', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1003,
+  serialized_end=1056,
 )
 
 
 _IMAGEDOWNLOADREQUEST = _descriptor.Descriptor(
-    name="ImageDownloadRequest",
-    full_name="ImageDownloadRequest",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="url",
-            full_name="ImageDownloadRequest.url",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        )
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=1427,
-    serialized_end=1462,
+  name='ImageDownloadRequest',
+  full_name='modelzoo.ImageDownloadRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='url', full_name='modelzoo.ImageDownloadRequest.url', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1058,
+  serialized_end=1093,
 )
 
 
 _IMAGEDOWNLOADRESPONSE = _descriptor.Descriptor(
-    name="ImageDownloadResponse",
-    full_name="ImageDownloadResponse",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="image",
-            full_name="ImageDownloadResponse.image",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=_b("").decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            file=DESCRIPTOR,
-        )
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=1464,
-    serialized_end=1502,
+  name='ImageDownloadResponse',
+  full_name='modelzoo.ImageDownloadResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='image', full_name='modelzoo.ImageDownloadResponse.image', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1095,
+  serialized_end=1133,
 )
 
-_MODELRESPONSE.fields_by_name["text"].message_type = _TEXTGENERATIONRESPONSE
-_MODELRESPONSE.fields_by_name["vision"].message_type = _VISIONCLASSIFICATIONRESPONSE
-_MODELRESPONSE.fields_by_name["segment"].message_type = _IMAGESEGMENTATIONRESPONSE
-_GETMODELSRESP_MODEL.fields_by_name["model_category"].enum_type = _MODELCATEGORY
-_GETMODELSRESP_MODEL.containing_type = _GETMODELSRESP
-_GETMODELSRESP.fields_by_name["models"].message_type = _GETMODELSRESP_MODEL
-_SETTOKENPERMISSIONSREQUEST_MODELPERMISSIONS.containing_type = (
-    _SETTOKENPERMISSIONSREQUEST
+
+_PAYLOAD = _descriptor.Descriptor(
+  name='Payload',
+  full_name='modelzoo.Payload',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='type', full_name='modelzoo.Payload.type', index=0,
+      number=1, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='image', full_name='modelzoo.Payload.image', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='text', full_name='modelzoo.Payload.text', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='table', full_name='modelzoo.Payload.table', index=3,
+      number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+    _descriptor.OneofDescriptor(
+      name='payload', full_name='modelzoo.Payload.payload',
+      index=0, containing_type=None, fields=[]),
+  ],
+  serialized_start=1136,
+  serialized_end=1293,
 )
-_SETTOKENPERMISSIONSREQUEST.fields_by_name[
-    "models"
-].message_type = _SETTOKENPERMISSIONSREQUEST_MODELPERMISSIONS
-_VISIONCLASSIFICATIONRESPONSE_RESULT.containing_type = _VISIONCLASSIFICATIONRESPONSE
-_VISIONCLASSIFICATIONRESPONSE.fields_by_name[
-    "results"
-].message_type = _VISIONCLASSIFICATIONRESPONSE_RESULT
-DESCRIPTOR.message_types_by_name["GetModelsReq"] = _GETMODELSREQ
-DESCRIPTOR.message_types_by_name["ModelResponse"] = _MODELRESPONSE
-DESCRIPTOR.message_types_by_name["GetModelsResp"] = _GETMODELSRESP
-DESCRIPTOR.message_types_by_name["ModelUUIDRequest"] = _MODELUUIDREQUEST
-DESCRIPTOR.message_types_by_name["ModelUUIDResponse"] = _MODELUUIDRESPONSE
-DESCRIPTOR.message_types_by_name["AuthenticationRequest"] = _AUTHENTICATIONREQUEST
-DESCRIPTOR.message_types_by_name["AuthenticationResponse"] = _AUTHENTICATIONRESPONSE
-DESCRIPTOR.message_types_by_name["RegisterTokenRequest"] = _REGISTERTOKENREQUEST
-DESCRIPTOR.message_types_by_name[
-    "SetTokenPermissionsRequest"
-] = _SETTOKENPERMISSIONSREQUEST
-DESCRIPTOR.message_types_by_name["RegisterUserRequest"] = _REGISTERUSERREQUEST
-DESCRIPTOR.message_types_by_name["TextGenerationRequest"] = _TEXTGENERATIONREQUEST
-DESCRIPTOR.message_types_by_name["TextGenerationResponse"] = _TEXTGENERATIONRESPONSE
-DESCRIPTOR.message_types_by_name[
-    "VisionClassificationRequest"
-] = _VISIONCLASSIFICATIONREQUEST
-DESCRIPTOR.message_types_by_name[
-    "VisionClassificationResponse"
-] = _VISIONCLASSIFICATIONRESPONSE
-DESCRIPTOR.message_types_by_name["ImageSegmentationRequest"] = _IMAGESEGMENTATIONREQUEST
-DESCRIPTOR.message_types_by_name[
-    "ImageSegmentationResponse"
-] = _IMAGESEGMENTATIONRESPONSE
-DESCRIPTOR.message_types_by_name["ImageDownloadRequest"] = _IMAGEDOWNLOADREQUEST
-DESCRIPTOR.message_types_by_name["ImageDownloadResponse"] = _IMAGEDOWNLOADRESPONSE
-DESCRIPTOR.enum_types_by_name["ModelCategory"] = _MODELCATEGORY
+
+_IMAGE_METADATAENTRY.containing_type = _IMAGE
+_IMAGE.fields_by_name['metadata'].message_type = _IMAGE_METADATAENTRY
+_TEXT_METADATAENTRY.containing_type = _TEXT
+_TEXT.fields_by_name['metadata'].message_type = _TEXT_METADATAENTRY
+_TABLE_METADATAENTRY.containing_type = _TABLE
+_TABLE_ROW_COLUMNTOVALUEENTRY.containing_type = _TABLE_ROW
+_TABLE_ROW.fields_by_name['column_to_value'].message_type = _TABLE_ROW_COLUMNTOVALUEENTRY
+_TABLE_ROW.containing_type = _TABLE
+_TABLE_TABLEENTRY.fields_by_name['value'].message_type = _TABLE_ROW
+_TABLE_TABLEENTRY.containing_type = _TABLE
+_TABLE.fields_by_name['metadata'].message_type = _TABLE_METADATAENTRY
+_TABLE.fields_by_name['table'].message_type = _TABLE_TABLEENTRY
+_MODEL.fields_by_name['metadata'].message_type = _KVPAIR
+_LISTMODELSRESPONSE.fields_by_name['models'].message_type = _MODEL
+_PAYLOAD.fields_by_name['type'].enum_type = _PAYLOADTYPE
+_PAYLOAD.fields_by_name['image'].message_type = _IMAGE
+_PAYLOAD.fields_by_name['text'].message_type = _TEXT
+_PAYLOAD.fields_by_name['table'].message_type = _TABLE
+_PAYLOAD.oneofs_by_name['payload'].fields.append(
+  _PAYLOAD.fields_by_name['image'])
+_PAYLOAD.fields_by_name['image'].containing_oneof = _PAYLOAD.oneofs_by_name['payload']
+_PAYLOAD.oneofs_by_name['payload'].fields.append(
+  _PAYLOAD.fields_by_name['text'])
+_PAYLOAD.fields_by_name['text'].containing_oneof = _PAYLOAD.oneofs_by_name['payload']
+_PAYLOAD.oneofs_by_name['payload'].fields.append(
+  _PAYLOAD.fields_by_name['table'])
+_PAYLOAD.fields_by_name['table'].containing_oneof = _PAYLOAD.oneofs_by_name['payload']
+DESCRIPTOR.message_types_by_name['Image'] = _IMAGE
+DESCRIPTOR.message_types_by_name['Text'] = _TEXT
+DESCRIPTOR.message_types_by_name['Table'] = _TABLE
+DESCRIPTOR.message_types_by_name['Empty'] = _EMPTY
+DESCRIPTOR.message_types_by_name['Status'] = _STATUS
+DESCRIPTOR.message_types_by_name['KVPair'] = _KVPAIR
+DESCRIPTOR.message_types_by_name['Model'] = _MODEL
+DESCRIPTOR.message_types_by_name['User'] = _USER
+DESCRIPTOR.message_types_by_name['RateLimitToken'] = _RATELIMITTOKEN
+DESCRIPTOR.message_types_by_name['ListModelsResponse'] = _LISTMODELSRESPONSE
+DESCRIPTOR.message_types_by_name['ImageDownloadRequest'] = _IMAGEDOWNLOADREQUEST
+DESCRIPTOR.message_types_by_name['ImageDownloadResponse'] = _IMAGEDOWNLOADRESPONSE
+DESCRIPTOR.message_types_by_name['Payload'] = _PAYLOAD
+DESCRIPTOR.enum_types_by_name['PayloadType'] = _PAYLOADTYPE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-GetModelsReq = _reflection.GeneratedProtocolMessageType(
-    "GetModelsReq",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _GETMODELSREQ,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:GetModelsReq)
-    },
-)
-_sym_db.RegisterMessage(GetModelsReq)
+Image = _reflection.GeneratedProtocolMessageType('Image', (_message.Message,), {
 
-ModelResponse = _reflection.GeneratedProtocolMessageType(
-    "ModelResponse",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _MODELRESPONSE,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:ModelResponse)
-    },
-)
-_sym_db.RegisterMessage(ModelResponse)
+  'MetadataEntry' : _reflection.GeneratedProtocolMessageType('MetadataEntry', (_message.Message,), {
+    'DESCRIPTOR' : _IMAGE_METADATAENTRY,
+    '__module__' : 'services_pb2'
+    # @@protoc_insertion_point(class_scope:modelzoo.Image.MetadataEntry)
+    })
+  ,
+  'DESCRIPTOR' : _IMAGE,
+  '__module__' : 'services_pb2'
+  # @@protoc_insertion_point(class_scope:modelzoo.Image)
+  })
+_sym_db.RegisterMessage(Image)
+_sym_db.RegisterMessage(Image.MetadataEntry)
 
-GetModelsResp = _reflection.GeneratedProtocolMessageType(
-    "GetModelsResp",
-    (_message.Message,),
-    {
-        "Model": _reflection.GeneratedProtocolMessageType(
-            "Model",
-            (_message.Message,),
-            {
-                "DESCRIPTOR": _GETMODELSRESP_MODEL,
-                "__module__": "services_pb2"
-                # @@protoc_insertion_point(class_scope:GetModelsResp.Model)
-            },
-        ),
-        "DESCRIPTOR": _GETMODELSRESP,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:GetModelsResp)
-    },
-)
-_sym_db.RegisterMessage(GetModelsResp)
-_sym_db.RegisterMessage(GetModelsResp.Model)
+Text = _reflection.GeneratedProtocolMessageType('Text', (_message.Message,), {
 
-ModelUUIDRequest = _reflection.GeneratedProtocolMessageType(
-    "ModelUUIDRequest",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _MODELUUIDREQUEST,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:ModelUUIDRequest)
-    },
-)
-_sym_db.RegisterMessage(ModelUUIDRequest)
+  'MetadataEntry' : _reflection.GeneratedProtocolMessageType('MetadataEntry', (_message.Message,), {
+    'DESCRIPTOR' : _TEXT_METADATAENTRY,
+    '__module__' : 'services_pb2'
+    # @@protoc_insertion_point(class_scope:modelzoo.Text.MetadataEntry)
+    })
+  ,
+  'DESCRIPTOR' : _TEXT,
+  '__module__' : 'services_pb2'
+  # @@protoc_insertion_point(class_scope:modelzoo.Text)
+  })
+_sym_db.RegisterMessage(Text)
+_sym_db.RegisterMessage(Text.MetadataEntry)
 
-ModelUUIDResponse = _reflection.GeneratedProtocolMessageType(
-    "ModelUUIDResponse",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _MODELUUIDRESPONSE,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:ModelUUIDResponse)
-    },
-)
-_sym_db.RegisterMessage(ModelUUIDResponse)
+Table = _reflection.GeneratedProtocolMessageType('Table', (_message.Message,), {
 
-AuthenticationRequest = _reflection.GeneratedProtocolMessageType(
-    "AuthenticationRequest",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _AUTHENTICATIONREQUEST,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:AuthenticationRequest)
-    },
-)
-_sym_db.RegisterMessage(AuthenticationRequest)
+  'MetadataEntry' : _reflection.GeneratedProtocolMessageType('MetadataEntry', (_message.Message,), {
+    'DESCRIPTOR' : _TABLE_METADATAENTRY,
+    '__module__' : 'services_pb2'
+    # @@protoc_insertion_point(class_scope:modelzoo.Table.MetadataEntry)
+    })
+  ,
 
-AuthenticationResponse = _reflection.GeneratedProtocolMessageType(
-    "AuthenticationResponse",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _AUTHENTICATIONRESPONSE,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:AuthenticationResponse)
-    },
-)
-_sym_db.RegisterMessage(AuthenticationResponse)
+  'Row' : _reflection.GeneratedProtocolMessageType('Row', (_message.Message,), {
 
-RegisterTokenRequest = _reflection.GeneratedProtocolMessageType(
-    "RegisterTokenRequest",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _REGISTERTOKENREQUEST,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:RegisterTokenRequest)
-    },
-)
-_sym_db.RegisterMessage(RegisterTokenRequest)
+    'ColumnToValueEntry' : _reflection.GeneratedProtocolMessageType('ColumnToValueEntry', (_message.Message,), {
+      'DESCRIPTOR' : _TABLE_ROW_COLUMNTOVALUEENTRY,
+      '__module__' : 'services_pb2'
+      # @@protoc_insertion_point(class_scope:modelzoo.Table.Row.ColumnToValueEntry)
+      })
+    ,
+    'DESCRIPTOR' : _TABLE_ROW,
+    '__module__' : 'services_pb2'
+    # @@protoc_insertion_point(class_scope:modelzoo.Table.Row)
+    })
+  ,
 
-SetTokenPermissionsRequest = _reflection.GeneratedProtocolMessageType(
-    "SetTokenPermissionsRequest",
-    (_message.Message,),
-    {
-        "ModelPermissions": _reflection.GeneratedProtocolMessageType(
-            "ModelPermissions",
-            (_message.Message,),
-            {
-                "DESCRIPTOR": _SETTOKENPERMISSIONSREQUEST_MODELPERMISSIONS,
-                "__module__": "services_pb2"
-                # @@protoc_insertion_point(class_scope:SetTokenPermissionsRequest.ModelPermissions)
-            },
-        ),
-        "DESCRIPTOR": _SETTOKENPERMISSIONSREQUEST,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:SetTokenPermissionsRequest)
-    },
-)
-_sym_db.RegisterMessage(SetTokenPermissionsRequest)
-_sym_db.RegisterMessage(SetTokenPermissionsRequest.ModelPermissions)
+  'TableEntry' : _reflection.GeneratedProtocolMessageType('TableEntry', (_message.Message,), {
+    'DESCRIPTOR' : _TABLE_TABLEENTRY,
+    '__module__' : 'services_pb2'
+    # @@protoc_insertion_point(class_scope:modelzoo.Table.TableEntry)
+    })
+  ,
+  'DESCRIPTOR' : _TABLE,
+  '__module__' : 'services_pb2'
+  # @@protoc_insertion_point(class_scope:modelzoo.Table)
+  })
+_sym_db.RegisterMessage(Table)
+_sym_db.RegisterMessage(Table.MetadataEntry)
+_sym_db.RegisterMessage(Table.Row)
+_sym_db.RegisterMessage(Table.Row.ColumnToValueEntry)
+_sym_db.RegisterMessage(Table.TableEntry)
 
-RegisterUserRequest = _reflection.GeneratedProtocolMessageType(
-    "RegisterUserRequest",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _REGISTERUSERREQUEST,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:RegisterUserRequest)
-    },
-)
-_sym_db.RegisterMessage(RegisterUserRequest)
+Empty = _reflection.GeneratedProtocolMessageType('Empty', (_message.Message,), {
+  'DESCRIPTOR' : _EMPTY,
+  '__module__' : 'services_pb2'
+  # @@protoc_insertion_point(class_scope:modelzoo.Empty)
+  })
+_sym_db.RegisterMessage(Empty)
 
-TextGenerationRequest = _reflection.GeneratedProtocolMessageType(
-    "TextGenerationRequest",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _TEXTGENERATIONREQUEST,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:TextGenerationRequest)
-    },
-)
-_sym_db.RegisterMessage(TextGenerationRequest)
+Status = _reflection.GeneratedProtocolMessageType('Status', (_message.Message,), {
+  'DESCRIPTOR' : _STATUS,
+  '__module__' : 'services_pb2'
+  # @@protoc_insertion_point(class_scope:modelzoo.Status)
+  })
+_sym_db.RegisterMessage(Status)
 
-TextGenerationResponse = _reflection.GeneratedProtocolMessageType(
-    "TextGenerationResponse",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _TEXTGENERATIONRESPONSE,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:TextGenerationResponse)
-    },
-)
-_sym_db.RegisterMessage(TextGenerationResponse)
+KVPair = _reflection.GeneratedProtocolMessageType('KVPair', (_message.Message,), {
+  'DESCRIPTOR' : _KVPAIR,
+  '__module__' : 'services_pb2'
+  # @@protoc_insertion_point(class_scope:modelzoo.KVPair)
+  })
+_sym_db.RegisterMessage(KVPair)
 
-VisionClassificationRequest = _reflection.GeneratedProtocolMessageType(
-    "VisionClassificationRequest",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _VISIONCLASSIFICATIONREQUEST,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:VisionClassificationRequest)
-    },
-)
-_sym_db.RegisterMessage(VisionClassificationRequest)
+Model = _reflection.GeneratedProtocolMessageType('Model', (_message.Message,), {
+  'DESCRIPTOR' : _MODEL,
+  '__module__' : 'services_pb2'
+  # @@protoc_insertion_point(class_scope:modelzoo.Model)
+  })
+_sym_db.RegisterMessage(Model)
 
-VisionClassificationResponse = _reflection.GeneratedProtocolMessageType(
-    "VisionClassificationResponse",
-    (_message.Message,),
-    {
-        "Result": _reflection.GeneratedProtocolMessageType(
-            "Result",
-            (_message.Message,),
-            {
-                "DESCRIPTOR": _VISIONCLASSIFICATIONRESPONSE_RESULT,
-                "__module__": "services_pb2"
-                # @@protoc_insertion_point(class_scope:VisionClassificationResponse.Result)
-            },
-        ),
-        "DESCRIPTOR": _VISIONCLASSIFICATIONRESPONSE,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:VisionClassificationResponse)
-    },
-)
-_sym_db.RegisterMessage(VisionClassificationResponse)
-_sym_db.RegisterMessage(VisionClassificationResponse.Result)
+User = _reflection.GeneratedProtocolMessageType('User', (_message.Message,), {
+  'DESCRIPTOR' : _USER,
+  '__module__' : 'services_pb2'
+  # @@protoc_insertion_point(class_scope:modelzoo.User)
+  })
+_sym_db.RegisterMessage(User)
 
-ImageSegmentationRequest = _reflection.GeneratedProtocolMessageType(
-    "ImageSegmentationRequest",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _IMAGESEGMENTATIONREQUEST,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:ImageSegmentationRequest)
-    },
-)
-_sym_db.RegisterMessage(ImageSegmentationRequest)
+RateLimitToken = _reflection.GeneratedProtocolMessageType('RateLimitToken', (_message.Message,), {
+  'DESCRIPTOR' : _RATELIMITTOKEN,
+  '__module__' : 'services_pb2'
+  # @@protoc_insertion_point(class_scope:modelzoo.RateLimitToken)
+  })
+_sym_db.RegisterMessage(RateLimitToken)
 
-ImageSegmentationResponse = _reflection.GeneratedProtocolMessageType(
-    "ImageSegmentationResponse",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _IMAGESEGMENTATIONRESPONSE,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:ImageSegmentationResponse)
-    },
-)
-_sym_db.RegisterMessage(ImageSegmentationResponse)
+ListModelsResponse = _reflection.GeneratedProtocolMessageType('ListModelsResponse', (_message.Message,), {
+  'DESCRIPTOR' : _LISTMODELSRESPONSE,
+  '__module__' : 'services_pb2'
+  # @@protoc_insertion_point(class_scope:modelzoo.ListModelsResponse)
+  })
+_sym_db.RegisterMessage(ListModelsResponse)
 
-ImageDownloadRequest = _reflection.GeneratedProtocolMessageType(
-    "ImageDownloadRequest",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _IMAGEDOWNLOADREQUEST,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:ImageDownloadRequest)
-    },
-)
+ImageDownloadRequest = _reflection.GeneratedProtocolMessageType('ImageDownloadRequest', (_message.Message,), {
+  'DESCRIPTOR' : _IMAGEDOWNLOADREQUEST,
+  '__module__' : 'services_pb2'
+  # @@protoc_insertion_point(class_scope:modelzoo.ImageDownloadRequest)
+  })
 _sym_db.RegisterMessage(ImageDownloadRequest)
 
-ImageDownloadResponse = _reflection.GeneratedProtocolMessageType(
-    "ImageDownloadResponse",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _IMAGEDOWNLOADRESPONSE,
-        "__module__": "services_pb2"
-        # @@protoc_insertion_point(class_scope:ImageDownloadResponse)
-    },
-)
+ImageDownloadResponse = _reflection.GeneratedProtocolMessageType('ImageDownloadResponse', (_message.Message,), {
+  'DESCRIPTOR' : _IMAGEDOWNLOADRESPONSE,
+  '__module__' : 'services_pb2'
+  # @@protoc_insertion_point(class_scope:modelzoo.ImageDownloadResponse)
+  })
 _sym_db.RegisterMessage(ImageDownloadResponse)
 
+Payload = _reflection.GeneratedProtocolMessageType('Payload', (_message.Message,), {
+  'DESCRIPTOR' : _PAYLOAD,
+  '__module__' : 'services_pb2'
+  # @@protoc_insertion_point(class_scope:modelzoo.Payload)
+  })
+_sym_db.RegisterMessage(Payload)
 
-_MODEL = _descriptor.ServiceDescriptor(
-    name="Model",
-    full_name="Model",
-    file=DESCRIPTOR,
+
+_IMAGE_METADATAENTRY._options = None
+_TEXT_METADATAENTRY._options = None
+_TABLE_METADATAENTRY._options = None
+_TABLE_ROW_COLUMNTOVALUEENTRY._options = None
+_TABLE_TABLEENTRY._options = None
+
+_MODELZOOSERVICE = _descriptor.ServiceDescriptor(
+  name='ModelzooService',
+  full_name='modelzoo.ModelzooService',
+  file=DESCRIPTOR,
+  index=0,
+  serialized_options=None,
+  serialized_start=1343,
+  serialized_end=1761,
+  methods=[
+  _descriptor.MethodDescriptor(
+    name='Inference',
+    full_name='modelzoo.ModelzooService.Inference',
     index=0,
+    containing_service=None,
+    input_type=_PAYLOAD,
+    output_type=_PAYLOAD,
     serialized_options=None,
-    serialized_start=1612,
-    serialized_end=2252,
-    methods=[
-        _descriptor.MethodDescriptor(
-            name="VisionClassification",
-            full_name="Model.VisionClassification",
-            index=0,
-            containing_service=None,
-            input_type=_VISIONCLASSIFICATIONREQUEST,
-            output_type=_MODELRESPONSE,
-            serialized_options=None,
-        ),
-        _descriptor.MethodDescriptor(
-            name="TextGeneration",
-            full_name="Model.TextGeneration",
-            index=1,
-            containing_service=None,
-            input_type=_TEXTGENERATIONREQUEST,
-            output_type=_MODELRESPONSE,
-            serialized_options=None,
-        ),
-        _descriptor.MethodDescriptor(
-            name="ImageSegmentation",
-            full_name="Model.ImageSegmentation",
-            index=2,
-            containing_service=None,
-            input_type=_IMAGESEGMENTATIONREQUEST,
-            output_type=_MODELRESPONSE,
-            serialized_options=None,
-        ),
-        _descriptor.MethodDescriptor(
-            name="GetImage",
-            full_name="Model.GetImage",
-            index=3,
-            containing_service=None,
-            input_type=_IMAGEDOWNLOADREQUEST,
-            output_type=_IMAGEDOWNLOADRESPONSE,
-            serialized_options=None,
-        ),
-        _descriptor.MethodDescriptor(
-            name="ListModels",
-            full_name="Model.ListModels",
-            index=4,
-            containing_service=None,
-            input_type=_GETMODELSREQ,
-            output_type=_GETMODELSRESP,
-            serialized_options=None,
-        ),
-        _descriptor.MethodDescriptor(
-            name="ModelUUID",
-            full_name="Model.ModelUUID",
-            index=5,
-            containing_service=None,
-            input_type=_MODELUUIDREQUEST,
-            output_type=_MODELUUIDRESPONSE,
-            serialized_options=None,
-        ),
-        _descriptor.MethodDescriptor(
-            name="Authenticate",
-            full_name="Model.Authenticate",
-            index=6,
-            containing_service=None,
-            input_type=_AUTHENTICATIONREQUEST,
-            output_type=_AUTHENTICATIONRESPONSE,
-            serialized_options=None,
-        ),
-        _descriptor.MethodDescriptor(
-            name="RegisterUser",
-            full_name="Model.RegisterUser",
-            index=7,
-            containing_service=None,
-            input_type=_REGISTERUSERREQUEST,
-            output_type=_AUTHENTICATIONRESPONSE,
-            serialized_options=None,
-        ),
-        _descriptor.MethodDescriptor(
-            name="RegisterToken",
-            full_name="Model.RegisterToken",
-            index=8,
-            containing_service=None,
-            input_type=_REGISTERTOKENREQUEST,
-            output_type=_AUTHENTICATIONRESPONSE,
-            serialized_options=None,
-        ),
-        _descriptor.MethodDescriptor(
-            name="SetPermissions",
-            full_name="Model.SetPermissions",
-            index=9,
-            containing_service=None,
-            input_type=_SETTOKENPERMISSIONSREQUEST,
-            output_type=_AUTHENTICATIONRESPONSE,
-            serialized_options=None,
-        ),
-    ],
-)
-_sym_db.RegisterServiceDescriptor(_MODEL)
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetImage',
+    full_name='modelzoo.ModelzooService.GetImage',
+    index=1,
+    containing_service=None,
+    input_type=_IMAGEDOWNLOADREQUEST,
+    output_type=_IMAGEDOWNLOADRESPONSE,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetToken',
+    full_name='modelzoo.ModelzooService.GetToken',
+    index=2,
+    containing_service=None,
+    input_type=_EMPTY,
+    output_type=_RATELIMITTOKEN,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='ListModels',
+    full_name='modelzoo.ModelzooService.ListModels',
+    index=3,
+    containing_service=None,
+    input_type=_EMPTY,
+    output_type=_LISTMODELSRESPONSE,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='CreateUser',
+    full_name='modelzoo.ModelzooService.CreateUser',
+    index=4,
+    containing_service=None,
+    input_type=_USER,
+    output_type=_STATUS,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='CreateModel',
+    full_name='modelzoo.ModelzooService.CreateModel',
+    index=5,
+    containing_service=None,
+    input_type=_MODEL,
+    output_type=_STATUS,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetUser',
+    full_name='modelzoo.ModelzooService.GetUser',
+    index=6,
+    containing_service=None,
+    input_type=_USER,
+    output_type=_STATUS,
+    serialized_options=None,
+  ),
+])
+_sym_db.RegisterServiceDescriptor(_MODELZOOSERVICE)
 
-DESCRIPTOR.services_by_name["Model"] = _MODEL
+DESCRIPTOR.services_by_name['ModelzooService'] = _MODELZOOSERVICE
 
 # @@protoc_insertion_point(module_scope)

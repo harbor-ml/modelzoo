@@ -51,6 +51,14 @@ func CreateToken(db *gorm.DB) (*Token, error) {
 	return &token, nil
 }
 
+func GetUser(db *gorm.DB, user *User) (bool, error) {
+	foundUser = User{}
+	if err := db.Where(user).First(&foundUser); err == nil {
+		return false, err
+	}
+	return true, nil
+}
+
 func PerformRateLimit(db *gorm.DB, secret string) (*Token, error) {
 	token := Token{}
 	if err := db.Where("secret = ?", secret).Find(&token).Error; err != nil {

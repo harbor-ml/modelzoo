@@ -1,470 +1,281 @@
 import grpc
 import typing
-from uuid import UUID
-from modelzoo._protos.services_pb2_grpc import ModelStub
+import pandas as pd
+from modelzoo._protos.services_pb2_grpc import ModelzooServiceStub
 from modelzoo._protos.services_pb2 import (
-    AuthenticationRequest,
-    RegisterTokenRequest,
-    RegisterUserRequest,
-    AuthenticationResponse,
-    TextGenerationRequest,
-    ImageSegmentationRequest,
-    VisionClassificationRequest,
-    ModelUUIDRequest,
-    ModelUUIDResponse,
-    ModelResponse,
+    Image,
+    Text,
+    Table,
+    User,
+    RateLimitToken,
+    Payload,
+    PayloadType,
+    Empty,
+    Status
+)
+from modelzoo.exceptions import (
+    AuthenticationException,
+    ModelZooConnectionException,
+    InvalidCredentialsException
+)
+from ..python.model_io.sugar import (
+    text_input,
+    image_input,
+    table_output
 )
 import modelzoo.utils as utils
 
-ModelOutput = typing.NewType(
-    "ModelOutput",
-    typing.Union[typing.Sequence[str], type(Image), typing.Sequence[dict]],
-)
-
-
-def validate_uuid(token: str) -> bool:
-    try:
-        token_id = UUID(token, version=4)
-    except ValueError:
-        return False
-    return True
-
-
-class UserAuth(object):
-    def __init__(
-        self,
-        conn: ModelZooConnection,
-        username: typing.Optional[str] = "",
-        password: typing.Optional[str] = "",
-        token: typing.Optional[str] = "",
-        admin: typing.Optional[bool] = True,
-    ):
-        """
-           adminFlag: Specifies whether or not this token is an admin token.
-        """
-        if token == "":
-            if username == "" or password == "":
-                raise InsufficientCredentialsException(
-                    "Username and Password or Token are required to authenticate."
-                )
-        self.username = username
-        self.password = password
-        self.use_token = True
-        if token != "" and not validate_uuid(token):
-            raise InvalidTokenException("Invalid Token.")
-        if token == "":
-            self.use_token = False
-        else:
-            self.token = token
-
-        self.adminFlag = admin
-        self.admin_token = None
-        if admin:
-            self.admin_token = conn._authenticate_to_server(self.username, self.password)
-        self.parent = None
-
-    def make(
-        self,
-        conn: ModelZooConnection,
-        username: typing.Optional[str] = "",
-        password: typing.Optional[str] = "",
-        token: typing.Optional[str] = "",
-    ) -> UserAuth:
-        if self.username == username and username != "":
-            if self.password == password and password != "":
-                if self.token == token and token != "":
-                    return self
-                else:
-                    u = UserAuth(
-                        conn,
-                        username=username,
-                        password=password,
-                        token=token,
-                        admin=False,
-                    )
-                    u.parent = self
-                    return u
-        u = UserAuth(conn, username=username, password=password, token=token)
-        return u
-
-    @property
-    def admin_token(self):
-        if self.adminFlag:
-            return self.admin_token
-        if self.parent is None:
-            return self.token
-        return self.parent.admin_token
-
-
 class ModelZooConnection(object):
+    """
+        ModelZooConnection class. This class will be the main client API for connecting to a ModelZoo instance, whether it be a local or external one.
+        This class manages authentication, and features several bound methods to aid the user in creation and manipulation of users and models.
+
+        Attributes
+        ----------
+            address -> string: This is the address of the ModelZoo instance to connect to. By default, it is the global testbed managed by RISELab.
+            email -> Optional[string]: The email with which to authenticate to the ModelZoo instance.
+            password -> Optional[string]: The password with which to authenticate to the ModelZoo instance.
+            conn -> GRPC Channel: The connection to the ModelZoo instance. The connect() method must be called to instantiate this.
+                Before this is instantiated, most methods will fail.
+            token -> string: The token to use for rate limiting and potentially access control in the future.
+            conn_error -> ModelZooConnectionException: A shorthand for the connection exception to be raised whenever a method is called before a connection
+                to the ModelZoo instance has been instantiated.
+            authenticated -> bool: Flag that indicates whether or not user has authenticated. Can be used to block access to creation or manipulation of models.
+    """
+
     def __init__(
         self,
         address: typing.Optional[str] = "grpc.modelzoo.live",
-        token: typing.Optional[str] = "",
-        username: typing.Optional[str] = "",
-        password: typing.Optional[str] = "",
+        email: typing.Optional[str] = "",
+        password: typing.Optional[str] = ""
     ):
         self.conn = None
+        self.authenticated = False
+        self.token = None
         self.address = address
         self.conn_error = ModelZooConnectionException(
             "Must be connected to ModelZoo instance before issuing requests. Please call connect()."
         )
-        try:
-            self.auth = UserAuth(
-                self, username=username, password=password, token=token
-            )
-        except AuthenticationException as e:
-            self.auth = None
+        self.email = email
+        self.password = password
 
     def connect(self, address: typing.Optional[str] = "grpc.modelzoo.live"):
+        """
+            Method to connect to the ModelZoo instance specified by self.address | address.
+            Must be called first, so that later methods have a connection to the server to perform queries.
+            If a username and email were not provided previously, an incognito rate limiting token is generated for the user.
+
+            Parameters
+            ----------
+                address -> string: This is the address of the ModelZoo instance to connect to.
+
+            Raises
+            ------
+                InvalidCredentialException
+                    If the user previously provided an email and password, authentication is attempted.
+                    If the authentication details are invalid, an InvalidCredentialException is raised.
+        """
         self.address = self.address if address is None else address
         channel = grpc.insecure_channel(self.address)
-        self.conn = ModelStub(channel)
+        self.conn = ModelzooServiceStub(channel)
+        if self.email != "" and self.password != "":
+            self.authenticate(self.email, self.password)
+        self.token = self.conn.GetToken(Empty())
 
     def authenticate(
         self,
-        username: typing.Optional[str] = "",
-        password: typing.Optional[str] = "",
-        token: typing.Optional[str] = "",
+        email: str,
+        password: str,
     ) -> None:
-        self.auth = UserAuth(
-            self, username=username, password=password, token=token
-        )
+        """
+            Method to authenticate. Allows user to retrieve their token from the database.
 
-    def _authenticate_to_server(self, username: str, password: str) -> str:
+            Parameters
+            ----------
+                email -> str: email with which to authenticate.
+                password -> str: password with which to authenticate.
+            
+            Raises
+            ------
+                InvalidCredentialException
+                    If the (email, password) tuple does not match any in the database of users,
+                    an InvalidCredentialException is raised.
+        """
         if self.conn is None:
             raise self.conn_error
-        resp = self.conn.Authenticate(
-            AuthenticationRequest(username=username, password=password)
-        )
-        if resp.success:
-            return resp.token
+        Status status = GetUser(User(email=email, password=password))
+        if status.succes:
+            self.authenticated = True
         else:
-            raise ModelZooConnectionException(resp.msg)
+            raise InvalidCredentialsException("Email and password do not match an existing user. Please check to make sure you have not made any typos.")
 
     def get_token(self):
-        if self.auth is None:
-            raise ModelZooConnectionException(
-                "Please call authenticate() before calling this method."
-            )
-        if self.conn is None:
-            raise self.conn_error
-        return self.auth.token
+        """
+            Returns the users token. User must be authenticated and connected.
 
-    def get_admin_token(self):
-        if self.auth is None:
-            raise ModelZooConnectionException(
-                "Please call authenticate() before calling this method."
-            )
+            Raises
+            ------
+                ModelZooConnectionException
+                    If the user is not connected, a ModelZooConnectionException will be raised.
+                AuthenticationException
+                    If the user has not authenticated, a AuthenticationException is raised.
+        """
         if self.conn is None:
             raise self.conn_error
-        if self.auth.admin_token is None:
-            raise ModelZooConnectionException(
-                "Please call authenticate() with username and password to recieve your administrative token."
+        if !self.authenticated:
+            raise AuthenticationException(
+                "You are not currently authenticated. Please call authenticate() to recieve your token."
             )
-        return self.auth.admin_token
+        return self.token
 
-    def register_user(self, username: str, password: str, email: str) -> dict:
+    def create_user(self, email: str, password: str):
+        """
+            Method to create user. Current user must be connected to ModelZoo instance prior to this method call.
+
+            Parameters
+            ----------
+                email -> str: The email for the new user.
+                password -> str: The password for the new user.
+            
+            Raises
+            ------
+                ModelZooConnectionException
+                    A ModelZooConnectionException is raised in two cases:
+                        1) The user is not currently connected to a ModelZoo instance.
+                        2) Creation of the new user failed.
+                    The error message for the exception will contain information as to which of the cases it is.
+        """
         if self.conn is None:
             raise self.conn_error
-        resp = self.conn.RegisterUser(
-            RegisterUserRequest(username=username, password=password, email=email)
+        resp = self.conn.CreateUser(
+            User(email=email, password=password)
         )
-        if resp.success:
-            return {
-                "username": username,
-                "password": password,
-                "admin_token": resp.token,
-            }
-        else:
-            raise ModelZooConnectionException(resp.msg)
+        if !resp.success:
+            raise ModelZooConnectionException(resp.message)
 
-    def register_token(
+    def list_all_models(
         self,
-        username: typing.Optional[str] = "",
-        password: typing.Optional[str] = "",
-    ) -> str:
-        if self.conn is None:
-            raise self.conn_error
-        auth = self.auth.make(self, username=username, password=password, token="")
-        resp = self.conn.RegisterToken(RegisterTokenRequest(admin_token=auth.admin_token))
-        if resp.success:
-            print(
-                "Created new token. This token currently does not have access to any models.",
-                resp.token,
-            )
-            return resp.token
-        else:
-            raise ModelZooConnectionException(resp.msg)
-
-    def get_accessible_models(
-        self,
-        token,
-        username: typing.Optional[str] = "",
-        password: typing.Optional[str] = "",
-        admin_token: typing.Optional[str] = "",
     ) -> typing.List[dict]:
+        """
+            Lists all models.
+
+            Return
+            ------
+                A dictionary of the models currently registered.
+        """
         if self.conn is None:
             raise self.conn_error
-        if not validate_uuid(token):
-            raise ModelZooConnectionException("Token %s is invalid.", token)
-        auth = self.auth.make(
-            self, username=username, password=password, token=admin_token
-        )
-        resp = self.conn.GetPermissions(
-            GetTokenPermissionsRequest(admin_token=auth.admin_token, token=token)
-        )
+        resp = self.conn.ListModels(Empty())
         return resp.models
+    
+    def text_inference(self, model: str, texts: List[str]) -> Payload:
+        """
+            Method to perform text inference.
 
-    def set_token_permissions(
-        self,
-        token,
-        models: typing.List[dict],
-        username: typing.Optional[str] = "",
-        password: typing.Optional[str] = "",
-        admin_token: typing.Optional[str] = "",
-    ) -> bool:
+            Parameters
+            ----------
+                texts -> List[str]: Batch of text inputs to provide to model.
+                model -> str: Name of model to forward request to.
+            
+            Returns
+            -------
+                The payload response from the ModelZoo instance.
+
+            Raises
+            ------
+                ModelZooConnectionException
+                    A ModelZooConnectionException is raised if the user is not connected to a ModelZoo instance.
+        """
         if self.conn is None:
             raise self.conn_error
-        if not validate_uuid(token):
-            raise ModelZooConnectionException("Token %s is invalid.", token)
-        auth = self.auth.make(
-            self, username=username, password=password, token=admin_token
-        )
-        models = [
-            {
-                "token": a["token"]
-                if "token" in a
-                else self._query_for_model_uuid(a["name"], auth.admin_token),
-                "remove": a["remove"],
-            }
-            for a in models
-        ]
-        resp = self.conn.SetPermissions(
-            SetTokenPermissionsRequest(
-                admin_token=admin_token,
-                token=token,
-                models=[
-                    SetTokenPermissionsRequest.ModelPermissions(
-                        model_uuid=a["uuid"], remove=a["remove"]
-                    )
-                    for a in models
-                ],
-            )
-        )
+        text_payload = Text(texts=texts, model_name=model, access_token=self.token)
+        request = Payload(type=PayloadType.TEXT, text=text_payload)
+        return self.conn.Inference(request)
+    
+    def image_inference(self, model: str, image: utils.ImgLike) -> Payload:
+        """
+            Method to perform image inference.
 
-    def query_for_model_uuid(
-        self,
-        model: str,
-        authP: typing.Optional[UserAuth] = None,
-        username: typing.Optional[str] = "",
-        password: typing.Optional[str] = "",
-        admin_token: typing.Optional[str] = "",
-    ) -> str:
+            Parameters
+            ----------
+                image -> utils.ImgLike: oneof(image filename, PIL.Image, image URI). Image input to provide to model.
+                model -> str: Name of model to forward request to.
+            
+            Returns
+            -------
+                The payload response from the ModelZoo instance.
+
+            Raises
+            ------
+                ModelZooConnectionException
+                    A ModelZooConnectionException is raised if the user is not connected to a ModelZoo instance.
+        """
         if self.conn is None:
             raise self.conn_error
-        auth = (
-            self.auth.make(self, username=username, password=password, token=admin_token)
-            if auth is None
-            else authP
-        )
-        req = ModelUUIDRequest(model_name=model, token=auth.admin_token)
-        resp = self.conn.ModelUUID(req)
-        if resp.model_uuid == "":
-            raise ModelZooConnectionException(
-                "Model %s does not exist, or you are not allowed to access it.", model
-            )
-        return resp.model_uuid
+        image_payload = Image(image_data_url=utils._img_inp_types_to_uri(image), model_name=model, access_token=self.token)
+        request = Payload(type=PayloadType.IMAGE, image=image_payload)
+        return self.conn.Inference(request)
 
-    def query_text(
-        self,
-        input_phrase: typing.Union[str, typing.Sequence[str]],
-        temp: float,
-        model: str,
-        token: str,
-        username: typing.Optional[str] = "",
-        password: typing.Optional[str] = "",
-        admin_token: typing.Optional[str] = "",
-        postprocess: typing.Optional[bool] = True,
-        callback: typing.Optional[typing.Callable] = None,
-    ) -> typing.Sequence[typing.Union[ModelOutput, typing.Any]]:
+    def table_inference(self, model: str, table: pd.DataFrame) -> Payload:
+        """
+            Method to perform tabular inference.
+
+            Parameters
+            ----------
+                table -> pd.DataFrame: Tabular input to provide to model.
+                model -> str: Name of model to forward request to.
+            
+            Returns
+            -------
+                The payload response from the ModelZoo instance.
+
+            Raises
+            ------
+                ModelZooConnectionException
+                    A ModelZooConnectionException is raised if the user is not connected to a ModelZoo instance.
+        """
         if self.conn is None:
             raise self.conn_error
-        auth = self.auth.make(
-            self, username=username, password=password, token=admin_token
-        )
-        input_phrase = (
-            input_phrase if isinstance(input_phrase, list) else [input_phrase]
-        )
-        results = []
-        for inp in input_phrase:
-            req = self.create_text_gen_req(inp, temp, model, auth.token)
-            resp = self.conn.TextGeneration(req)
-            results.append(self.process(resp, callback) if postprocess else resp)
-        return results
+        table_payload = table_output(table)
+        table_payload.model_name = model
+        table_payload.access_token = self.token
+        request = Payload(type=PayloadType.TABLE, table=table_payload)
+        return self.conn.Inference(request)
 
-    def query_vision(
-        self,
-        input_image: typing.Union[utils.ImgLike, typing.Sequence[utils.ImgLike]],
-        model: str,
-        token: str,
-        num_returns: typing.Optional[int] = 3,
-        username: typing.Optional[str] = "",
-        password: typing.Optional[str] = "",
-        admin_token: typing.Optional[str] = "",
-        postprocess: typing.Optional[bool] = True,
-        callback: typing.Optional[typing.Callable] = None,
-    ) -> typing.Sequence[typing.Union[ModelOutput, typing.Any]]:
-        if self.conn is None:
-            raise self.conn_error
-        auth = self.auth.make(
-            self, username=username, password=password, token=admin_token
-        )
-        input_image = input_image if isinstance(input_image, list) else [input_image]
-        results = []
-        for inp in input_image:
-            req = self.create_vision_gen_req(inp, model, auth.token, num_returns)
-            resp = self.conn.VisionClassification(req)
-            results.append(self.process(resp, callback) if postprocess else resp)
-        return results
+    def process_inference_response(self, resp: Payload, callback: typing.Optional[typing.Callable] = None) -> typing.Any:
+        """
+            Method to process inference responses.
 
-    def query_segmentation(
-        self,
-        input_image: typing.Union[utils.ImgLike, typing.Sequence[utils.ImgLike]],
-        model: str,
-        token: str,
-        username: typing.Optional[str] = "",
-        password: typing.Optional[str] = "",
-        admin_token: typing.Optional[str] = "",
-        postprocess: typing.Optional[bool] = True,
-        callback: typing.Optional[typing.Callable] = None,
-    ) -> typing.Sequence[typing.Union[ModelOutput, typing.Any]]:
-        if self.conn is None:
-            raise self.conn_error
-        auth = self.auth.make(
-            self, username=username, password=password, token=admin_token
-        )
-        input_image = input_image if isinstance(input_image, list) else [input_image]
-        results = []
-        for inp in input_image:
-            req = self.create_image_seg_req(inp, model, token)
-            resp = self.conn.ImageSegmentation(req)
-            results.append(self.process(resp, callback) if postprocess else resp)
-        return results
+            Parameters
+            ----------
+                resp -> Payload: The Payload returned by one of the inference methods.
+                callback -> Optional[Callable]: The callback to pass the outputs to for further postprocessing.
 
-    def create_text_gen_req(
-        self,
-        input_phrase: str,
-        temp: float,
-        model: str,
-        authP: typing.Optional[UserAuth] = None,
-        username: typing.Optional[str] = "",
-        password: typing.Optional[str] = "",
-        admin_token: typing.Optional[str] = "",
-    ) -> TextGenerationRequest:
-        if self.conn is None:
-            raise self.conn_error
-        auth = (
-            self.auth.make(self, username=username, password=password, token=admin_token)
-            if authP is None
-            else authP
-        )
-        uuid = self.query_for_model_uuid(model, authP=auth)
-        return TextGenerationRequest(
-            input_phrase=input_phrase,
-            temperature=temp,
-            model_uuid=uuid,
-            token=auth.otken,
-        )
+            Returns
+            -------
+                Either the raw outputs, or the results of calling the callback on them.
 
-    def create_vision_gen_req(
-        self,
-        input_image: utils.ImgLike,
-        model: str,
-        num_returns: typing.Optional[int] = 3,
-        authP: typing.Optional[UserAuth] = None,
-        username: typing.Optional[str] = "",
-        password: typing.Optional[str] = "",
-        admin_token: typing.Optional[str] = "",
-    ) -> VisionClassificationRequest:
-        if self.conn is None:
-            raise self.conn_error
-        auth = (
-            self.auth.make(self, username=username, password=password, token=admin_token)
-            if authP is None
-            else authP
-        )
-        uuid = self.query_for_model_uuid(model, authP=auth)
-        input_image = utils._img_inp_types_to_uri(input_image)
-        return VisionClassificationRequest(
-            input_image=input_image,
-            num_returns=num_returns,
-            model_uuid=uuid,
-            token=auth.token,
-        )
-
-    def create_image_seg_req(
-        self,
-        input_image: utils.ImgLike,
-        model: str,
-        authP: typing.Optional[UserAuth] = None,
-        username: typing.Optional[str] = "",
-        password: typing.Optional[str] = "",
-        admin_token: typing.Optional[str] = "",
-    ) -> ImageSegmentationRequest:
-        if self.conn is None:
-            raise self.conn_error
-        auth = (
-            self.auth.make(self, username=username, password=password, token=admin_token)
-            if authP is None
-            else authP
-        )
-        uuid = self.query_for_model_uuid(model, authP=auth)
-        input_image = utils._img_inp_types_to_uri(input_image)
-        return ImageSegmentationRequest(
-            input_image=input_image, model_uuid=uuid, token=auth.token
-        )
-
-    def process_response(
-        self, resp: ModelResponse, callback: typing.Optional[typing.Callable] = None
-    ) -> typing.Union[ModelOutput, typing.Any]:
-        if resp.typeString == "text":
-            return (
-                resp.text.generated_texts
-                if callback is None
-                else callback(resp.text.generated_texts)
-            )
-        elif resp.typeString == "segment":
-            return (
-                utils.uri_to_img(resp.segment.output_image)
-                if callback is None
-                else callback(resp.segment.output_image)
-            )
-        elif resp.typeString == "vision":
-            r = []
-            for res in resp.vision.results:
-                r += [
-                    {
-                        "Rank": res.rank,
-                        "Category": res.category,
-                        "Confidence": res.proba,
-                    }
-                ]
-            return r if callback is None else callback(r)
-        return ["Invalid Response"]
-
-
-class AuthenticationException(Exception):
-    pass
-
-
-class InvalidTokenException(AuthenticationException):
-    pass
-
-
-class InsufficientCredentialsException(AuthenticationException):
-    pass
-
-
-class ModelZooConnectionException(Exception):
-    pass
+            Raises
+            ------
+                ModelZooConnectionException
+                    A ModelZooConnectionException is called in two cases:
+                        1) If the Payload contains a tabular output. Post processing for tabular outputs is not currently supported.
+                        2) The Payload contains a type besides oneof(text, image). This is likely a sign that the Payload was not produced
+                            by an inference method.
+        """
+        if resp.type == PayloadType.TEXT:
+            texts = text_input(resp)
+            if callback is None:
+                return texts
+            else:
+                return callback(texts)
+        elif resp.type == PayloadType.IMAGE:
+            image = image_input(resp)
+            if callback is None:
+                return image
+            else:
+                return callback(image)
+        elif resp.type == PayloadType.TABLE:
+            raise ModelZooConnectionException("Post processing for tabular outputs is not supported at this time.")
+        else:
+            raise ModelZooConnectionException("Payload type does not match known values. Please ensure that your packet is not corrupted.")

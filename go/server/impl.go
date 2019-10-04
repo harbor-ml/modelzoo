@@ -84,21 +84,32 @@ func (s *ProxyServer) ListModels(
 }
 
 // CreateUser ...
-func (s *ProxyServer) CreateUser(ctx context.Context, user *modelzoo.User) (*modelzoo.Empty, error) {
+func (s *ProxyServer) CreateUser(ctx context.Context, user *modelzoo.User) (*modelzoo.Status, error) {
 	userRecord := schema.User{Email: user.Email, Password: user.Password}
 	if err := s.db.Create(&userRecord).Error; err != nil {
-		log.Panic(err)
+		log.Print(err)
+		return &modelzoo.Status{Success: false, Message: fmt.Sprint(err)}, err
 	}
-	return &modelzoo.Empty{}, nil
+	return &modelzoo.Status{Success: true, Message: "Success"}, nil
+}
+
+// GetUser ...
+func (s *ProxyServer) GetUser(ctx context.Context, user *modelzoo.User) (*modelzoo.RateLimitToken, error) {
+	userRecord := schema.User{Email: user.Email, Password: user.Password}
+	_, err := schema.GetUser(s.db, &userRecord)
+	if err != nil {
+		return &modelzoo.Status{Success: false, Message: fmt.Sprint(err)}, err
+	}
+	return &modelzoo.Status{Success: true, Message: "Success"}, nil
 }
 
 // CreateModel ...
-func (s *ProxyServer) CreateModel(ctx context.Context, model *modelzoo.Model) (*modelzoo.Empty, error) {
+func (s *ProxyServer) CreateModel(ctx context.Context, model *modelzoo.Model) (*modelzoo.Status, error) {
 	err := schema.CreateModel(s.db, model)
 	if err != nil {
-		return nil, status.Error(codes.Internal, fmt.Sprint(err))
+		return &modelzoo.Status{Success: false, Message: fmt.Sprint(err)}, err
 	}
-	return &modelzoo.Empty{}, nil
+	return &modelzoo.Status{Success: true, Message: "Success!"}, nil
 }
 
 func (s *ProxyServer) GetToken(ctx context.Context, _ *modelzoo.Empty) (*modelzoo.RateLimitToken, error) {

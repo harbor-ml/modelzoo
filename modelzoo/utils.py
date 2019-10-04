@@ -6,17 +6,6 @@ from w3lib.url import parse_data_uri
 import mimetypes
 from PIL import Image
 from pathlib import Path
-from modelzoo._protos.services_pb2 import (
-    TextGenerationRequest,
-    ImageSegmentationRequest,
-    VisionClassificationRequest,
-    ModelUUIDRequest,
-    ModelUUIDResponse,
-)
-
-
-class UnauthorizedException(Exception):
-    pass
 
 
 ImgLike = typing.NewType("ImgLike", typing.Union[type(Image), str])
@@ -34,7 +23,7 @@ def img_file_to_uri(filepath: str) -> str:
 
 def img_to_uri(img: Image) -> str:
     """
-        Converts a Image (In the form of a PIL.Image) to a data URI.
+        Converts an Image (In the form of a PIL.Image) to a data URI.
     """
     buffered = io.BytesIO()
     img.save(buffered)
@@ -57,6 +46,9 @@ def uri_to_img_file(data_uri: str, filepath: typing.Union[str, Path]) -> None:
 
 
 def _validate_data_uri(data_uri: str) -> bool:
+    """
+        Internal method to validate that a given URI is valid (i.e. can be translated to a PIL.Image).
+    """
     try:
         uri_to_img(data_uri)
         return True
@@ -64,7 +56,23 @@ def _validate_data_uri(data_uri: str) -> bool:
         return False
 
 
-def _img_inp_types_to_uri(input_image: ImgLike) -> str:
+def image_input_types_to_uri(input_image: ImgLike) -> str:
+    """
+        Helper method to convert from oneof(image filename, PIL.Image, image URI) to image URI.
+
+        Parameters
+        ----------
+        input_image -> ImgLike: corresponds to oneof(image filename, PIL.Image, image URI).
+
+        Raises
+        ------
+        ValueError: 
+            If an invalid data URI is passed, a ValueError is raised.
+
+        Returns
+        -------
+        A data URI corresponding to the image or ImgLike passed in.
+    """
     if isinstance(input_image, Image):
         return img_to_uri(input_image)
     elif os.path.isfile(input_image):
