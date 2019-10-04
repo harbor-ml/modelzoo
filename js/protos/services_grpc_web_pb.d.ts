@@ -1,40 +1,48 @@
 import * as grpcWeb from 'grpc-web';
 
 import {
-  GetModelsReq,
-  GetModelsResp,
+  Empty,
+  Image,
   ImageDownloadRequest,
   ImageDownloadResponse,
-  ImageSegmentationRequest,
-  ModelResponse,
-  TextGenerationRequest,
-  VisionClassificationRequest} from './services_pb';
+  ListModelsResponse,
+  Model,
+  Table,
+  Text,
+  User} from './services_pb';
 
-export class ModelClient {
+export class ModelzooServiceClient {
   constructor (hostname: string,
                credentials: null | { [index: string]: string; },
                options: null | { [index: string]: string; });
 
   visionClassification(
-    request: VisionClassificationRequest,
+    request: Image,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
-               response: ModelResponse) => void
-  ): grpcWeb.ClientReadableStream<ModelResponse>;
+               response: Table) => void
+  ): grpcWeb.ClientReadableStream<Table>;
 
   textGeneration(
-    request: TextGenerationRequest,
+    request: Text,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
-               response: ModelResponse) => void
-  ): grpcWeb.ClientReadableStream<ModelResponse>;
+               response: Text) => void
+  ): grpcWeb.ClientReadableStream<Text>;
 
   imageSegmentation(
-    request: ImageSegmentationRequest,
+    request: Image,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
-               response: ModelResponse) => void
-  ): grpcWeb.ClientReadableStream<ModelResponse>;
+               response: Image) => void
+  ): grpcWeb.ClientReadableStream<Image>;
+
+  imageCaption(
+    request: Image,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.Error,
+               response: Text) => void
+  ): grpcWeb.ClientReadableStream<Text>;
 
   getImage(
     request: ImageDownloadRequest,
@@ -44,33 +52,52 @@ export class ModelClient {
   ): grpcWeb.ClientReadableStream<ImageDownloadResponse>;
 
   listModels(
-    request: GetModelsReq,
+    request: Empty,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
-               response: GetModelsResp) => void
-  ): grpcWeb.ClientReadableStream<GetModelsResp>;
+               response: ListModelsResponse) => void
+  ): grpcWeb.ClientReadableStream<ListModelsResponse>;
+
+  createUser(
+    request: User,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.Error,
+               response: Empty) => void
+  ): grpcWeb.ClientReadableStream<Empty>;
+
+  createModel(
+    request: Model,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.Error,
+               response: Empty) => void
+  ): grpcWeb.ClientReadableStream<Empty>;
 
 }
 
-export class ModelPromiseClient {
+export class ModelzooServicePromiseClient {
   constructor (hostname: string,
                credentials: null | { [index: string]: string; },
                options: null | { [index: string]: string; });
 
   visionClassification(
-    request: VisionClassificationRequest,
+    request: Image,
     metadata?: grpcWeb.Metadata
-  ): Promise<ModelResponse>;
+  ): Promise<Table>;
 
   textGeneration(
-    request: TextGenerationRequest,
+    request: Text,
     metadata?: grpcWeb.Metadata
-  ): Promise<ModelResponse>;
+  ): Promise<Text>;
 
   imageSegmentation(
-    request: ImageSegmentationRequest,
+    request: Image,
     metadata?: grpcWeb.Metadata
-  ): Promise<ModelResponse>;
+  ): Promise<Image>;
+
+  imageCaption(
+    request: Image,
+    metadata?: grpcWeb.Metadata
+  ): Promise<Text>;
 
   getImage(
     request: ImageDownloadRequest,
@@ -78,9 +105,19 @@ export class ModelPromiseClient {
   ): Promise<ImageDownloadResponse>;
 
   listModels(
-    request: GetModelsReq,
+    request: Empty,
     metadata?: grpcWeb.Metadata
-  ): Promise<GetModelsResp>;
+  ): Promise<ListModelsResponse>;
+
+  createUser(
+    request: User,
+    metadata?: grpcWeb.Metadata
+  ): Promise<Empty>;
+
+  createModel(
+    request: Model,
+    metadata?: grpcWeb.Metadata
+  ): Promise<Empty>;
 
 }
 

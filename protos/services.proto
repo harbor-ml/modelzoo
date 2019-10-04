@@ -1,147 +1,99 @@
 syntax = "proto3";
+// import "google/protobuf/timestamp.proto";
 
-enum ModelCategory {
-  VISIONCLASSIFICATION = 0;
-  TEXTGENERATION = 1;
-  IMAGESEGMENTATION = 2;
-  IMAGECAPTIONING = 3;
+package modelzoo;
+
+/* Image is repsented by the dataurl format
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
+*/
+message Image {
+  map<string, string> metadata = 1;
+  string image_data_url = 2;
+
+  string model_name = 3;
+  string access_token = 4;
 }
 
-message GetModelsReq {
-  string token = 1;
+// Text is a list of string
+message Text {
+  map<string, string> metadata = 1;
+  repeated string texts = 2;
+
+  string model_name = 3;
+  string access_token = 4;
 }
 
-message ModelResponse {
-  string typeString = 1;
-    TextGenerationResponse text = 2;
-    VisionClassificationResponse vision = 3;
-    ImageSegmentationResponse segment = 4;
+/* Table is more complicated.
+   It is inspired from pandas orient="index"
+   >>> df.to_json(orient='index')
+   '{"row 1":{"col 1":"a","col 2":"b"},"row 2":{"col 1":"c","col 2":"d"}}'
+*/
+message Table {
+  map<string, string> metadata = 1;
+  string model_name = 2;
+  string access_token = 3;
+
+  message Row { map<string, string> column_to_value = 1; }
+  map<string, Row> table = 4;
+  repeated string column_names = 5;
 }
 
-message GetModelsResp {
-  message Model {
-    string model_name = 1;
-    ModelCategory model_category = 2;
-    string uuid = 3;
-  }
-  repeated Model models = 1;
+// Web
+message Empty {}
+message KVPair {
+  string key = 1;
+  string value = 2;
 }
-
-message ModelUUIDRequest {
+message Model {
   string model_name = 1;
-  string token = 2;
+  repeated KVPair metadata = 3;
 }
-
-message ModelUUIDResponse {
-  string model_uuid = 1;
-}
-
-message AuthenticationRequest {
-  string username = 1;
+message User {
+  string email = 1;
   string password = 2;
 }
+message RateLimitToken { string token = 1; }
+// message RateLimitExceeded {
+//   string token = 1;
+//   uint64 quota = 2;
+//   google.protobuf.Timestamp restore_at = 3;
+// }
 
-message AuthenticationResponse {
-  bool success = 1;
-  string msg = 2;
-  string token = 3;
-}
+message ListModelsResponse { repeated Model models = 1; }
 
-message RegisterTokenRequest {
-  string adm_token = 1;
-}
+// Downloader
+message ImageDownloadRequest { string url = 1; }
+message ImageDownloadResponse { string image = 1; }
 
-message GetTokenPermissionsRequest {
-  string adm_token = 1;
-  string token = 2;
-}
-
-message SetTokenPermissionsRequest {
-  message ModelPermissions {
-    string model_uuid = 1;
-    bool remove = 2;
-  }
-  string adm_token = 1;
-  string token = 2;
-  repeated ModelPermissions models = 3;
-}
-
-message RegisterUserRequest {
-  string username = 1;
-  string password = 2;
-  string email = 3;
-}
-
-message TextGenerationRequest {
-  string input_phrase = 1;
-  float temperature = 2; 
-
-  string model_uuid = 3;
-  string token = 4;
-}
-
-message TextGenerationResponse {
-  repeated string generated_texts = 1;
-}
-
-message VisionClassificationRequest {
-  string input_image = 1;
-  uint32 num_returns = 2;
-
-  string model_uuid = 3;
-  string token = 4;
-}
-
-message VisionClassificationResponse {
-  message Result {
-    uint32 rank = 1;
-    string category = 2;
-    float proba = 3;
-  }
-
-  repeated Result results = 1;
-}
-
-message ImageSegmentationRequest {
-  string input_image = 1;
+enum PayloadType {
+  IMAGE = 0;
+  TEXT = 1;
+  TABLE = 2;
   
-  string model_uuid = 2;
-  string token = 3;
 }
 
-message ImageSegmentationResponse {
-  string output_image = 1;
-}    
+message Payload {
+  PayloadType type = 1;
 
-message ImageDownloadRequest {
-  string url = 1;
+  oneof payload {
+    Image image = 2;
+    Text text = 3;
+    Table table = 4;
+  }
 }
-message ImageDownloadResponse {
-  string image = 1;
-}
 
-service Model {
-  rpc VisionClassification(VisionClassificationRequest)
-      returns (ModelResponse) {}
+service ModelzooService {
+  // Inference
+  rpc Inference(Payload) returns (Payload) {}
 
-  rpc TextGeneration(TextGenerationRequest)
-      returns (ModelResponse) {}
-
-  rpc ImageSegmentation(ImageSegmentationRequest)
-      returns (ModelResponse) {}
-
+  // Website utils
   rpc GetImage(ImageDownloadRequest) returns (ImageDownloadResponse) {}
-  rpc ListModels(GetModelsReq) returns (GetModelsResp) {}
 
-  rpc ModelUUID(ModelUUIDRequest) returns (ModelUUIDResponse) {}
+  // Rate limiting
+  rpc GetToken(Empty) returns (RateLimitToken) {}
 
-  rpc Authenticate(AuthenticationRequest) returns (AuthenticationResponse) {}
-
-  rpc RegisterUser(RegisterUserRequest) returns (AuthenticationResponse) {}
-
-  rpc RegisterToken(RegisterTokenRequest) returns (AuthenticationResponse) {}
-
-  rpc SetPermissions(SetTokenPermissionsRequest) returns (AuthenticationResponse) {}
-
-  rpc GetPermissions(GetTokenPermissionsRequest) returns (GetModelsResp) {}
+  // Database
+  rpc ListModels(Empty) returns (ListModelsResponse) {}
+  rpc CreateUser(User) returns (Empty) {}
+  rpc CreateModel(Model) returns (Empty) {}
 }

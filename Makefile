@@ -11,7 +11,7 @@ proto-js:
 
 proto-py:
 	protoc \
-		--python_out=python --mypy_out=python \
+		--python_out=python/model_io --mypy_out=python/model_io \
 		./protos/*.proto
 
 proto-py-pkg:
