@@ -1,8 +1,8 @@
 import grpc
 import typing
 from uuid import UUID
-from _protos.services_pb2_grpc import ModelStub
-from _protos.services_pb2 import (
+from modelzoo._protos.services_pb2_grpc import ModelStub
+from modelzoo._protos.services_pb2 import (
     AuthenticationRequest,
     RegisterTokenRequest,
     RegisterUserRequest,
@@ -14,7 +14,7 @@ from _protos.services_pb2 import (
     ModelUUIDResponse,
     ModelResponse,
 )
-import utils
+import modelzoo.utils as utils
 
 ModelOutput = typing.NewType(
     "ModelOutput",
@@ -39,6 +39,9 @@ class UserAuth(object):
         token: typing.Optional[str] = "",
         admin: typing.Optional[bool] = True,
     ):
+        """
+           adminFlag: Specifies whether or not this token is an admin token.
+        """
         if token == "":
             if username == "" or password == "":
                 raise InsufficientCredentialsException(
@@ -54,10 +57,10 @@ class UserAuth(object):
         else:
             self.token = token
 
-        self.adminF = admin
+        self.adminFlag = admin
         self.admin_token = None
         if admin:
-            self.admin_token = conn._authenticate(self.username, self.password)
+            self.admin_token = conn._authenticate_to_server(self.username, self.password)
         self.parent = None
 
     def make(
@@ -85,12 +88,12 @@ class UserAuth(object):
         return u
 
     @property
-    def admin(self):
-        if self.adminF:
+    def admin_token(self):
+        if self.adminFlag:
             return self.admin_token
         if self.parent is None:
             return self.token
-        return self.parent.admin
+        return self.parent.admin_token
 
 
 class ModelZooConnection(object):
@@ -124,18 +127,11 @@ class ModelZooConnection(object):
         password: typing.Optional[str] = "",
         token: typing.Optional[str] = "",
     ) -> None:
-        try:
-            self.auth = UserAuth(
-                self, username=username, password=password, token=token
-            )
-        except InsufficientCredentialsException:
-            raise ModelZooConnectionException(
-                "At least one of [(Username, Password), Token] are required."
-            )
-        except InvalidTokenException:
-            raise ModelZooConnectionException("The token provided is not valid.")
+        self.auth = UserAuth(
+            self, username=username, password=password, token=token
+        )
 
-    def _authenticate(self, username: str, password: str) -> str:
+    def _authenticate_to_server(self, username: str, password: str) -> str:
         if self.conn is None:
             raise self.conn_error
         resp = self.conn.Authenticate(
@@ -149,7 +145,7 @@ class ModelZooConnection(object):
     def get_token(self):
         if self.auth is None:
             raise ModelZooConnectionException(
-                "Please authenticate before calling this method."
+                "Please call authenticate() before calling this method."
             )
         if self.conn is None:
             raise self.conn_error
@@ -158,15 +154,15 @@ class ModelZooConnection(object):
     def get_admin_token(self):
         if self.auth is None:
             raise ModelZooConnectionException(
-                "Please authenticate before calling this method."
+                "Please call authenticate() before calling this method."
             )
         if self.conn is None:
             raise self.conn_error
         if self.auth.admin_token is None:
             raise ModelZooConnectionException(
-                "Please authenticate with username and password to recieve your administrative token."
+                "Please call authenticate() with username and password to recieve your administrative token."
             )
-        return self.auth.admin
+        return self.auth.admin_token
 
     def register_user(self, username: str, password: str, email: str) -> dict:
         if self.conn is None:
@@ -176,9 +172,9 @@ class ModelZooConnection(object):
         )
         if resp.success:
             return {
-                "Username": username,
-                "Password": password,
-                "Admin Token": resp.token,
+                "username": username,
+                "password": password,
+                "admin_token": resp.token,
             }
         else:
             raise ModelZooConnectionException(resp.msg)
@@ -187,37 +183,36 @@ class ModelZooConnection(object):
         self,
         username: typing.Optional[str] = "",
         password: typing.Optional[str] = "",
-        token: typing.Optional[str] = "",
     ) -> str:
         if self.conn is None:
             raise self.conn_error
-        auth = self.auth.make(self, username=username, password=password, token=token)
-        resp = self.conn.RegisterToken(RegisterTokenRequest(adm_token=auth.admin))
+        auth = self.auth.make(self, username=username, password=password, token="")
+        resp = self.conn.RegisterToken(RegisterTokenRequest(admin_token=auth.admin_token))
         if resp.success:
             print(
-                "Created new token %s with no permissions. Please save this somewhere.",
+                "Created new token. This token currently does not have access to any models.",
                 resp.token,
             )
             return resp.token
         else:
             raise ModelZooConnectionException(resp.msg)
 
-    def get_token_permissions(
+    def get_accessible_models(
         self,
         token,
         username: typing.Optional[str] = "",
         password: typing.Optional[str] = "",
-        adm_token: typing.Optional[str] = "",
+        admin_token: typing.Optional[str] = "",
     ) -> typing.List[dict]:
         if self.conn is None:
             raise self.conn_error
         if not validate_uuid(token):
             raise ModelZooConnectionException("Token %s is invalid.", token)
         auth = self.auth.make(
-            self, username=username, password=password, token=adm_token
+            self, username=username, password=password, token=admin_token
         )
         resp = self.conn.GetPermissions(
-            GetTokenPermissionsRequest(adm_token=auth.admin, token=token)
+            GetTokenPermissionsRequest(admin_token=auth.admin_token, token=token)
         )
         return resp.models
 
@@ -227,27 +222,27 @@ class ModelZooConnection(object):
         models: typing.List[dict],
         username: typing.Optional[str] = "",
         password: typing.Optional[str] = "",
-        adm_token: typing.Optional[str] = "",
+        admin_token: typing.Optional[str] = "",
     ) -> bool:
         if self.conn is None:
             raise self.conn_error
         if not validate_uuid(token):
             raise ModelZooConnectionException("Token %s is invalid.", token)
         auth = self.auth.make(
-            self, username=username, password=password, token=adm_token
+            self, username=username, password=password, token=admin_token
         )
         models = [
             {
                 "token": a["token"]
                 if "token" in a
-                else self._query_for_model_uuid(a["name"], auth.admin),
+                else self._query_for_model_uuid(a["name"], auth.admin_token),
                 "remove": a["remove"],
             }
             for a in models
         ]
         resp = self.conn.SetPermissions(
             SetTokenPermissionsRequest(
-                adm_token=adm_token,
+                admin_token=admin_token,
                 token=token,
                 models=[
                     SetTokenPermissionsRequest.ModelPermissions(
@@ -264,16 +259,16 @@ class ModelZooConnection(object):
         authP: typing.Optional[UserAuth] = None,
         username: typing.Optional[str] = "",
         password: typing.Optional[str] = "",
-        adm_token: typing.Optional[str] = "",
+        admin_token: typing.Optional[str] = "",
     ) -> str:
         if self.conn is None:
             raise self.conn_error
         auth = (
-            self.auth.make(self, username=username, password=password, token=adm_token)
+            self.auth.make(self, username=username, password=password, token=admin_token)
             if auth is None
             else authP
         )
-        req = ModelUUIDRequest(model_name=model, token=auth.admin)
+        req = ModelUUIDRequest(model_name=model, token=auth.admin_token)
         resp = self.conn.ModelUUID(req)
         if resp.model_uuid == "":
             raise ModelZooConnectionException(
@@ -289,14 +284,14 @@ class ModelZooConnection(object):
         token: str,
         username: typing.Optional[str] = "",
         password: typing.Optional[str] = "",
-        adm_token: typing.Optional[str] = "",
+        admin_token: typing.Optional[str] = "",
         postprocess: typing.Optional[bool] = True,
-        cb: typing.Optional[typing.Callable] = None,
+        callback: typing.Optional[typing.Callable] = None,
     ) -> typing.Sequence[typing.Union[ModelOutput, typing.Any]]:
         if self.conn is None:
             raise self.conn_error
         auth = self.auth.make(
-            self, username=username, password=password, token=adm_token
+            self, username=username, password=password, token=admin_token
         )
         input_phrase = (
             input_phrase if isinstance(input_phrase, list) else [input_phrase]
@@ -305,7 +300,7 @@ class ModelZooConnection(object):
         for inp in input_phrase:
             req = self.create_text_gen_req(inp, temp, model, auth.token)
             resp = self.conn.TextGeneration(req)
-            results.append(self.process(resp, cb) if postprocess else resp)
+            results.append(self.process(resp, callback) if postprocess else resp)
         return results
 
     def query_vision(
@@ -316,21 +311,21 @@ class ModelZooConnection(object):
         num_returns: typing.Optional[int] = 3,
         username: typing.Optional[str] = "",
         password: typing.Optional[str] = "",
-        adm_token: typing.Optional[str] = "",
+        admin_token: typing.Optional[str] = "",
         postprocess: typing.Optional[bool] = True,
-        cb: typing.Optional[typing.Callable] = None,
+        callback: typing.Optional[typing.Callable] = None,
     ) -> typing.Sequence[typing.Union[ModelOutput, typing.Any]]:
         if self.conn is None:
             raise self.conn_error
         auth = self.auth.make(
-            self, username=username, password=password, token=adm_token
+            self, username=username, password=password, token=admin_token
         )
         input_image = input_image if isinstance(input_image, list) else [input_image]
         results = []
         for inp in input_image:
             req = self.create_vision_gen_req(inp, model, auth.token, num_returns)
             resp = self.conn.VisionClassification(req)
-            results.append(self.process(resp, cb) if postprocess else resp)
+            results.append(self.process(resp, callback) if postprocess else resp)
         return results
 
     def query_segmentation(
@@ -340,21 +335,21 @@ class ModelZooConnection(object):
         token: str,
         username: typing.Optional[str] = "",
         password: typing.Optional[str] = "",
-        adm_token: typing.Optional[str] = "",
+        admin_token: typing.Optional[str] = "",
         postprocess: typing.Optional[bool] = True,
-        cb: typing.Optional[typing.Callable] = None,
+        callback: typing.Optional[typing.Callable] = None,
     ) -> typing.Sequence[typing.Union[ModelOutput, typing.Any]]:
         if self.conn is None:
             raise self.conn_error
         auth = self.auth.make(
-            self, username=username, password=password, token=adm_token
+            self, username=username, password=password, token=admin_token
         )
         input_image = input_image if isinstance(input_image, list) else [input_image]
         results = []
         for inp in input_image:
             req = self.create_image_seg_req(inp, model, token)
             resp = self.conn.ImageSegmentation(req)
-            results.append(self.process(resp, cb) if postprocess else resp)
+            results.append(self.process(resp, callback) if postprocess else resp)
         return results
 
     def create_text_gen_req(
@@ -365,12 +360,12 @@ class ModelZooConnection(object):
         authP: typing.Optional[UserAuth] = None,
         username: typing.Optional[str] = "",
         password: typing.Optional[str] = "",
-        adm_token: typing.Optional[str] = "",
+        admin_token: typing.Optional[str] = "",
     ) -> TextGenerationRequest:
         if self.conn is None:
             raise self.conn_error
         auth = (
-            self.auth.make(self, username=username, password=password, token=adm_token)
+            self.auth.make(self, username=username, password=password, token=admin_token)
             if authP is None
             else authP
         )
@@ -390,12 +385,12 @@ class ModelZooConnection(object):
         authP: typing.Optional[UserAuth] = None,
         username: typing.Optional[str] = "",
         password: typing.Optional[str] = "",
-        adm_token: typing.Optional[str] = "",
+        admin_token: typing.Optional[str] = "",
     ) -> VisionClassificationRequest:
         if self.conn is None:
             raise self.conn_error
         auth = (
-            self.auth.make(self, username=username, password=password, token=adm_token)
+            self.auth.make(self, username=username, password=password, token=admin_token)
             if authP is None
             else authP
         )
@@ -415,12 +410,12 @@ class ModelZooConnection(object):
         authP: typing.Optional[UserAuth] = None,
         username: typing.Optional[str] = "",
         password: typing.Optional[str] = "",
-        adm_token: typing.Optional[str] = "",
+        admin_token: typing.Optional[str] = "",
     ) -> ImageSegmentationRequest:
         if self.conn is None:
             raise self.conn_error
         auth = (
-            self.auth.make(self, username=username, password=password, token=adm_token)
+            self.auth.make(self, username=username, password=password, token=admin_token)
             if authP is None
             else authP
         )
@@ -430,20 +425,20 @@ class ModelZooConnection(object):
             input_image=input_image, model_uuid=uuid, token=auth.token
         )
 
-    def process(
-        self, resp: ModelResponse, cb: typing.Optional[typing.Callable] = None
+    def process_response(
+        self, resp: ModelResponse, callback: typing.Optional[typing.Callable] = None
     ) -> typing.Union[ModelOutput, typing.Any]:
         if resp.typeString == "text":
             return (
                 resp.text.generated_texts
-                if cb is None
-                else cb(resp.text.generated_texts)
+                if callback is None
+                else callback(resp.text.generated_texts)
             )
         elif resp.typeString == "segment":
             return (
                 utils.uri_to_img(resp.segment.output_image)
-                if cb is None
-                else cb(resp.segment.output_image)
+                if callback is None
+                else callback(resp.segment.output_image)
             )
         elif resp.typeString == "vision":
             r = []
@@ -455,7 +450,7 @@ class ModelZooConnection(object):
                         "Confidence": res.proba,
                     }
                 ]
-            return r if cb is None else cb(r)
+            return r if callback is None else callback(r)
         return ["Invalid Response"]
 
 

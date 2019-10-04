@@ -1,6 +1,7 @@
+
 name = "modelzoo"
 
-from admin import (
+from modelzoo.admin import (
     ModelZooConnection,
     ModelZooConnectionException,
     UserAuth,
@@ -9,7 +10,7 @@ from admin import (
     InvalidTokenException,
     InsufficientCredentialsException
 )
-from utils import img_file_to_uri, img_to_uri, uri_to_img, uri_to_img_file, ImgLike
+from modelzoo.utils import img_file_to_uri, img_to_uri, uri_to_img, uri_to_img_file, ImgLike
 
 __all__ = [
     "ModelZooConnection",

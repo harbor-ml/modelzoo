@@ -6,7 +6,7 @@ from w3lib.url import parse_data_uri
 import mimetypes
 from PIL import Image
 from pathlib import Path
-from _protos.services_pb2 import (
+from modelzoo._protos.services_pb2 import (
     TextGenerationRequest,
     ImageSegmentationRequest,
     VisionClassificationRequest,
@@ -24,7 +24,7 @@ ImgLike = typing.NewType("ImgLike", typing.Union[type(Image), str])
 
 def img_file_to_uri(filepath: str) -> str:
     """
-        Reads an JPEG image from a file and converts it to a data URI.
+        Reads an image from a file and converts it to a data URI.
     """
     if not os.path.isfile(filepath):
         raise FileNotFoundError()
@@ -34,10 +34,10 @@ def img_file_to_uri(filepath: str) -> str:
 
 def img_to_uri(img: Image) -> str:
     """
-        Converts a JPEG Image (In the form of a PIL.Image) to a data URI.
+        Converts a Image (In the form of a PIL.Image) to a data URI.
     """
     buffered = io.BytesIO()
-    img.save(buffered, format="JPEG")
+    img.save(buffered)
     img_str = base64.b64encode(buffered.getvalue()).decode()
     return u"data:%s;base64,%s" % (mimetypes.types_map[".jpg"], img_str)
 
