@@ -1,11 +1,9 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 
-	"github.com/harbor-ml/modelzoo/go/db"
+	"github.com/harbor-ml/modelzoo/go/schema"
 )
 
 var dataPath *string
@@ -13,16 +11,12 @@ var dataPath *string
 // seedCmd represents the seed command
 var seedCmd = &cobra.Command{
 	Use:   "seed",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Seed the database",
+	Long: `Create a dev database and fill in data
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+A SQLLite3 instance will be created by default.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("seed called", "loading...", *dataPath)
-		db.Seed(*dataPath)
+		schema.Seed(*dataPath)
 	},
 }
 

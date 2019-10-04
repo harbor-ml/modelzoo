@@ -14,10 +14,11 @@ import (
 	"github.com/phayes/freeport"
 	"google.golang.org/grpc"
 
-	services "github.com/harbor-ml/modelzoo/go/protos"
+	modelzoo "github.com/harbor-ml/modelzoo/go/protos"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
-var client services.ModelClient
+var client modelzoo.ModelzooServiceClient
 
 func errorAndFailWith(err interface{}, t *testing.T) {
 	if err != nil {
@@ -51,7 +52,7 @@ func TestGetImage(t *testing.T) {
 	defer cancel()
 
 	// TEST CASE 1: test normal case
-	request := services.ImageDownloadRequest{
+	request := modelzoo.ImageDownloadRequest{
 		Url: fmt.Sprintf("http://localhost:%d/%s", port, "image.png"),
 	}
 	resp, err := client.GetImage(context.Background(), &request)
@@ -63,7 +64,7 @@ func TestGetImage(t *testing.T) {
 	}
 
 	// Test CASE 2: test 404
-	request = services.ImageDownloadRequest{
+	request = modelzoo.ImageDownloadRequest{
 		Url: "http://httpbin.org/status/404",
 	}
 	resp, err = client.GetImage(context.Background(), &request)
@@ -73,12 +74,17 @@ func TestGetImage(t *testing.T) {
 }
 
 func TestListModel(t *testing.T) {
-	req := services.GetModelsReq{}
+	req := modelzoo.Empty{}
 	resp, err := client.ListModels(context.Background(), &req)
 	errorAndFailWith(err, t)
-	if len(resp.Models) != 2 {
+
+	if len(resp.Models) != 1 {
 		errorAndFailWith(fmt.Sprintf("Wrong number of models. Exptected 2 but it's %v",
 			resp), t)
+	}
+
+	if len(resp.Models[0].ModelName) == 0 {
+		errorAndFailWith("ModelName is empty", t)
 	}
 }
 
@@ -92,7 +98,7 @@ func TestMain(m *testing.M) {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 
-	go server.ServeForever(false, port, ctx)
+	go server.ServeForever(ctx, false, port)
 
 	address := fmt.Sprintf("0.0.0.0:%d", port)
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
@@ -100,7 +106,7 @@ func TestMain(m *testing.M) {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	client = services.NewModelClient(conn)
+	client = modelzoo.NewModelzooServiceClient(conn)
 
 	retCode := m.Run()
 	cancel()

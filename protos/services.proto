@@ -1,78 +1,99 @@
 syntax = "proto3";
+// import "google/protobuf/timestamp.proto";
 
-/* Model Categories are semanically meaningful categoies. Each category
-should be associated with one input type and one output type.
+package modelzoo;
+
+/* Image is repsented by the dataurl format
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
 */
-enum ModelCategory {
-  VISION_CLASSIFICATION = 0;
-  TEXT_GENERATION = 1;
-  IMAGE_SEGMENTATION = 2;
-  IMAGE_CAPTIONING = 3;
-}
-
 message Image {
   map<string, string> metadata = 1;
   string image_data_url = 2;
 
-  string model_uuid = 3;
+  string model_name = 3;
   string access_token = 4;
 }
 
+// Text is a list of string
 message Text {
   map<string, string> metadata = 1;
   repeated string texts = 2;
 
-  string model_uuid = 3;
+  string model_name = 3;
   string access_token = 4;
 }
 
+/* Table is more complicated.
+   It is inspired from pandas orient="index"
+   >>> df.to_json(orient='index')
+   '{"row 1":{"col 1":"a","col 2":"b"},"row 2":{"col 1":"c","col 2":"d"}}'
+*/
 message Table {
   map<string, string> metadata = 1;
-  string model_uuid = 2;
+  string model_name = 2;
   string access_token = 3;
 
-  // Inspired from pandas orient="index"
-  // >>> df.to_json(orient='index')
-  // '{"row 1":{"col 1":"a","col 2":"b"},"row 2":{"col 1":"c","col 2":"d"}}'
   message Row { map<string, string> column_to_value = 1; }
   map<string, Row> table = 4;
   repeated string column_names = 5;
 }
 
-message ListModelsRequest {}
-message ListModelsResponse {
-  message Model {
-    string model_name = 1;
-    ModelCategory model_category = 2;
-    string uuid = 3;
-  }
-  repeated Model models = 1;
+// Web
+message Empty {}
+message KVPair {
+  string key = 1;
+  string value = 2;
 }
-
-/*
-TODO(rehan): plz fix the following a bit for auth
-*/
-message ModelUUIDRequest {
+message Model {
   string model_name = 1;
-  string token = 2;
+  repeated KVPair metadata = 3;
 }
-message ModelUUIDResponse { string model_uuid = 1; }
+message User {
+  string email = 1;
+  string password = 2;
+}
+message RateLimitToken { string token = 1; }
+// message RateLimitExceeded {
+//   string token = 1;
+//   uint64 quota = 2;
+//   google.protobuf.Timestamp restore_at = 3;
+// }
+
+message ListModelsResponse { repeated Model models = 1; }
 
 // Downloader
 message ImageDownloadRequest { string url = 1; }
 message ImageDownloadResponse { string image = 1; }
 
-service Model {
+enum PayloadType {
+  IMAGE = 0;
+  TEXT = 1;
+  TABLE = 2;
+  
+}
+
+message Payload {
+  PayloadType type = 1;
+
+  oneof payload {
+    Image image = 2;
+    Text text = 3;
+    Table table = 4;
+  }
+}
+
+service ModelzooService {
   // Inference
-  rpc VisionClassification(Image) returns (Table) {}
-  rpc TextGeneration(Text) returns (Text) {}
-  rpc ImageSegmentation(Image) returns (Image) {}
-  rpc ImageCaption(Image) returns (Text) {}
+  rpc Inference(Payload) returns (Payload) {}
 
   // Website utils
   rpc GetImage(ImageDownloadRequest) returns (ImageDownloadResponse) {}
 
+  // Rate limiting
+  rpc GetToken(Empty) returns (RateLimitToken) {}
+
   // Database
-  rpc ListModels(ListModelsRequest) returns (ListModelsResponse) {}
-  rpc ModelUUID(ModelUUIDRequest) returns (ModelUUIDResponse) {}
+  rpc ListModels(Empty) returns (ListModelsResponse) {}
+  rpc CreateUser(User) returns (Empty) {}
+  rpc CreateModel(Model) returns (Empty) {}
 }

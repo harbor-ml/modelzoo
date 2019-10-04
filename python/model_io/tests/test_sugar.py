@@ -7,13 +7,33 @@ from google.protobuf import json_format
 
 def test_input_output_wrapping():
     @register_type(image_input, image_output)
-    def my_func(inp):
+    def my_func(inp, metadata):
         return inp
 
     image = Image.new("RGB", (1, 1))
     request = image_output(image)
-    response = my_func(request)
+    response = my_func(request, {})
     assert request == response
+
+def test_metadata_mutation():
+    @register_type(text_input, text_output)
+    def my_func(inp, metadata):
+        metadata["new_field"] = 2
+        return inp
+
+    metadata = {"old_field": 1}
+    inp = pb.Text(texts=["a"])
+    out = my_func(inp, metadata)
+    assert out.texts == ["a"]
+    assert metadata == {"old_field": 1, "new_field": 2}
+
+def test_metadata_from_proto():
+    text = pb.Text(texts=["a"])
+    text.metadata["f1"] = "1"
+    text.metadata["f2"] = "2"
+
+    metadata_dict = json_format.MessageToDict(text)["metadata"]
+    assert metadata_dict == {"f1": "1", "f2": "2"}
 
 def test_text():
     data = ['a','b']

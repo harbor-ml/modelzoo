@@ -9,6 +9,7 @@ from flask import Flask, jsonify, request, g
 from flask_cors import CORS
 from PIL import Image
 from typing import List
+from google.protobuf import json_format
 
 import model_io.protos.services_pb2 as pb
 from model_io.sugar import (
@@ -23,7 +24,7 @@ from model_io.sugar import (
 app = Flask(__name__)
 CORS(app)
 
-@register_type(image_input, table_output, "metadata")
+@register_type(image_input, table_output)
 def vision_classification(inp: Image, metadata):
     df = pd.DataFrame(
         {
@@ -33,22 +34,23 @@ def vision_classification(inp: Image, metadata):
         }
     ).astype(str)
 
-    return df, metadata
+    return df
 
 
-@register_type(text_input, text_output, "metadata")
+@register_type(text_input, text_output)
 def text_generation(inp: List[str], metadata):
-    return [item[::-1] for item in inp], metadata
+    metadata["method"] = "reversed"
+    return [item[::-1] for item in inp]
 
 
-@register_type(image_input, image_output, "metadata")
+@register_type(image_input, image_output)
 def image_segmentation(inp: Image, metadata):
-    return inp.rotate(45), metadata
+    return inp.rotate(45)
 
 
-@register_type(image_input, text_output, "metadata")
+@register_type(image_input, text_output)
 def image_captioning(inp: Image, metadata):
-    return ["this is a cool image lol"], metadata
+    return ["this is a cool image lol"]
 
 
 
@@ -79,9 +81,13 @@ def clipper(app_name):
     pred_func, input_cls = prediction_apps[app_name]
     request_proto = input_cls()
     request_proto.ParseFromString(base64.b64decode(request.json["input"]))
-    result_proto, metadata = pred_func(request_proto, {'meta': 2})
-    # TODO(simon): handle metadata correctly in input and output sugar
-    # ideally: input meta kvs should be parsed and injected into function
-    #          output meta kvs should be inject to output proto automatically
+    
+    metadata_dict = json_format.MessageToDict(request_proto)["metadata"]
+    result_proto = pred_func(request_proto, metadata_dict)
+
+    # Populate metadata
+    for k, v in metadata_dict.items():
+        result_proto.metadata[k] = str(v)
+
     serialized = base64.b64encode(result_proto.SerializeToString()).decode()
     return jsonify(generate_clipper_resp(False, serialized))

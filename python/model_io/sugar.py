@@ -11,30 +11,20 @@ import pandas as pd
 import model_io.protos.services_pb2 as pb
 
 
-# TODO(simon): metadata should be a single mutable state that's returned.
-# Something like https://github.com/taoufik07/responder
-
+# NOTE(simon): Metadata should be a single mutable state that's returned.
 class register_type:
-    def __init__(self, inp_type_cls, out_type_cls, metadata_name=None):
+    def __init__(self, inp_type_cls, out_type_cls, override_metadata_name="metadata"):
         self._in_transformer = inp_type_cls
         self._out_transformer = out_type_cls
-        self.metadata_name = metadata_name
+        self.metadata_name = override_metadata_name
 
     def __call__(self, func):
         @wraps(func)
-        def wrapped(inp, metadata=None):
+        def wrapped(inp, metadata):
             args = (self._in_transformer(inp),)
-            kwargs = {}
-            if self.metadata_name:
-                kwargs[self.metadata_name] = metadata
+            kwargs = {self.metadata_name: metadata}
             out = func(*args, **kwargs)
-
-            if not isinstance(out, tuple) or len(out) == 1:
-                return self._out_transformer(out)
-            else:
-                out, metadata = out
-                return self._out_transformer(out), metadata
-
+            return self._out_transformer(out)
         return wrapped
 
 

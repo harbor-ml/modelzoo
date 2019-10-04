@@ -1,15 +1,27 @@
-{
-    "models": [
-        {
-            "name":"model1",
-            "category":"VISIONCLASSIFICATION",
-            "output":"vision"
-        },
-        {
-            "name":"model2",
-            "category":"VISIONCLASSIFICATION",
-            "output":"text",
-            "private": true
-        }
+[
+  {
+    "@type": "/modelzoo.User",
+    "email": "rehan@modelzoo.live",
+    "password": "password"
+  },
+  {
+    "@type": "/modelzoo.User",
+    "email": "simon@modelzoo.live",
+    "password": "password"
+  },
+  {
+    "@type": "/modelzoo.Model",
+    "model_name": "vision_classification_mock",
+    "metadata": [
+      { "key": "category", "value": "vision classification" },
+      { "key": "author", "value": "pytorch folks" },
+      { "key": "service_type", "value": "clipper" },
+      {
+        "key": "clipper_url",
+        "value": "http://localhost:10000/vision_classification/predict"
+      },
+      { "key": "input_type", "value": "image" },
+      { "key": "output_type", "value": "table" }
     ]
-}
+  }
+]
