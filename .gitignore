@@ -1,4 +1,5 @@
-
+# Our binary name
+go/go
 # Created by https://www.gitignore.io/api/go,node,python
 # Edit at https://www.gitignore.io/?templates=go,node,python
 

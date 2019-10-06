@@ -2,14 +2,12 @@ package server
 
 import (
 	"context"
-	"encoding/base64"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
 
-	"github.com/golang/protobuf/proto"
 	"github.com/harbor-ml/modelzoo/go/schema"
 
 	"google.golang.org/grpc/codes"
@@ -84,13 +82,12 @@ func (s *ProxyServer) ListModels(
 }
 
 // CreateUser ...
-func (s *ProxyServer) CreateUser(ctx context.Context, user *modelzoo.User) (*modelzoo.Status, error) {
+func (s *ProxyServer) CreateUser(ctx context.Context, user *modelzoo.User) (*modelzoo.Empty, error) {
 	userRecord := schema.User{Email: user.Email, Password: user.Password}
 	if err := s.db.Create(&userRecord).Error; err != nil {
-		log.Print(err)
-		return &modelzoo.Status{Success: false, Message: fmt.Sprint(err)}, err
+		log.Panic(err)
 	}
-	return &modelzoo.Status{Success: true, Message: "Success"}, nil
+	return &modelzoo.Empty{}, nil
 }
 
 // GetUser ...
@@ -104,12 +101,12 @@ func (s *ProxyServer) GetUser(ctx context.Context, user *modelzoo.User) (*modelz
 }
 
 // CreateModel ...
-func (s *ProxyServer) CreateModel(ctx context.Context, model *modelzoo.Model) (*modelzoo.Status, error) {
+func (s *ProxyServer) CreateModel(ctx context.Context, model *modelzoo.Model) (*modelzoo.Empty, error) {
 	err := schema.CreateModel(s.db, model)
 	if err != nil {
-		return &modelzoo.Status{Success: false, Message: fmt.Sprint(err)}, err
+		return nil, status.Error(codes.Internal, fmt.Sprint(err))
 	}
-	return &modelzoo.Status{Success: true, Message: "Success!"}, nil
+	return &modelzoo.Empty{}, nil
 }
 
 func (s *ProxyServer) GetToken(ctx context.Context, _ *modelzoo.Empty) (*modelzoo.RateLimitToken, error) {
@@ -119,62 +116,6 @@ func (s *ProxyServer) GetToken(ctx context.Context, _ *modelzoo.Empty) (*modelzo
 	}
 
 	return &modelzoo.RateLimitToken{Token: token.Secret}, nil
-}
-
-func (s *ProxyServer) Inference(ctx context.Context, payload *modelzoo.Payload) (*modelzoo.Payload, error) {
-	var item interface{}
-	switch payload.Type {
-	case modelzoo.PayloadType_IMAGE:
-		item = payload.GetImage()
-	case modelzoo.PayloadType_TEXT:
-		item = payload.GetText()
-	case modelzoo.PayloadType_TABLE:
-		item = payload.GetTable()
-	default:
-		return nil, status.Error(codes.Internal, "Invalid payload type")
-	}
-
-	modelRecord := schema.ModelVersion{}
-	if err := s.db.Where("name = ?", item.ModelName).Find(&modelRecord).Error; err != nil {
-		return nil, status.Error(codes.Internal, fmt.Sprint(err))
-	}
-	metadataPrt, err := schema.GetMetadataMap(s.db, &modelRecord)
-	if err != nil {
-		return nil, err
-	}
-	metadata := *metadataPrt
-
-	if metadata["service_type"] != "clipper" {
-		return nil, status.Error(codes.Internal, "modelzoo only support clipper for now")
-	}
-
-	if metadata["input_type"] != "image" {
-		return nil, status.Error(codes.Internal, "input type mismatch")
-	}
-
-	url := metadata["clipper_url"]
-	serializedReq, err := proto.Marshal(image)
-	if err != nil {
-		return nil, err
-	}
-	encodedReq := base64.StdEncoding.EncodeToString(serializedReq)
-	payload := map[string]string{"input": encodedReq}
-	resp := postJSON(url, payload)
-	decoded, err := base64.StdEncoding.DecodeString(resp["output"].(string))
-	if err != nil {
-		return nil, err
-	}
-
-	val := &modelzoo.ModelResponse{}
-	proto.Unmarshal(decoded, val)
-	s.reqID++
-
-	token := image.AccessToken
-	_, err = schema.PerformRateLimit(s.db, token)
-	if err != nil {
-		return nil, status.Error(codes.Internal, fmt.Sprint(err))
-	}
-
 }
 
 // // VisionClassification returns
