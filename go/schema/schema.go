@@ -115,7 +115,7 @@ type ModelMetaData struct {
 	Value string
 }
 
-func GetMetadataMap(db *gorm.DB, model *ModelVersion) (*map[string]string, error) {
+func GetMetadataMap(db *gorm.DB, model *ModelVersion) (map[string]string, error) {
 	relavantMetadata := make([]*ModelMetaData, 0)
 	if err := db.Model(&model).Related(&relavantMetadata).Error; err != nil {
 		return nil, err
@@ -126,7 +126,7 @@ func GetMetadataMap(db *gorm.DB, model *ModelVersion) (*map[string]string, error
 		reducedMap[entry.Key] = entry.Value
 	}
 
-	return &reducedMap, nil
+	return reducedMap, nil
 }
 
 func CreateModel(db *gorm.DB, model *modelzoo.Model) error {

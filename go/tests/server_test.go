@@ -46,6 +46,7 @@ func TestGetImage(t *testing.T) {
 
 	server := &http.Server{Addr: fmt.Sprintf(":%d", port)}
 	http.Handle("/", http.FileServer(http.Dir(".")))
+	http.HandleFunc("/not_found", http.NotFound)
 	go server.ListenAndServe()
 	ctx, cancel := context.WithCancel(context.Background())
 	defer server.Shutdown(ctx)
@@ -65,7 +66,7 @@ func TestGetImage(t *testing.T) {
 
 	// Test CASE 2: test 404
 	request = modelzoo.ImageDownloadRequest{
-		Url: "http://httpbin.org/status/404",
+		Url: fmt.Sprintf("http://localhost:%d/%s", port, "not_found"),
 	}
 	resp, err = client.GetImage(context.Background(), &request)
 	if err == nil {
@@ -78,7 +79,7 @@ func TestListModel(t *testing.T) {
 	resp, err := client.ListModels(context.Background(), &req)
 	errorAndFailWith(err, t)
 
-	if len(resp.Models) != 1 {
+	if len(resp.Models) != 2 {
 		errorAndFailWith(fmt.Sprintf("Wrong number of models. Exptected 2 but it's %v",
 			resp), t)
 	}
@@ -86,6 +87,34 @@ func TestListModel(t *testing.T) {
 	if len(resp.Models[0].ModelName) == 0 {
 		errorAndFailWith("ModelName is empty", t)
 	}
+}
+
+func TestTextInfer(t *testing.T) {
+	input := []string{"123456", "654321"}
+	token, err := client.GetToken(context.Background(), &modelzoo.Empty{})
+	errorAndFailWith(err, t)
+
+	req := modelzoo.Payload{
+		Payload: &modelzoo.Payload_Text{
+			Text: &modelzoo.Text{
+				Texts:       input,
+				ModelName:   "text_generation_mock",
+				AccessToken: token.Token,
+			},
+		},
+		Type: modelzoo.PayloadType_TEXT,
+	}
+	resp, err := client.Inference(context.Background(), &req)
+	errorAndFailWith(err, t)
+
+	if resp.GetText().Metadata["method"] != "reversed" {
+		t.Errorf("Doesn't have a metadata entry {'method': reveserd}")
+	}
+
+	if len(resp.GetText().Texts) != 2 {
+		t.Errorf("Wrong number of text response")
+	}
+
 }
 
 func TestMain(m *testing.M) {

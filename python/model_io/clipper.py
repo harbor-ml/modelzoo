@@ -82,7 +82,8 @@ def clipper(app_name):
     request_proto = input_cls()
     request_proto.ParseFromString(base64.b64decode(request.json["input"]))
     
-    metadata_dict = json_format.MessageToDict(request_proto)["metadata"]
+    request_proto_dict = json_format.MessageToDict(request_proto)
+    metadata_dict = request_proto_dict.get("metadata", dict())
     result_proto = pred_func(request_proto, metadata_dict)
 
     # Populate metadata
