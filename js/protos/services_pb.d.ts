@@ -7,8 +7,8 @@ export class Image extends jspb.Message {
   getImageDataUrl(): string;
   setImageDataUrl(value: string): void;
 
-  getModelId(): number;
-  setModelId(value: number): void;
+  getModelName(): string;
+  setModelName(value: string): void;
 
   getAccessToken(): string;
   setAccessToken(value: string): void;
@@ -25,7 +25,7 @@ export namespace Image {
   export type AsObject = {
     metadataMap: Array<[string, string]>,
     imageDataUrl: string,
-    modelId: number,
+    modelName: string,
     accessToken: string,
   }
 }
@@ -39,8 +39,8 @@ export class Text extends jspb.Message {
   clearTextsList(): void;
   addTexts(value: string, index?: number): void;
 
-  getModelId(): number;
-  setModelId(value: number): void;
+  getModelName(): string;
+  setModelName(value: string): void;
 
   getAccessToken(): string;
   setAccessToken(value: string): void;
@@ -57,7 +57,7 @@ export namespace Text {
   export type AsObject = {
     metadataMap: Array<[string, string]>,
     textsList: Array<string>,
-    modelId: number,
+    modelName: string,
     accessToken: string,
   }
 }
@@ -66,8 +66,8 @@ export class Table extends jspb.Message {
   getMetadataMap(): jspb.Map<string, string>;
   clearMetadataMap(): void;
 
-  getModelId(): number;
-  setModelId(value: number): void;
+  getModelName(): string;
+  setModelName(value: string): void;
 
   getAccessToken(): string;
   setAccessToken(value: string): void;
@@ -91,7 +91,7 @@ export class Table extends jspb.Message {
 export namespace Table {
   export type AsObject = {
     metadataMap: Array<[string, string]>,
-    modelId: number,
+    modelName: string,
     accessToken: string,
     tableMap: Array<[string, Table.Row.AsObject]>,
     columnNamesList: Array<string>,
@@ -157,9 +157,6 @@ export class Model extends jspb.Message {
   getModelName(): string;
   setModelName(value: string): void;
 
-  getUserEmail(): string;
-  setUserEmail(value: string): void;
-
   getMetadataList(): Array<KVPair>;
   setMetadataList(value: Array<KVPair>): void;
   clearMetadataList(): void;
@@ -176,7 +173,6 @@ export class Model extends jspb.Message {
 export namespace Model {
   export type AsObject = {
     modelName: string,
-    userEmail: string,
     metadataList: Array<KVPair.AsObject>,
   }
 }
@@ -184,6 +180,9 @@ export namespace Model {
 export class User extends jspb.Message {
   getEmail(): string;
   setEmail(value: string): void;
+
+  getPassword(): string;
+  setPassword(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): User.AsObject;
@@ -196,6 +195,25 @@ export class User extends jspb.Message {
 export namespace User {
   export type AsObject = {
     email: string,
+    password: string,
+  }
+}
+
+export class RateLimitToken extends jspb.Message {
+  getToken(): string;
+  setToken(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): RateLimitToken.AsObject;
+  static toObject(includeInstance: boolean, msg: RateLimitToken): RateLimitToken.AsObject;
+  static serializeBinaryToWriter(message: RateLimitToken, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): RateLimitToken;
+  static deserializeBinaryFromReader(message: RateLimitToken, reader: jspb.BinaryReader): RateLimitToken;
+}
+
+export namespace RateLimitToken {
+  export type AsObject = {
+    token: string,
   }
 }
 
@@ -255,3 +273,56 @@ export namespace ImageDownloadResponse {
   }
 }
 
+export class Payload extends jspb.Message {
+  getType(): PayloadType;
+  setType(value: PayloadType): void;
+
+  getImage(): Image | undefined;
+  setImage(value?: Image): void;
+  hasImage(): boolean;
+  clearImage(): void;
+  hasImage(): boolean;
+
+  getText(): Text | undefined;
+  setText(value?: Text): void;
+  hasText(): boolean;
+  clearText(): void;
+  hasText(): boolean;
+
+  getTable(): Table | undefined;
+  setTable(value?: Table): void;
+  hasTable(): boolean;
+  clearTable(): void;
+  hasTable(): boolean;
+
+  getPayloadCase(): Payload.PayloadCase;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Payload.AsObject;
+  static toObject(includeInstance: boolean, msg: Payload): Payload.AsObject;
+  static serializeBinaryToWriter(message: Payload, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Payload;
+  static deserializeBinaryFromReader(message: Payload, reader: jspb.BinaryReader): Payload;
+}
+
+export namespace Payload {
+  export type AsObject = {
+    type: PayloadType,
+    image?: Image.AsObject,
+    text?: Text.AsObject,
+    table?: Table.AsObject,
+  }
+
+  export enum PayloadCase { 
+    PAYLOAD_NOT_SET = 0,
+    IMAGE = 2,
+    TEXT = 3,
+    TABLE = 4,
+  }
+}
+
+export enum PayloadType { 
+  IMAGE = 0,
+  TEXT = 1,
+  TABLE = 2,
+}

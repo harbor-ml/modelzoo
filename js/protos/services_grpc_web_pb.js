@@ -89,220 +89,55 @@ proto.modelzoo.ModelzooServicePromiseClient =
 /**
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.modelzoo.Image,
- *   !proto.modelzoo.Table>}
+ *   !proto.modelzoo.Payload,
+ *   !proto.modelzoo.Payload>}
  */
-const methodInfo_ModelzooService_VisionClassification = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.modelzoo.Table,
-  /** @param {!proto.modelzoo.Image} request */
+const methodInfo_ModelzooService_Inference = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.modelzoo.Payload,
+  /** @param {!proto.modelzoo.Payload} request */
   function(request) {
     return request.serializeBinary();
   },
-  proto.modelzoo.Table.deserializeBinary
+  proto.modelzoo.Payload.deserializeBinary
 );
 
 
 /**
- * @param {!proto.modelzoo.Image} request The
+ * @param {!proto.modelzoo.Payload} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.modelzoo.Table)}
+ * @param {function(?grpc.web.Error, ?proto.modelzoo.Payload)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.modelzoo.Table>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.modelzoo.Payload>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.modelzoo.ModelzooServiceClient.prototype.visionClassification =
+proto.modelzoo.ModelzooServiceClient.prototype.inference =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/modelzoo.ModelzooService/VisionClassification',
+      '/modelzoo.ModelzooService/Inference',
       request,
       metadata || {},
-      methodInfo_ModelzooService_VisionClassification,
+      methodInfo_ModelzooService_Inference,
       callback);
 };
 
 
 /**
- * @param {!proto.modelzoo.Image} request The
+ * @param {!proto.modelzoo.Payload} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.modelzoo.Table>}
+ * @return {!Promise<!proto.modelzoo.Payload>}
  *     A native promise that resolves to the response
  */
-proto.modelzoo.ModelzooServicePromiseClient.prototype.visionClassification =
+proto.modelzoo.ModelzooServicePromiseClient.prototype.inference =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/modelzoo.ModelzooService/VisionClassification',
+      '/modelzoo.ModelzooService/Inference',
       request,
       metadata || {},
-      methodInfo_ModelzooService_VisionClassification);
-};
-
-
-/**
- * @const
- * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.modelzoo.Text,
- *   !proto.modelzoo.Text>}
- */
-const methodInfo_ModelzooService_TextGeneration = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.modelzoo.Text,
-  /** @param {!proto.modelzoo.Text} request */
-  function(request) {
-    return request.serializeBinary();
-  },
-  proto.modelzoo.Text.deserializeBinary
-);
-
-
-/**
- * @param {!proto.modelzoo.Text} request The
- *     request proto
- * @param {?Object<string, string>} metadata User defined
- *     call metadata
- * @param {function(?grpc.web.Error, ?proto.modelzoo.Text)}
- *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.modelzoo.Text>|undefined}
- *     The XHR Node Readable Stream
- */
-proto.modelzoo.ModelzooServiceClient.prototype.textGeneration =
-    function(request, metadata, callback) {
-  return this.client_.rpcCall(this.hostname_ +
-      '/modelzoo.ModelzooService/TextGeneration',
-      request,
-      metadata || {},
-      methodInfo_ModelzooService_TextGeneration,
-      callback);
-};
-
-
-/**
- * @param {!proto.modelzoo.Text} request The
- *     request proto
- * @param {?Object<string, string>} metadata User defined
- *     call metadata
- * @return {!Promise<!proto.modelzoo.Text>}
- *     A native promise that resolves to the response
- */
-proto.modelzoo.ModelzooServicePromiseClient.prototype.textGeneration =
-    function(request, metadata) {
-  return this.client_.unaryCall(this.hostname_ +
-      '/modelzoo.ModelzooService/TextGeneration',
-      request,
-      metadata || {},
-      methodInfo_ModelzooService_TextGeneration);
-};
-
-
-/**
- * @const
- * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.modelzoo.Image,
- *   !proto.modelzoo.Image>}
- */
-const methodInfo_ModelzooService_ImageSegmentation = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.modelzoo.Image,
-  /** @param {!proto.modelzoo.Image} request */
-  function(request) {
-    return request.serializeBinary();
-  },
-  proto.modelzoo.Image.deserializeBinary
-);
-
-
-/**
- * @param {!proto.modelzoo.Image} request The
- *     request proto
- * @param {?Object<string, string>} metadata User defined
- *     call metadata
- * @param {function(?grpc.web.Error, ?proto.modelzoo.Image)}
- *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.modelzoo.Image>|undefined}
- *     The XHR Node Readable Stream
- */
-proto.modelzoo.ModelzooServiceClient.prototype.imageSegmentation =
-    function(request, metadata, callback) {
-  return this.client_.rpcCall(this.hostname_ +
-      '/modelzoo.ModelzooService/ImageSegmentation',
-      request,
-      metadata || {},
-      methodInfo_ModelzooService_ImageSegmentation,
-      callback);
-};
-
-
-/**
- * @param {!proto.modelzoo.Image} request The
- *     request proto
- * @param {?Object<string, string>} metadata User defined
- *     call metadata
- * @return {!Promise<!proto.modelzoo.Image>}
- *     A native promise that resolves to the response
- */
-proto.modelzoo.ModelzooServicePromiseClient.prototype.imageSegmentation =
-    function(request, metadata) {
-  return this.client_.unaryCall(this.hostname_ +
-      '/modelzoo.ModelzooService/ImageSegmentation',
-      request,
-      metadata || {},
-      methodInfo_ModelzooService_ImageSegmentation);
-};
-
-
-/**
- * @const
- * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.modelzoo.Image,
- *   !proto.modelzoo.Text>}
- */
-const methodInfo_ModelzooService_ImageCaption = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.modelzoo.Text,
-  /** @param {!proto.modelzoo.Image} request */
-  function(request) {
-    return request.serializeBinary();
-  },
-  proto.modelzoo.Text.deserializeBinary
-);
-
-
-/**
- * @param {!proto.modelzoo.Image} request The
- *     request proto
- * @param {?Object<string, string>} metadata User defined
- *     call metadata
- * @param {function(?grpc.web.Error, ?proto.modelzoo.Text)}
- *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.modelzoo.Text>|undefined}
- *     The XHR Node Readable Stream
- */
-proto.modelzoo.ModelzooServiceClient.prototype.imageCaption =
-    function(request, metadata, callback) {
-  return this.client_.rpcCall(this.hostname_ +
-      '/modelzoo.ModelzooService/ImageCaption',
-      request,
-      metadata || {},
-      methodInfo_ModelzooService_ImageCaption,
-      callback);
-};
-
-
-/**
- * @param {!proto.modelzoo.Image} request The
- *     request proto
- * @param {?Object<string, string>} metadata User defined
- *     call metadata
- * @return {!Promise<!proto.modelzoo.Text>}
- *     A native promise that resolves to the response
- */
-proto.modelzoo.ModelzooServicePromiseClient.prototype.imageCaption =
-    function(request, metadata) {
-  return this.client_.unaryCall(this.hostname_ +
-      '/modelzoo.ModelzooService/ImageCaption',
-      request,
-      metadata || {},
-      methodInfo_ModelzooService_ImageCaption);
+      methodInfo_ModelzooService_Inference);
 };
 
 
@@ -358,6 +193,61 @@ proto.modelzoo.ModelzooServicePromiseClient.prototype.getImage =
       request,
       metadata || {},
       methodInfo_ModelzooService_GetImage);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.modelzoo.Empty,
+ *   !proto.modelzoo.RateLimitToken>}
+ */
+const methodInfo_ModelzooService_GetToken = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.modelzoo.RateLimitToken,
+  /** @param {!proto.modelzoo.Empty} request */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.modelzoo.RateLimitToken.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.modelzoo.Empty} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.Error, ?proto.modelzoo.RateLimitToken)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.modelzoo.RateLimitToken>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.modelzoo.ModelzooServiceClient.prototype.getToken =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/modelzoo.ModelzooService/GetToken',
+      request,
+      metadata || {},
+      methodInfo_ModelzooService_GetToken,
+      callback);
+};
+
+
+/**
+ * @param {!proto.modelzoo.Empty} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.modelzoo.RateLimitToken>}
+ *     A native promise that resolves to the response
+ */
+proto.modelzoo.ModelzooServicePromiseClient.prototype.getToken =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/modelzoo.ModelzooService/GetToken',
+      request,
+      metadata || {},
+      methodInfo_ModelzooService_GetToken);
 };
 
 

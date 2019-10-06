@@ -2,13 +2,12 @@ import * as grpcWeb from 'grpc-web';
 
 import {
   Empty,
-  Image,
   ImageDownloadRequest,
   ImageDownloadResponse,
   ListModelsResponse,
   Model,
-  Table,
-  Text,
+  Payload,
+  RateLimitToken,
   User} from './services_pb';
 
 export class ModelzooServiceClient {
@@ -16,33 +15,12 @@ export class ModelzooServiceClient {
                credentials: null | { [index: string]: string; },
                options: null | { [index: string]: string; });
 
-  visionClassification(
-    request: Image,
+  inference(
+    request: Payload,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
-               response: Table) => void
-  ): grpcWeb.ClientReadableStream<Table>;
-
-  textGeneration(
-    request: Text,
-    metadata: grpcWeb.Metadata | undefined,
-    callback: (err: grpcWeb.Error,
-               response: Text) => void
-  ): grpcWeb.ClientReadableStream<Text>;
-
-  imageSegmentation(
-    request: Image,
-    metadata: grpcWeb.Metadata | undefined,
-    callback: (err: grpcWeb.Error,
-               response: Image) => void
-  ): grpcWeb.ClientReadableStream<Image>;
-
-  imageCaption(
-    request: Image,
-    metadata: grpcWeb.Metadata | undefined,
-    callback: (err: grpcWeb.Error,
-               response: Text) => void
-  ): grpcWeb.ClientReadableStream<Text>;
+               response: Payload) => void
+  ): grpcWeb.ClientReadableStream<Payload>;
 
   getImage(
     request: ImageDownloadRequest,
@@ -50,6 +28,13 @@ export class ModelzooServiceClient {
     callback: (err: grpcWeb.Error,
                response: ImageDownloadResponse) => void
   ): grpcWeb.ClientReadableStream<ImageDownloadResponse>;
+
+  getToken(
+    request: Empty,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.Error,
+               response: RateLimitToken) => void
+  ): grpcWeb.ClientReadableStream<RateLimitToken>;
 
   listModels(
     request: Empty,
@@ -79,30 +64,20 @@ export class ModelzooServicePromiseClient {
                credentials: null | { [index: string]: string; },
                options: null | { [index: string]: string; });
 
-  visionClassification(
-    request: Image,
+  inference(
+    request: Payload,
     metadata?: grpcWeb.Metadata
-  ): Promise<Table>;
-
-  textGeneration(
-    request: Text,
-    metadata?: grpcWeb.Metadata
-  ): Promise<Text>;
-
-  imageSegmentation(
-    request: Image,
-    metadata?: grpcWeb.Metadata
-  ): Promise<Image>;
-
-  imageCaption(
-    request: Image,
-    metadata?: grpcWeb.Metadata
-  ): Promise<Text>;
+  ): Promise<Payload>;
 
   getImage(
     request: ImageDownloadRequest,
     metadata?: grpcWeb.Metadata
   ): Promise<ImageDownloadResponse>;
+
+  getToken(
+    request: Empty,
+    metadata?: grpcWeb.Metadata
+  ): Promise<RateLimitToken>;
 
   listModels(
     request: Empty,
