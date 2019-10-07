@@ -233,7 +233,6 @@ class Empty(google___protobuf___message___Message):
     def MergeFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
     def CopyFrom(self, other_msg: google___protobuf___message___Message) -> None: ...
 
-<<<<<<< HEAD
 class Status(google___protobuf___message___Message):
     success = ... # type: bool
     message = ... # type: typing___Text
@@ -251,8 +250,6 @@ class Status(google___protobuf___message___Message):
     else:
         def ClearField(self, field_name: typing_extensions___Literal[b"message",b"success"]) -> None: ...
 
-=======
->>>>>>> master
 class KVPair(google___protobuf___message___Message):
     key = ... # type: typing___Text
     value = ... # type: typing___Text

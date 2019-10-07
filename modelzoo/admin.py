@@ -1,53 +1,49 @@
-import grpc
 import typing
+
+import grpc
 import pandas as pd
-from modelzoo._protos.services_pb2_grpc import ModelzooServiceStub
-from modelzoo._protos.services_pb2 import (
-    Image,
-    Text,
-    Table,
-    User,
-    RateLimitToken,
-    Payload,
-    PayloadType,
-    Empty,
-    Status
-)
-from modelzoo.exceptions import (
-    AuthenticationException,
-    ModelZooConnectionException,
-    InvalidCredentialsException
-)
-from ..python.model_io.sugar import (
-    text_input,
-    image_input,
-    table_output
-)
+
 import modelzoo.utils as utils
+from modelzoo._protos.services_pb2 import (Empty, Image, Payload, PayloadType,
+                                           RateLimitToken, Status, Table, Text,
+                                           User)
+from modelzoo._protos.services_pb2_grpc import ModelzooServiceStub
+from modelzoo.exceptions import (AuthenticationException,
+                                 InvalidCredentialsException,
+                                 ModelZooConnectionException)
+
+from ..python.model_io.sugar import image_input, table_output, text_input
+
 
 class ModelZooConnection(object):
     """
-        ModelZooConnection class. This class will be the main client API for connecting to a ModelZoo instance, whether it be a local or external one.
-        This class manages authentication, and features several bound methods to aid the user in creation and manipulation of users and models.
+    ModelZooConnection class. This class will be the main client API for connecting to a ModelZoo instance, whether it be a local or external one.
+    This class manages authentication, and features several bound methods to aid the user in creation and manipulation of users and models.
 
-        Attributes
-        ----------
-            address -> string: This is the address of the ModelZoo instance to connect to. By default, it is the global testbed managed by RISELab.
-            email -> Optional[string]: The email with which to authenticate to the ModelZoo instance.
-            password -> Optional[string]: The password with which to authenticate to the ModelZoo instance.
-            conn -> GRPC Channel: The connection to the ModelZoo instance. The connect() method must be called to instantiate this.
-                Before this is instantiated, most methods will fail.
-            token -> string: The token to use for rate limiting and potentially access control in the future.
-            conn_error -> ModelZooConnectionException: A shorthand for the connection exception to be raised whenever a method is called before a connection
-                to the ModelZoo instance has been instantiated.
-            authenticated -> bool: Flag that indicates whether or not user has authenticated. Can be used to block access to creation or manipulation of models.
+    Attributes
+    ----------
+    address : string
+        This is the address of the ModelZoo instance to connect to. By default, it is the global testbed managed by RISELab.
+    email : Optional[string]
+        The email with which to authenticate to the ModelZoo instance.
+        password : Optional[string]: The password with which to authenticate to the ModelZoo instance.
+    conn : GRPC Channel
+        The connection to the ModelZoo instance. The connect() method must be called to instantiate this.
+            Before this is instantiated, most methods will fail.
+    token : string
+        The token to use for rate limiting and potentially access control in the future.
+    conn_error : ModelZooConnectionException
+        A shorthand for the connection exception to be raised whenever a method is called before a connection
+            to the ModelZoo instance has been instantiated.
+    authenticated : bool
+        Flag that indicates whether or not user has authenticated. Can be used to block access to creation or manipulation of models.
     """
 
     def __init__(
         self,
         address: typing.Optional[str] = "grpc.modelzoo.live",
         email: typing.Optional[str] = "",
-        password: typing.Optional[str] = ""
+        password: typing.Optional[str] = "",
     ):
         self.conn = None
         self.authenticated = False
@@ -59,21 +55,22 @@ class ModelZooConnection(object):
         self.email = email
         self.password = password
 
-    def connect(self, address: typing.Optional[str] = "grpc.modelzoo.live"):
+    def connect(self, address: typing.Optional[str] = "grpc.modelzoo.live") -> None:
         """
-            Method to connect to the ModelZoo instance specified by self.address | address.
-            Must be called first, so that later methods have a connection to the server to perform queries.
-            If a username and email were not provided previously, an incognito rate limiting token is generated for the user.
+        Method to connect to the ModelZoo instance specified by self.address | address.
+        Must be called first, so that later methods have a connection to the server to perform queries.
+        If a username and email were not provided previously, an incognito rate limiting token is generated for the user.
 
-            Parameters
-            ----------
-                address -> string: This is the address of the ModelZoo instance to connect to.
+        Parameters
+        ----------
+        address : string
+            This is the address of the ModelZoo instance to connect to.
 
-            Raises
-            ------
-                InvalidCredentialException
-                    If the user previously provided an email and password, authentication is attempted.
-                    If the authentication details are invalid, an InvalidCredentialException is raised.
+        Raises
+        ------
+        InvalidCredentialException
+            If the user previously provided an email and password, authentication is attempted.
+            If the authentication details are invalid, an InvalidCredentialException is raised.
         """
         self.address = self.address if address is None else address
         channel = grpc.insecure_channel(self.address)
@@ -82,157 +79,169 @@ class ModelZooConnection(object):
             self.authenticate(self.email, self.password)
         self.token = self.conn.GetToken(Empty())
 
-    def authenticate(
-        self,
-        email: str,
-        password: str,
-    ) -> None:
+    def authenticate(self, email: str, password: str) -> None:
         """
-            Method to authenticate. Allows user to retrieve their token from the database.
+        Method to authenticate. Allows user to retrieve their token from the database.
 
-            Parameters
-            ----------
-                email -> str: email with which to authenticate.
-                password -> str: password with which to authenticate.
-            
-            Raises
-            ------
-                InvalidCredentialException
-                    If the (email, password) tuple does not match any in the database of users,
-                    an InvalidCredentialException is raised.
+        Parameters
+        ----------
+        email : str
+            email with which to authenticate.
+        password : str
+            password with which to authenticate.
+        
+        Raises
+        ------
+        InvalidCredentialException
+            If the (email, password) tuple does not match any in the database of users,
+            an InvalidCredentialException is raised.
         """
         if self.conn is None:
             raise self.conn_error
-        Status status = GetUser(User(email=email, password=password))
+        status = GetUser(User(email=email, password=password))
         if status.succes:
             self.authenticated = True
         else:
-            raise InvalidCredentialsException("Email and password do not match an existing user. Please check to make sure you have not made any typos.")
+            raise InvalidCredentialsException(
+                "Email and password do not match an existing user. Please check to make sure you have not made any typos."
+            )
 
-    def get_token(self):
+    def get_token(self) -> str:
         """
-            Returns the users token. User must be authenticated and connected.
+        Returns the users token. User must be authenticated and connected.
 
-            Raises
-            ------
-                ModelZooConnectionException
-                    If the user is not connected, a ModelZooConnectionException will be raised.
-                AuthenticationException
-                    If the user has not authenticated, a AuthenticationException is raised.
+        Raises
+        ------
+        ModelZooConnectionException
+            If the user is not connected, a ModelZooConnectionException will be raised.
+        AuthenticationException
+            If the user has not authenticated, a AuthenticationException is raised.
         """
         if self.conn is None:
             raise self.conn_error
-        if !self.authenticated:
+        if not self.authenticated:
             raise AuthenticationException(
                 "You are not currently authenticated. Please call authenticate() to recieve your token."
             )
         return self.token
 
-    def create_user(self, email: str, password: str):
+    def create_user(self, email: str, password: str) -> None:
         """
-            Method to create user. Current user must be connected to ModelZoo instance prior to this method call.
+        Method to create user. Current user must be connected to ModelZoo instance prior to this method call.
 
-            Parameters
-            ----------
-                email -> str: The email for the new user.
-                password -> str: The password for the new user.
-            
-            Raises
-            ------
-                ModelZooConnectionException
-                    A ModelZooConnectionException is raised in two cases:
-                        1) The user is not currently connected to a ModelZoo instance.
-                        2) Creation of the new user failed.
-                    The error message for the exception will contain information as to which of the cases it is.
+        Parameters
+        ----------
+        email : str
+            The email for the new user.
+        password : str
+            The password for the new user.
+        
+        Raises
+        ------
+        ModelZooConnectionException
+            A ModelZooConnectionException is raised in two cases:
+                1) The user is not currently connected to a ModelZoo instance.
+                2) Creation of the new user failed.
+            The error message for the exception will contain information as to which of the cases it is.
         """
         if self.conn is None:
             raise self.conn_error
-        resp = self.conn.CreateUser(
-            User(email=email, password=password)
-        )
-        if !resp.success:
+        resp = self.conn.CreateUser(User(email=email, password=password))
+        if not resp.success:
             raise ModelZooConnectionException(resp.message)
 
-    def list_all_models(
-        self,
-    ) -> typing.List[dict]:
+    def list_all_models(self,) -> typing.List[dict]:
         """
-            Lists all models.
+        Lists all models.
 
-            Return
-            ------
-                A dictionary of the models currently registered.
+        Return
+        ------
+        List[dict]
+            A dictionary of the models currently registered.
         """
         if self.conn is None:
             raise self.conn_error
         resp = self.conn.ListModels(Empty())
         return resp.models
-    
+
     def text_inference(self, model: str, texts: List[str]) -> Payload:
         """
-            Method to perform text inference.
+        Method to perform text inference.
 
-            Parameters
-            ----------
-                texts -> List[str]: Batch of text inputs to provide to model.
-                model -> str: Name of model to forward request to.
-            
-            Returns
-            -------
-                The payload response from the ModelZoo instance.
+        Parameters
+        ----------
+        texts : List[str]
+            Batch of text inputs to provide to model.
+        model : str
+            Name of model to forward request to.
+        
+        Returns
+        -------
+        Payload
+            The payload response from the ModelZoo instance.
 
-            Raises
-            ------
-                ModelZooConnectionException
-                    A ModelZooConnectionException is raised if the user is not connected to a ModelZoo instance.
+        Raises
+        ------
+        ModelZooConnectionException
+            A ModelZooConnectionException is raised if the user is not connected to a ModelZoo instance.
         """
         if self.conn is None:
             raise self.conn_error
         text_payload = Text(texts=texts, model_name=model, access_token=self.token)
         request = Payload(type=PayloadType.TEXT, text=text_payload)
         return self.conn.Inference(request)
-    
+
     def image_inference(self, model: str, image: utils.ImgLike) -> Payload:
         """
-            Method to perform image inference.
+        Method to perform image inference.
 
-            Parameters
-            ----------
-                image -> utils.ImgLike: oneof(image filename, PIL.Image, image URI). Image input to provide to model.
-                model -> str: Name of model to forward request to.
-            
-            Returns
-            -------
-                The payload response from the ModelZoo instance.
+        Parameters
+        ----------
+        image : utils.ImgLike (oneof(image filename, PIL.Image, image URI))
+            Image input to provide to model.
+        model : str
+            Name of model to forward request to.
+        
+        Returns
+        -------
+        Payload
+            The payload response from the ModelZoo instance.
 
-            Raises
-            ------
-                ModelZooConnectionException
-                    A ModelZooConnectionException is raised if the user is not connected to a ModelZoo instance.
+        Raises
+        ------
+        ModelZooConnectionException
+            A ModelZooConnectionException is raised if the user is not connected to a ModelZoo instance.
         """
         if self.conn is None:
             raise self.conn_error
-        image_payload = Image(image_data_url=utils._img_inp_types_to_uri(image), model_name=model, access_token=self.token)
+        image_payload = Image(
+            image_data_url=utils._img_inp_types_to_uri(image),
+            model_name=model,
+            access_token=self.token,
+        )
         request = Payload(type=PayloadType.IMAGE, image=image_payload)
         return self.conn.Inference(request)
 
-    def table_inference(self, model: str, table: pd.DataFrame) -> Payload:
+    def tabular_inference(self, model: str, table: pd.DataFrame) -> Payload:
         """
-            Method to perform tabular inference.
+        Method to perform tabular inference.
 
-            Parameters
-            ----------
-                table -> pd.DataFrame: Tabular input to provide to model.
-                model -> str: Name of model to forward request to.
-            
-            Returns
-            -------
-                The payload response from the ModelZoo instance.
+        Parameters
+        ----------
+        table : pd.DataFrame
+            Tabular input to provide to model.
+        model : str
+            Name of model to forward request to.
+        
+        Returns
+        -------
+        Payload
+            The payload response from the ModelZoo instance.
 
-            Raises
-            ------
-                ModelZooConnectionException
-                    A ModelZooConnectionException is raised if the user is not connected to a ModelZoo instance.
+        Raises
+        ------
+        ModelZooConnectionException
+            A ModelZooConnectionException is raised if the user is not connected to a ModelZoo instance.
         """
         if self.conn is None:
             raise self.conn_error
@@ -242,26 +251,31 @@ class ModelZooConnection(object):
         request = Payload(type=PayloadType.TABLE, table=table_payload)
         return self.conn.Inference(request)
 
-    def process_inference_response(self, resp: Payload, callback: typing.Optional[typing.Callable] = None) -> typing.Any:
+    def process_inference_response(
+        self, resp: Payload, callback: typing.Optional[typing.Callable] = None
+    ) -> typing.Any:
         """
-            Method to process inference responses.
+        Method to process inference responses.
 
-            Parameters
-            ----------
-                resp -> Payload: The Payload returned by one of the inference methods.
-                callback -> Optional[Callable]: The callback to pass the outputs to for further postprocessing.
+        Parameters
+        ----------
+        resp : Payload
+            The Payload returned by one of the inference methods.
+        callback : Optional[Callable]
+            The callback to pass the outputs to for further postprocessing.
 
-            Returns
-            -------
-                Either the raw outputs, or the results of calling the callback on them.
+        Returns
+        -------
+        oneof({Any, Payload})
+            Either the raw outputs, or the results of calling the callback on them.
 
-            Raises
-            ------
-                ModelZooConnectionException
-                    A ModelZooConnectionException is called in two cases:
-                        1) If the Payload contains a tabular output. Post processing for tabular outputs is not currently supported.
-                        2) The Payload contains a type besides oneof(text, image). This is likely a sign that the Payload was not produced
-                            by an inference method.
+        Raises
+        ------
+        ModelZooConnectionException
+            A ModelZooConnectionException is called in two cases:
+                1) If the Payload contains a tabular output. Post processing for tabular outputs is not currently supported.
+                2) The Payload contains a type besides oneof(text, image). This is likely a sign that the Payload was not produced
+                    by an inference method.
         """
         if resp.type == PayloadType.TEXT:
             texts = text_input(resp)
@@ -276,6 +290,10 @@ class ModelZooConnection(object):
             else:
                 return callback(image)
         elif resp.type == PayloadType.TABLE:
-            raise ModelZooConnectionException("Post processing for tabular outputs is not supported at this time.")
+            raise ModelZooConnectionException(
+                "Post processing for tabular outputs is not supported at this time."
+            )
         else:
-            raise ModelZooConnectionException("Payload type does not match known values. Please ensure that your packet is not corrupted.")
+            raise ModelZooConnectionException(
+                "Payload type does not match known values. Please ensure that your packet is not corrupted."
+            )
