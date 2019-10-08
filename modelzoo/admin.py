@@ -12,7 +12,7 @@ from modelzoo.exceptions import (AuthenticationException,
                                  InvalidCredentialsException,
                                  ModelZooConnectionException)
 
-from ..python.model_io.sugar import image_input, table_output, text_input
+from modelzoo.model_io.sugar import image_input, table_output, text_input
 
 
 class ModelZooConnection(object):
