@@ -2,27 +2,22 @@ import base64
 import io
 import json
 import mimetypes
-
-import pandas as pd
-import numpy as np
-from flask import Flask, jsonify, request, g
-from flask_cors import CORS
-from PIL import Image
 from typing import List
-from google.protobuf import json_format
 
-import model_io.protos.services_pb2 as pb
-from model_io.sugar import (
-    image_input,
-    image_output,
-    register_type,
-    table_output,
-    text_input,
-    text_output,
-)
+import numpy as np
+import pandas as pd
+from flask import Flask, g, jsonify, request
+from flask_cors import CORS
+from google.protobuf import json_format
+from PIL import Image
+
+import modelzoo.protos.services_pb2 as pb
+from modelzoo.model_io.sugar import (image_input, image_output, register_type,
+                                     table_output, text_input, text_output)
 
 app = Flask(__name__)
 CORS(app)
+
 
 @register_type(image_input, table_output)
 def vision_classification(inp: Image, metadata):
@@ -53,7 +48,6 @@ def image_captioning(inp: Image, metadata):
     return ["this is a cool image lol"]
 
 
-
 prediction_apps = dict(
     vision_classification=(vision_classification, pb.Image),
     text_generation=(text_generation, pb.Text),
@@ -72,16 +66,18 @@ def generate_clipper_resp(
         "query_id": 1,
     }
 
+
 @app.route("/")
 def ok():
     return "OK"
+
 
 @app.route("/<app_name>/predict", methods=["POST"])
 def clipper(app_name):
     pred_func, input_cls = prediction_apps[app_name]
     request_proto = input_cls()
     request_proto.ParseFromString(base64.b64decode(request.json["input"]))
-    
+
     request_proto_dict = json_format.MessageToDict(request_proto)
     metadata_dict = request_proto_dict.get("metadata", dict())
     result_proto = pred_func(request_proto, metadata_dict)

@@ -4,11 +4,11 @@ import mimetypes
 from functools import wraps
 from typing import List
 
+import pandas as pd
 from PIL import Image
 from w3lib.url import parse_data_uri
 
-import pandas as pd
-import model_io.protos.services_pb2 as pb
+import modelzoo.protos.services_pb2 as pb
 
 
 # NOTE(simon): Metadata should be a single mutable state that's returned.
@@ -25,6 +25,7 @@ class register_type:
             kwargs = {self.metadata_name: metadata}
             out = func(*args, **kwargs)
             return self._out_transformer(out)
+
         return wrapped
 
 
@@ -62,5 +63,5 @@ def table_output(dataframe: pd.DataFrame) -> pb.Table:
         row = table.table[row_name]
         for column, value in column_value_map.items():
             row.column_to_value[column] = value
-        
+
     return table

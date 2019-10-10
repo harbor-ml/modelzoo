@@ -1,18 +1,17 @@
-import typing
+from typing import Any, Callable, List, Optional
 
 import grpc
 import pandas as pd
 
 import modelzoo.utils as utils
-from modelzoo._protos.services_pb2 import (Empty, Image, Payload, PayloadType,
-                                           RateLimitToken, Status, Table, Text,
-                                           User)
-from modelzoo._protos.services_pb2_grpc import ModelzooServiceStub
 from modelzoo.exceptions import (AuthenticationException,
                                  InvalidCredentialsException,
                                  ModelZooConnectionException)
-
 from modelzoo.model_io.sugar import image_input, table_output, text_input
+from modelzoo.protos.services_pb2 import (Empty, Image, Payload, PayloadType,
+                                          RateLimitToken, Status, Table, Text,
+                                          User)
+from modelzoo.protos.services_pb2_grpc import ModelzooServiceStub
 
 
 class ModelZooConnection(object):
@@ -41,9 +40,9 @@ class ModelZooConnection(object):
 
     def __init__(
         self,
-        address: typing.Optional[str] = "grpc.modelzoo.live",
-        email: typing.Optional[str] = "",
-        password: typing.Optional[str] = "",
+        address: Optional[str] = "grpc.modelzoo.live",
+        email: Optional[str] = "",
+        password: Optional[str] = "",
     ):
         self.conn = None
         self.authenticated = False
@@ -55,7 +54,7 @@ class ModelZooConnection(object):
         self.email = email
         self.password = password
 
-    def connect(self, address: typing.Optional[str] = "grpc.modelzoo.live") -> None:
+    def connect(self, address: Optional[str] = "grpc.modelzoo.live") -> None:
         """
         Method to connect to the ModelZoo instance specified by self.address | address.
         Must be called first, so that later methods have a connection to the server to perform queries.
@@ -98,7 +97,7 @@ class ModelZooConnection(object):
         """
         if self.conn is None:
             raise self.conn_error
-        status = GetUser(User(email=email, password=password))
+        status = self.conn.GetUser(User(email=email, password=password))
         if status.succes:
             self.authenticated = True
         else:
@@ -150,7 +149,7 @@ class ModelZooConnection(object):
         if not resp.success:
             raise ModelZooConnectionException(resp.message)
 
-    def list_all_models(self,) -> typing.List[dict]:
+    def list_all_models(self,) -> List[dict]:
         """
         Lists all models.
 
@@ -252,8 +251,8 @@ class ModelZooConnection(object):
         return self.conn.Inference(request)
 
     def process_inference_response(
-        self, resp: Payload, callback: typing.Optional[typing.Callable] = None
-    ) -> typing.Any:
+        self, resp: Payload, callback: Optional[Callable] = None
+    ) -> Any:
         """
         Method to process inference responses.
 
