@@ -98,7 +98,7 @@ class ModelZooConnection(object):
         if self.conn is None:
             raise self.conn_error
         try:
-            self.conn.GetUser(User(email=email, password=password))
+            print(self.conn.GetUser(User(email=email, password=password)))
         except Exception:
             raise InvalidCredentialsException(
                 "Email and password do not match an existing user. Please check to make sure you have not made any typos."

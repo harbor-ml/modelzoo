@@ -75,9 +75,9 @@ def test_modelzoo_connection():
         conn.authenticate("placeholder", "placeholder")
 
     conn.create_user("dummy@dummy.com", "password123")
-    # conn.authenticate("dummy@dummy.com", "password123")
-    # assert isinstance(conn.get_token(), str)
-    # assert validate_uuid(conn.get_token())
+    conn.authenticate("dummy@dummy.com", "password123")
+    assert isinstance(conn.get_token(), str)
+    assert validate_uuid(conn.get_token())
     conn.list_all_models()
 
     text_input = ["This is a test"]
