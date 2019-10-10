@@ -71,12 +71,12 @@ class ModelZooConnection(object):
             If the user previously provided an email and password, authentication is attempted.
             If the authentication details are invalid, an InvalidCredentialException is raised.
         """
-        self.address = self.address if address is None else address
+        self.address = address if self.address is None else self.address
         channel = grpc.insecure_channel(self.address)
         self.conn = ModelzooServiceStub(channel)
         if self.email != "" and self.password != "":
             self.authenticate(self.email, self.password)
-        self.token = self.conn.GetToken(Empty())
+        self.token = self.conn.GetToken(Empty()).token
 
     def authenticate(self, email: str, password: str) -> None:
         """
@@ -97,13 +97,13 @@ class ModelZooConnection(object):
         """
         if self.conn is None:
             raise self.conn_error
-        status = self.conn.GetUser(User(email=email, password=password))
-        if status.succes:
-            self.authenticated = True
-        else:
+        try:
+            self.conn.GetUser(User(email=email, password=password))
+        except Exception:
             raise InvalidCredentialsException(
                 "Email and password do not match an existing user. Please check to make sure you have not made any typos."
             )
+        self.authenticated = True
 
     def get_token(self) -> str:
         """
@@ -145,9 +145,10 @@ class ModelZooConnection(object):
         """
         if self.conn is None:
             raise self.conn_error
-        resp = self.conn.CreateUser(User(email=email, password=password))
-        if not resp.success:
-            raise ModelZooConnectionException(resp.message)
+        try:
+            self.conn.CreateUser(User(email=email, password=password))
+        except Exception:
+            raise ModelZooConnectionException("Failed to create user.")
 
     def list_all_models(self,) -> List[dict]:
         """
@@ -214,7 +215,7 @@ class ModelZooConnection(object):
         if self.conn is None:
             raise self.conn_error
         image_payload = Image(
-            image_data_url=utils._img_inp_types_to_uri(image),
+            image_data_url=utils.image_input_types_to_uri(image),
             model_name=model,
             access_token=self.token,
         )
@@ -277,13 +278,13 @@ class ModelZooConnection(object):
                     by an inference method.
         """
         if resp.type == PayloadType.TEXT:
-            texts = text_input(resp)
+            texts = text_input(resp.text)
             if callback is None:
                 return texts
             else:
                 return callback(texts)
         elif resp.type == PayloadType.IMAGE:
-            image = image_input(resp)
+            image = image_input(resp.image)
             if callback is None:
                 return image
             else:

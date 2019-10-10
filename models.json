@@ -11,17 +11,17 @@
   },
   {
     "@type": "/modelzoo.Model",
-    "model_name": "vision_classification_mock",
+    "model_name": "image_segmentation_mock",
     "metadata": [
-      { "key": "category", "value": "vision classification" },
+      { "key": "category", "value": "image segmentation" },
       { "key": "author", "value": "pytorch folks" },
       { "key": "service_type", "value": "clipper" },
       {
         "key": "clipper_url",
-        "value": "http://localhost:10000/vision_classification/predict"
+        "value": "http://localhost:10000/image_segmentation/predict"
       },
       { "key": "input_type", "value": "image" },
-      { "key": "output_type", "value": "table" }
+      { "key": "output_type", "value": "image" }
     ]
   },
   {

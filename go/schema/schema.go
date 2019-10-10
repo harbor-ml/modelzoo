@@ -52,9 +52,9 @@ func CreateToken(db *gorm.DB) (*Token, error) {
 }
 
 func GetUser(db *gorm.DB, user *User) (bool, error) {
-	foundUser = User{}
+	foundUser := User{}
 	if err := db.Where(user).First(&foundUser); err == nil {
-		return false, err
+		return false, errors.New("No such user.")
 	}
 	return true, nil
 }

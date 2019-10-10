@@ -91,13 +91,13 @@ func (s *ProxyServer) CreateUser(ctx context.Context, user *modelzoo.User) (*mod
 }
 
 // GetUser ...
-func (s *ProxyServer) GetUser(ctx context.Context, user *modelzoo.User) (*modelzoo.RateLimitToken, error) {
+func (s *ProxyServer) GetUser(ctx context.Context, user *modelzoo.User) (*modelzoo.Empty, error) {
 	userRecord := schema.User{Email: user.Email, Password: user.Password}
 	_, err := schema.GetUser(s.db, &userRecord)
 	if err != nil {
-		return &modelzoo.Status{Success: false, Message: fmt.Sprint(err)}, err
+		log.Panic(err)
 	}
-	return &modelzoo.Status{Success: true, Message: "Success"}, nil
+	return &modelzoo.Empty{}, nil
 }
 
 // CreateModel ...
