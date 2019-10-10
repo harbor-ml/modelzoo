@@ -93,9 +93,12 @@ func (s *ProxyServer) CreateUser(ctx context.Context, user *modelzoo.User) (*mod
 // GetUser ...
 func (s *ProxyServer) GetUser(ctx context.Context, user *modelzoo.User) (*modelzoo.Empty, error) {
 	userRecord := schema.User{Email: user.Email, Password: user.Password}
-	_, err := schema.GetUser(s.db, &userRecord)
+	found, err := schema.GetUser(s.db, &userRecord)
 	if err != nil {
-		log.Panic(err)
+		return nil, status.Error(codes.Internal, fmt.Sprint(err))
+	}
+	if !found {
+		return nil, status.Error(codes.Internal, "No such user.")
 	}
 	return &modelzoo.Empty{}, nil
 }
