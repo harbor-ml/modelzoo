@@ -28,11 +28,11 @@ def compare_image(im1, im2):
 
 def validate_uuid(uuid):
     try:
-        uuid_obj = UUID(uuid_to_test, version=4)
+        uuid_obj = UUID(uuid, version=4)
     except ValueError:
         return False
 
-    return str(uuid_obj) == uuid_to_test
+    return str(uuid_obj) == uuid
 
 
 # Test ModelZoo Utils
@@ -65,7 +65,7 @@ def test_image_utils():
 
 # Test ModelZoo Connection
 def test_modelzoo_connection():
-    conn = ModelZooConnection(address="localhost:9090")
+    conn = ModelZooConnection(address="localhost:9000")
     with pytest.raises(ModelZooConnectionException):
         conn.authenticate("placeholder", "placeholder")
     conn.connect()
