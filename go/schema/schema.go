@@ -53,7 +53,8 @@ func CreateToken(db *gorm.DB) (*Token, error) {
 
 func GetUser(db *gorm.DB, user *User) (bool, error) {
 	foundUser := User{}
-	if _, err := db.Where("email = ? AND password = ?", user.Email, user.Password).First(&foundUser); err != nil {
+	newdb := db.Where("email = ? AND password = ?", user.Email, user.Password).First(&foundUser)
+	if newdb.Error != nil {
 		return false, errors.New("No such user.")
 	}
 	return true, nil
