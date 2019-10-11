@@ -1,5 +1,6 @@
 syntax = "proto3";
 // import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
 
 package modelzoo;
 
@@ -84,17 +85,47 @@ message Payload {
 
 service ModelzooService {
   // Inference
-  rpc Inference(Payload) returns (Payload) {}
+  rpc Inference(Payload) returns (Payload) {
+    option (google.api.http) = {
+      post: "/inference"
+      body: "*"
+    };
+   }
 
   // Website utils
   rpc GetImage(ImageDownloadRequest) returns (ImageDownloadResponse) {}
 
   // Rate limiting
-  rpc GetToken(Empty) returns (RateLimitToken) {}
+  rpc GetToken(Empty) returns (RateLimitToken) {
+    option (google.api.http) = {
+      post: "/get/token"
+      body: "*"
+    };
+  }
 
   // Database
-  rpc ListModels(Empty) returns (ListModelsResponse) {}
-  rpc CreateUser(User) returns (Empty) {}
-  rpc CreateModel(Model) returns (Empty) {}
-  rpc GetUser(User) returns (Empty) {}
+  rpc ListModels(Empty) returns (ListModelsResponse) {
+    option (google.api.http) = {
+      post: "/get/models"
+      body: "*"
+    };
+  }
+  rpc CreateUser(User) returns (Empty) {
+    option (google.api.http) = {
+      post: "/create/user"
+      body: "*"
+    };
+  }
+  rpc CreateModel(Model) returns (Empty) {
+    option (google.api.http) = {
+      post: "/create/model"
+      body: "*"
+    };
+  }
+  rpc GetUser(User) returns (Empty) {
+    option (google.api.http) = {
+      post: "/get/user"
+      body: "*"
+    };
+  }
 }
