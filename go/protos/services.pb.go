@@ -6,13 +6,12 @@ package modelzoo
 import (
 	context "context"
 	fmt "fmt"
-	math "math"
-
 	proto "github.com/golang/protobuf/proto"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	math "math"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -628,7 +627,7 @@ func (m *ImageDownloadResponse) GetImage() string {
 }
 
 type Payload struct {
-	Type PayloadType `protobuf:"varint,1,opt,name=type,proto3,enum=modelzoo.PayloadType" json:"type,string,omitempty"`
+	Type PayloadType `protobuf:"varint,1,opt,name=type,proto3,enum=modelzoo.PayloadType" json:"type,omitempty"`
 	// Types that are valid to be assigned to Payload:
 	//	*Payload_Image
 	//	*Payload_Text
