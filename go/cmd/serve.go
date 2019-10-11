@@ -15,7 +15,14 @@ var serveCmd = &cobra.Command{
 		// Pass a do-nothing ctx for serving
 		ctx := context.Background()
 		server.ServeForever(ctx, false, 9000)
-		server.ProxyForever(9000, 9090)
+	},
+}
+
+var proxyCmd = &cobra.Command{
+	Use:   "proxy",
+	Short: "Start the reverse HTTP proxy",
+	Run: func(cmd *cobra.Command, args []string) {
+		serve.ProxyForever(9000, 9090)
 	},
 }
 
