@@ -3,6 +3,7 @@ package server
 import (
 	"context" // Use "golang.org/x/net/context" for Golang version <= 1.6
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/golang/glog"
@@ -36,4 +37,6 @@ func ProxyForever(grpcPort int, port int) {
 	if err := run(grpcPort, port); err != nil {
 		glog.Fatal(err)
 	}
+
+	log.Println("Proxy started, listening to port", port)
 }
