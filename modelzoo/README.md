@@ -53,7 +53,8 @@ p = conn.image_inference(model_name, img)
 If your model's output is an image, you could expect an output formatted like so:
 ```python
 p = Payload({type: PayloadType.IMAGE, image = t})
-t = Image({metadata: {...}, image_data_url: "img_output_uri", model_name: "name", access_token: "token"})
+t = Image({metadata: {...}, image_data_url: "img_output_uri", model_name: "name", 
+    access_token: "token"})
 ```
 #### It is important to note that your model is not constrained to return an output of the same type as its input. 
 It is perfectly valid, for example, for a model to take a text input, and return an image output, or vice versa.
