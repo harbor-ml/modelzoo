@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"net"
 	"net/http"
 
 	"github.com/harbor-ml/modelzoo/go/schema"
@@ -18,8 +17,6 @@ import (
 	modelzoo "github.com/harbor-ml/modelzoo/go/protos"
 
 	"github.com/jinzhu/gorm"
-
-	"google.golang.org/grpc"
 )
 
 // ProxyServer implements the generated model server from modelzoo.proto
@@ -196,41 +193,3 @@ func (s *ProxyServer) GetToken(ctx context.Context, _ *modelzoo.Empty) (*modelzo
 
 // 	return val, nil
 // }
-
-// ServeForever runs?
-func ServeForever(cancelCtx context.Context, public bool, port int) {
-	lis, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%d", port))
-	panicIf(err)
-
-	log.Println("Server started, listening to port", port)
-
-	var dbType string
-	var dbURL string
-
-	if public {
-		dbType = "postgres"
-		dbURL = "host=34.213.216.228 port=5432 user=modelzoo"
-	} else {
-		dbType = "sqlite3"
-		dbURL = "/tmp/modelzoo.db"
-	}
-
-	db, err := gorm.Open(dbType, dbURL)
-	panicIf(err)
-	defer db.Close()
-
-	grpcServer := grpc.NewServer()
-
-	s := &ProxyServer{db}
-	modelzoo.RegisterModelzooServiceServer(grpcServer, s)
-
-	cancelFunc := func() {
-		select {
-		case <-cancelCtx.Done():
-			grpcServer.Stop()
-		}
-	}
-	go cancelFunc()
-
-	grpcServer.Serve(lis)
-}
