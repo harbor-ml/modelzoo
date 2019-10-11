@@ -34,9 +34,10 @@ func run(grpcPort int, port int) error {
 func ProxyForever(grpcPort int, port int) {
 	defer glog.Flush()
 
+	log.Println("Proxy started, listening to port", port)
+
 	if err := run(grpcPort, port); err != nil {
 		glog.Fatal(err)
 	}
 
-	log.Println("Proxy started, listening to port", port)
 }
