@@ -26,11 +26,11 @@ curl -X POST -d '{"body": ""}' http://modelzoo.url/get/token
 ```
 ### Create User
 ```zsh
-curl -X POST -d '{"email":"myemail", "password":"mypassword"}' localhost:9090/create/user
+curl -X POST -d '{"email":"myemail", "password":"mypassword"}' http://modelzoo.url/create/user
 ```
 ### Get User (To Check if User exists. Also used to authenticate with the python client)
 ```zsh
-curl -X POST -d '{"email":"myemail", "password":"mypassword"}' localhost:9090/get/user
+curl -X POST -d '{"email":"myemail", "password":"mypassword"}' http://modelzoo.url/get/user
 ```
 ### Text Inference
 ```zsh
