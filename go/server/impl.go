@@ -90,6 +90,16 @@ func (s *ProxyServer) CreateUser(ctx context.Context, user *modelzoo.User) (*mod
 	return &modelzoo.Empty{}, nil
 }
 
+// GetUser ...
+func (s *ProxyServer) GetUser(ctx context.Context, user *modelzoo.User) (*modelzoo.Empty, error) {
+	userRecord := schema.User{Email: user.Email, Password: user.Password}
+	_, err := schema.GetUser(s.db, &userRecord)
+	if err != nil {
+		return nil, status.Error(codes.Internal, fmt.Sprint(err))
+	}
+	return &modelzoo.Empty{}, nil
+}
+
 // CreateModel ...
 func (s *ProxyServer) CreateModel(ctx context.Context, model *modelzoo.Model) (*modelzoo.Empty, error) {
 	err := schema.CreateModel(s.db, model)

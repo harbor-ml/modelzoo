@@ -96,4 +96,5 @@ service ModelzooService {
   rpc ListModels(Empty) returns (ListModelsResponse) {}
   rpc CreateUser(User) returns (Empty) {}
   rpc CreateModel(Model) returns (Empty) {}
+  rpc GetUser(User) returns (Empty) {}
 }

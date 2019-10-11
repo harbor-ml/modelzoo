@@ -14,7 +14,8 @@ setuptools.setup(
     url="https://github.com/harbor-ml/modelzoo",
     packages=setuptools.find_packages(),
     classifiers=[
-        "Development Status :: 1 - Planning", "License :: OSI Approved :: Apache Software License",
-        "Programming Language :: Python :: 3 :: Only"
-        ],
+        "Development Status :: 1 - Planning",
+        "License :: OSI Approved :: Apache Software License",
+        "Programming Language :: Python :: 3 :: Only",
+    ],
 )
