@@ -15,6 +15,7 @@ var serveCmd = &cobra.Command{
 		// Pass a do-nothing ctx for serving
 		ctx := context.Background()
 		server.ServeForever(ctx, false, 9000)
+		server.ProxyForever(9000, 9090)
 	},
 }
 

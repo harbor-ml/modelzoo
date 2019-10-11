@@ -22,8 +22,12 @@ proto-go:
 	protoc -I/usr/local/include -I . \
   		-I ${GOPATH}/src \
   		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-  		--go_out=plugins=grpc,paths=source_relative:go ./protos/*.proto
-
+  		--go_out=plugins=grpc,paths=source_relative:go ./protos/*.proto && \
+	protoc -I/usr/local/include -I . \
+  		-I${GOPATH}/src \
+  		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+  		--grpc-gateway_out=logtostderr=true,paths=source_relative:go ./protos/*.proto \
+		  
 .PHONY: protos
 protos: proto-js proto-py proto-go
 
