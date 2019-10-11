@@ -34,5 +34,6 @@ curl -X POST -d '{"email":"myemail", "password":"mypassword"}' localhost:9090/ge
 ```
 ### Text Inference
 ```sh
-curl -X POST -d '{"text": {"access_token": "0ad62eb5-c10f-4f09-acb9-509ebf654489","metadata": {},"model_name": "text_generation_mock","texts": ["123456","654321"]},"type": "TEXT"}' http://modelzoo.url/inference
+curl -X POST -d '{"text": {"access_token": "0ad62eb5-c10f-4f09-acb9-509ebf654489", \
+    "metadata": {},"model_name": "text_generation_mock","texts": ["123456","654321"]},"type": "TEXT"}' http://modelzoo.url/inference
 ```
