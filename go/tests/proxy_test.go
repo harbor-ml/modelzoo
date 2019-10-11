@@ -31,7 +31,7 @@ func TestListModel(t *testing.T) {
 
 	jsonValue, _ := json.Marshal(values)
 
-	resp, err := http.Post(fmt.Sprintf("http://localhost:%d/get/models", proxyPort), "application/grpc", bytes.NewBuffer(jsonValue))
+	resp, err := http.Post(fmt.Sprintf("http://localhost:%d/get/models", proxyPort), "application/json", bytes.NewBuffer(jsonValue))
 
 	errorAndFailWith(err, t)
 
@@ -50,20 +50,21 @@ func TestListModel(t *testing.T) {
 
 func TestTextInfer(t *testing.T) {
 	values := map[string]string{"body": ""}
+	input := []string{"123456", "654321"}
 
 	jsonValue, _ := json.Marshal(values)
 
-	resp, err := http.Post(fmt.Sprintf("http://localhost:%d/get/token", proxyPort), "application/grpc", bytes.NewBuffer(jsonValue))
+	resp, err := http.Post(fmt.Sprintf("http://localhost:%d/get/token", proxyPort), "application/json", bytes.NewBuffer(jsonValue))
 	errorAndFailWith(err, t)
 	tokenStruct := modelzoo.RateLimitToken{}
 	err = json.NewDecoder(resp.Body).Decode(&tokenStruct)
 	errorAndFailWith(err, t)
 	token := tokenStruct.Token
 
-	text := fmt.Sprintf("{\"texts\": \"[\"123456\", \"654321\"\", \"model_name\": \"text_generation_mock\", \"access_token\": %s}", token)
-
-	values = map[string]string{"text": text, "type": "TEXT"}
-	jsonValue, _ = json.Marshal(values)
+	payload :=
+		log.Println(payload)
+	jsonValue, _ = json.Marshal(payload)
+	log.Println(jsonValue)
 
 	resp, err = http.Post(fmt.Sprintf("http://localhost:%d/inference", proxyPort), "application/grpc", bytes.NewBuffer(jsonValue))
 	errorAndFailWith(err, t)
