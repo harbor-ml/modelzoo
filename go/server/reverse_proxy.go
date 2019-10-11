@@ -9,7 +9,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"google.golang.org/grpc"
 
-	gw "github.com/harbor-ml/modelzoo/go/protos/" // Update
+	gw "github.com/harbor-ml/modelzoo/go/protos" // Update
 )
 
 func run(grpcPort int, port int) error {
