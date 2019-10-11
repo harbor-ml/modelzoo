@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -50,7 +51,6 @@ func TestListModel(t *testing.T) {
 
 func TestTextInfer(t *testing.T) {
 	values := map[string]string{"body": ""}
-	input := []string{"123456", "654321"}
 
 	jsonValue, _ := json.Marshal(values)
 
@@ -60,28 +60,17 @@ func TestTextInfer(t *testing.T) {
 	err = json.NewDecoder(resp.Body).Decode(&tokenStruct)
 	errorAndFailWith(err, t)
 	token := tokenStruct.Token
-
-	payload :=
-		log.Println(payload)
-	jsonValue, _ = json.Marshal(payload)
-	log.Println(jsonValue)
-
-	resp, err = http.Post(fmt.Sprintf("http://localhost:%d/inference", proxyPort), "application/grpc", bytes.NewBuffer(jsonValue))
+	payload := json.RawMessage(fmt.Sprintf("{\"text\": {\"access_token\": \"%s\",\"metadata\": {},\"model_name\": \"text_generation_mock\",\"texts\": [\"123456\",\"654321\"]},\"type\": \"TEXT\"}", token))
+	resp, err = http.Post(fmt.Sprintf("http://localhost:%d/inference", proxyPort), "application/json", bytes.NewBuffer(payload))
 	errorAndFailWith(err, t)
-	payloadStruct := modelzoo.Payload{}
+	payloadStruct := json.RawMessage{}
 	err = json.NewDecoder(resp.Body).Decode(&payloadStruct)
 	errorAndFailWith(err, t)
-	log.Println(payloadStruct)
-	log.Println(payloadStruct.Type)
 
-	if payloadStruct.GetText().Metadata["method"] != "reversed" {
-		t.Errorf("Doesn't have a metadata entry {'method': reveserd}")
+	if string(payloadStruct) != "{\"type\":\"TEXT\",\"text\":{\"metadata\":{\"method\":\"reversed\"},\"texts\":[\"654321\",\"123456\"]}}" {
+		log.Println(string(payloadStruct))
+		errorAndFailWith(errors.New("Inference Return failed."), t)
 	}
-
-	if len(payloadStruct.GetText().Texts) != 2 {
-		t.Errorf("Wrong number of text response")
-	}
-
 }
 
 func TestMain(m *testing.M) {
