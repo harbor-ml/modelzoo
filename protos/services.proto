@@ -3,7 +3,7 @@ syntax = "proto3";
 
 package modelzoo;
 
-/* Image is repsented by the dataurl format
+/* Image is repsented by the datauri format
 https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
 */
 message Image {

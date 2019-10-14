@@ -63,7 +63,7 @@ func (s *ProxyServer) ListModels(
 
 	for _, model := range models {
 		profiles := make([]schema.ModelMetaData, 0)
-		if err := s.db.Model(&models).Related(&profiles).Error; err != nil {
+		if err := s.db.Model(&model).Related(&profiles).Error; err != nil {
 			log.Panicf("Can't retrieve model metadata for model %s:%v", model.Name, err)
 		}
 
@@ -72,7 +72,7 @@ func (s *ProxyServer) ListModels(
 			kvs = append(kvs, &modelzoo.KVPair{Key: profile.Key, Value: profile.Value})
 		}
 
-		resp.Models = append(resp.Models, &modelzoo.Model{ModelName: model.Name})
+		resp.Models = append(resp.Models, &modelzoo.Model{ModelName: model.Name, Metadata: kvs})
 	}
 
 	return &resp, nil

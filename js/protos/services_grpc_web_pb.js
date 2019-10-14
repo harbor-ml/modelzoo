@@ -416,5 +416,60 @@ proto.modelzoo.ModelzooServicePromiseClient.prototype.createModel =
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.modelzoo.User,
+ *   !proto.modelzoo.Empty>}
+ */
+const methodInfo_ModelzooService_GetUser = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.modelzoo.Empty,
+  /** @param {!proto.modelzoo.User} request */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.modelzoo.Empty.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.modelzoo.User} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.Error, ?proto.modelzoo.Empty)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.modelzoo.Empty>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.modelzoo.ModelzooServiceClient.prototype.getUser =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/modelzoo.ModelzooService/GetUser',
+      request,
+      metadata || {},
+      methodInfo_ModelzooService_GetUser,
+      callback);
+};
+
+
+/**
+ * @param {!proto.modelzoo.User} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.modelzoo.Empty>}
+ *     A native promise that resolves to the response
+ */
+proto.modelzoo.ModelzooServicePromiseClient.prototype.getUser =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/modelzoo.ModelzooService/GetUser',
+      request,
+      metadata || {},
+      methodInfo_ModelzooService_GetUser);
+};
+
+
 module.exports = proto.modelzoo;
 

@@ -1,30 +1,68 @@
-import { Icon, Layout, Menu, Input } from "antd";
-import React, { FC, useState } from "react";
+import { Icon, Layout, Menu, Input, message, Drawer, Typography } from "antd";
+import React, { FC, useState, useMemo } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { NavItemComponent } from "./Components/NavItem";
-import { API, Catalog, Contact, Home, Monitor, Register } from "./Views";
+import { API, Catalog, Contact, Home, Monitor, Register, Model } from "./Views";
 import { NavItems } from "./Config";
+import { ModelzooServicePromiseClient } from "protos/services_grpc_web_pb";
+import { Empty } from "protos/services_pb";
+import { ModelObject, parseModels } from "./Utils/ProtoUtil";
 const { Content, Sider, Footer } = Layout;
 // const { Search } = Input;
 // import { Models } from "./Components/Models";
 
 // const { Title } = Typography;
 
-// const client = new ModelzooServiceClient(
-//   `${window.location.protocol}//${window.location.hostname}:8080`,
-//   null,
-//   null
-// );
-// export const ClientContext = React.createContext(client);
-
 const App: FC = () => {
   let [siderCollapsed, setSiderCollapsed] = useState(false);
+  const [token, setToken] = useState("");
+  const [tokenDrawerVisible, setTokenDrawerVisible] = useState(false);
+  const [allModels, setAllModels] = useState<Array<ModelObject>>([]);
+  console.log("App renders with token " + token);
+
+  const client = useMemo(() => {
+    let newClient = new ModelzooServicePromiseClient(
+      `${window.location.protocol}//${window.location.hostname}:8080`,
+      null,
+      null
+    );
+
+    // Use new client to fetch list of models immediately
+    newClient
+      .listModels(new Empty(), undefined)
+      .then(resp => setAllModels(parseModels(resp.getModelsList())))
+      .catch(err => {
+        message.error("Failed to fetch models");
+        console.error(err);
+      });
+
+    newClient
+      .getToken(new Empty(), undefined)
+      .then(resp => setToken(resp.getToken()))
+      .catch(err => {
+        message.loading("Failed to retrieve token");
+        console.log(err);
+      });
+    return newClient;
+  }, []);
 
   let contentPading = 20;
   let contentWidth = siderCollapsed ? 80 : 200;
 
   return (
     <Router>
+      <Drawer
+        title="Access Token"
+        placement="right"
+        closable
+        onClose={() => setTokenDrawerVisible(false)}
+        visible={tokenDrawerVisible}
+      >
+        <Typography.Text code copyable>
+          {token}
+        </Typography.Text>
+      </Drawer>
+
       <Layout style={{ minHeight: "100vh" }}>
         <Sider
           theme="dark"
@@ -62,7 +100,10 @@ const App: FC = () => {
               ></Input.Search>
             </Menu.Item>
 
-            <Menu.Item key="user">
+            <Menu.Item
+              key="token"
+              onClick={() => setTokenDrawerVisible(!tokenDrawerVisible)}
+            >
               <Icon type="user" />
             </Menu.Item>
           </Menu>
@@ -76,10 +117,13 @@ const App: FC = () => {
           >
             <Switch>
               <Route exact path="/">
-                <Home />
+                <Home models={allModels} />
               </Route>
               <Route path="/catalog">
-                <Catalog />
+                <Catalog
+                  client={client}
+                  // models={allModels}
+                />
               </Route>
               <Route path="/monitor">
                 <Monitor />
@@ -88,10 +132,23 @@ const App: FC = () => {
                 <API />
               </Route>
               <Route path="/register">
-                <Register />
+                <Register client={client} />
               </Route>
               <Route path="/contact">
                 <Contact />
+              </Route>
+              <Route path="/model/:name">
+                <Model
+                  client={client}
+                  token={token}
+                  // models={allModels}
+                />
+              </Route>
+              <Route path="/compare">
+                <h2>
+                  Comparison fucntion coming soon. View your result in one
+                  place.
+                </h2>
               </Route>
             </Switch>
           </Content>

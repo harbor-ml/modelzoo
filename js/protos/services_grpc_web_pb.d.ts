@@ -57,6 +57,13 @@ export class ModelzooServiceClient {
                response: Empty) => void
   ): grpcWeb.ClientReadableStream<Empty>;
 
+  getUser(
+    request: User,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.Error,
+               response: Empty) => void
+  ): grpcWeb.ClientReadableStream<Empty>;
+
 }
 
 export class ModelzooServicePromiseClient {
@@ -91,6 +98,11 @@ export class ModelzooServicePromiseClient {
 
   createModel(
     request: Model,
+    metadata?: grpcWeb.Metadata
+  ): Promise<Empty>;
+
+  getUser(
+    request: User,
     metadata?: grpcWeb.Metadata
   ): Promise<Empty>;
 

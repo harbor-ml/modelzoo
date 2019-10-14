@@ -2,8 +2,15 @@ import { Card, Col, Row, Statistic } from "antd";
 import _ from "lodash";
 import React, { FC } from "react";
 import { FeaturedModelTag } from "../Components/Tags";
+import { ModelObject } from "../Utils/ProtoUtil";
 
-export const Home: FC = () => {
+interface HomeProps {
+  models: ModelObject[];
+}
+
+export const Home: FC<HomeProps> = props => {
+  // let { models } = props;
+
   let featuredModels = _.times(3, i => (
     <Card.Grid>
       <h2>Resnet50</h2>
