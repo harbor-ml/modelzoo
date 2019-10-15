@@ -5,14 +5,17 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"net/http"
 
 	modelzoo "github.com/harbor-ml/modelzoo/go/protos"
 	"github.com/jinzhu/gorm"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_logrus "github.com/grpc-ecosystem/go-grpc-middleware/logging/logrus"
+	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 )
 
 // ServeForever runs?
@@ -47,14 +50,21 @@ func ServeForever(cancelCtx context.Context, public bool, port int) {
 	grpcServer := grpc.NewServer(
 		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
 			grpc_logrus.StreamServerInterceptor(logrusEntry),
+			grpc_prometheus.StreamServerInterceptor,
 		)),
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
 			grpc_logrus.UnaryServerInterceptor(logrusEntry),
+			grpc_prometheus.UnaryServerInterceptor,
 		)),
 	)
 
 	s := &ProxyServer{db, newLogger}
 	modelzoo.RegisterModelzooServiceServer(grpcServer, s)
+
+	// Register Prometheus metrics handler.
+	grpc_prometheus.Register(grpcServer)
+	http.Handle("/metrics", promhttp.Handler())
+	go http.ListenAndServe(":9999", nil)
 
 	cancelFunc := func() {
 		select {

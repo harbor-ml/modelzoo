@@ -471,5 +471,60 @@ proto.modelzoo.ModelzooServicePromiseClient.prototype.getUser =
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.modelzoo.Empty,
+ *   !proto.modelzoo.MetricItems>}
+ */
+const methodInfo_ModelzooService_GetMetrics = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.modelzoo.MetricItems,
+  /** @param {!proto.modelzoo.Empty} request */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.modelzoo.MetricItems.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.modelzoo.Empty} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.Error, ?proto.modelzoo.MetricItems)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.modelzoo.MetricItems>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.modelzoo.ModelzooServiceClient.prototype.getMetrics =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/modelzoo.ModelzooService/GetMetrics',
+      request,
+      metadata || {},
+      methodInfo_ModelzooService_GetMetrics,
+      callback);
+};
+
+
+/**
+ * @param {!proto.modelzoo.Empty} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.modelzoo.MetricItems>}
+ *     A native promise that resolves to the response
+ */
+proto.modelzoo.ModelzooServicePromiseClient.prototype.getMetrics =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/modelzoo.ModelzooService/GetMetrics',
+      request,
+      metadata || {},
+      methodInfo_ModelzooService_GetMetrics);
+};
+
+
 module.exports = proto.modelzoo;
 

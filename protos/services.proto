@@ -69,7 +69,6 @@ enum PayloadType {
   IMAGE = 0;
   TEXT = 1;
   TABLE = 2;
-  
 }
 
 message Payload {
@@ -80,6 +79,16 @@ message Payload {
     Text text = 3;
     Table table = 4;
   }
+}
+
+message MetricItems {
+  message Metric {
+    string key = 1;
+    string value = 2;
+    string unit = 3;
+  }
+
+  repeated Metric metrics = 4;
 }
 
 service ModelzooService {
@@ -97,4 +106,6 @@ service ModelzooService {
   rpc CreateUser(User) returns (Empty) {}
   rpc CreateModel(Model) returns (Empty) {}
   rpc GetUser(User) returns (Empty) {}
+
+  rpc GetMetrics(Empty) returns (MetricItems) {}
 }

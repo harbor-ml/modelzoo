@@ -5,6 +5,7 @@ import {
   ImageDownloadRequest,
   ImageDownloadResponse,
   ListModelsResponse,
+  MetricItems,
   Model,
   Payload,
   RateLimitToken,
@@ -64,6 +65,13 @@ export class ModelzooServiceClient {
                response: Empty) => void
   ): grpcWeb.ClientReadableStream<Empty>;
 
+  getMetrics(
+    request: Empty,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.Error,
+               response: MetricItems) => void
+  ): grpcWeb.ClientReadableStream<MetricItems>;
+
 }
 
 export class ModelzooServicePromiseClient {
@@ -105,6 +113,11 @@ export class ModelzooServicePromiseClient {
     request: User,
     metadata?: grpcWeb.Metadata
   ): Promise<Empty>;
+
+  getMetrics(
+    request: Empty,
+    metadata?: grpcWeb.Metadata
+  ): Promise<MetricItems>;
 
 }
 

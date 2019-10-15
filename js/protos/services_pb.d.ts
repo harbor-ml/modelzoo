@@ -321,6 +321,53 @@ export namespace Payload {
   }
 }
 
+export class MetricItems extends jspb.Message {
+  getMetricsList(): Array<MetricItems.Metric>;
+  setMetricsList(value: Array<MetricItems.Metric>): void;
+  clearMetricsList(): void;
+  addMetrics(value?: MetricItems.Metric, index?: number): MetricItems.Metric;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): MetricItems.AsObject;
+  static toObject(includeInstance: boolean, msg: MetricItems): MetricItems.AsObject;
+  static serializeBinaryToWriter(message: MetricItems, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): MetricItems;
+  static deserializeBinaryFromReader(message: MetricItems, reader: jspb.BinaryReader): MetricItems;
+}
+
+export namespace MetricItems {
+  export type AsObject = {
+    metricsList: Array<MetricItems.Metric.AsObject>,
+  }
+
+  export class Metric extends jspb.Message {
+    getKey(): string;
+    setKey(value: string): void;
+
+    getValue(): string;
+    setValue(value: string): void;
+
+    getUnit(): string;
+    setUnit(value: string): void;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): Metric.AsObject;
+    static toObject(includeInstance: boolean, msg: Metric): Metric.AsObject;
+    static serializeBinaryToWriter(message: Metric, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): Metric;
+    static deserializeBinaryFromReader(message: Metric, reader: jspb.BinaryReader): Metric;
+  }
+
+  export namespace Metric {
+    export type AsObject = {
+      key: string,
+      value: string,
+      unit: string,
+    }
+  }
+
+}
+
 export enum PayloadType { 
   IMAGE = 0,
   TEXT = 1,
