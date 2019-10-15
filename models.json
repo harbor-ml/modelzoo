@@ -21,14 +21,15 @@
         "value": "http://localhost:10000/image_segmentation/predict"
       },
       { "key": "input_type", "value": "image" },
-      { "key": "output_type", "value": "image" }
+      { "key": "output_type", "value": "image" },
+      { "key": "framework", "value": "TensorFlow" }
     ]
   },
   {
     "@type": "/modelzoo.Model",
     "model_name": "text_generation_mock",
     "metadata": [
-      { "key": "category", "value": "vision classification" },
+      { "key": "category", "value": "text generation" },
       { "key": "author", "value": "pytorch folks" },
       { "key": "service_type", "value": "clipper" },
       {
@@ -36,7 +37,8 @@
         "value": "http://localhost:10000/text_generation/predict"
       },
       { "key": "input_type", "value": "text" },
-      { "key": "output_type", "value": "text" }
+      { "key": "output_type", "value": "text" },
+      { "key": "framework", "value": "PyTorch" }
     ]
   }
 ]

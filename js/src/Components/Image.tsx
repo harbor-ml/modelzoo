@@ -1,79 +1,63 @@
-import React, { FC, useState, useContext } from "react";
-import { Card, Row, Col, Upload, Icon, Button, Input, Alert } from "antd";
-import { DefaultImages } from "./Constants";
-import { b64Encode } from "./Utils";
+import { Alert, Button, Card, Col, Icon, Input, Row, Upload } from "antd";
+import { ModelzooServicePromiseClient } from "protos/services_grpc_web_pb";
 import { ImageDownloadRequest } from "protos/services_pb";
-import { SingleImage } from "./CVClassifier";
-import { ClientContext } from "../App";
+import React, { FC, useState } from "react";
+import { DefaultImages } from "../Config";
 
-interface IDImgTuple {
-  id: number;
-  comp: JSX.Element;
+interface ImageInputProps {
+  setImageString: (image: string) => void;
+  client: ModelzooServicePromiseClient;
 }
 
-interface InferecePageProp {
-  modelNameSelected: string;
-  modelUUID: string;
+function b64Encode(img: File, callback: Function) {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => callback(reader.result));
+  reader.readAsDataURL(img);
 }
 
-export const CVInferencePage: FC<InferecePageProp> = props => {
-  const [addedImages, setAddedImages] = useState<IDImgTuple[]>([]);
-  const [imageIDCoutner, setImageIDCounter] = useState(0);
+const defaultImageStyles = { height: "80px" };
+
+export const ImageInput: FC<ImageInputProps> = props => {
+  let { setImageString, client } = props;
   const [imageURL, setImageURL] = useState("");
   const [alertComp, setAlertComp] = useState<JSX.Element>();
-  const client = useContext(ClientContext);
 
-  const removeImageComp = (val: number) => {
-    setAddedImages(addedImages => addedImages.filter(v => v.id !== val));
-  };
-  function createImageRow(result: string) {
-    let component = (
-      <Row style={{ padding: "2px" }} key={imageIDCoutner}>
-        <SingleImage
-          key={imageIDCoutner}
-          img={result}
-          imgID={imageIDCoutner}
-          removeFunc={removeImageComp}
-          modelName={props.modelNameSelected}
-          uuid={props.modelUUID}
-        />
-      </Row>
-    );
-    setImageIDCounter(imageIDCoutner => imageIDCoutner + 1);
-    setAddedImages(addedImages => [
-      { id: imageIDCoutner, comp: component },
-      ...addedImages
-    ]);
-  }
   const uploadProps = {
     beforeUpload: (file: File) => {
-      b64Encode(file, createImageRow);
+      b64Encode(file, setImageString);
       return false;
     },
     showUploadList: false
   };
+
   const downloadImage = () => {
     downloadImageWithURL(imageURL);
   };
+
   const downloadImageWithURL = (url: string) => {
     // Image is dataurl
     if (url.startsWith("data:image")) {
-      createImageRow(url);
+      setImageString(url);
     } else {
       let req = new ImageDownloadRequest();
       req.setUrl(url);
-      client.getImage(req, undefined, (err, resp) => {
-        if (err) {
+
+      client
+        .getImage(req, undefined)
+        .then(resp => setImageString(resp.getImage()))
+        .catch(err => {
           setAlertComp(
-            <Alert message="Can't fetch image. Maybe try download the image and drag it to upload area?" closable={true} type="error" />
+            <Alert
+              message="Can't fetch image. Maybe try download the image and drag it to upload area?"
+              closable={true}
+              type="error"
+            />
           );
-        } else {
-          createImageRow(resp.getImage());
-        }
-      });
+          console.error(err);
+        });
     }
   };
-  const defaultImageStyles = { height: "80px" };
+
   const defaultImagesButtons = DefaultImages.map(url => (
     <Button
       onClick={() => {
@@ -85,6 +69,7 @@ export const CVInferencePage: FC<InferecePageProp> = props => {
       <img {...defaultImageStyles} src={url} alt="Default" />
     </Button>
   ));
+
   return (
     <div>
       <Row gutter={16} style={{ marginTop: "5px" }}>
@@ -123,11 +108,24 @@ export const CVInferencePage: FC<InferecePageProp> = props => {
               </Button>
             </Card.Grid>
           </Card>
+
           {alertComp}
         </Col>
       </Row>
-
-      {addedImages.map(v => v.comp)}
     </div>
+  );
+};
+
+interface ImageOutputProps {
+  image_uri: string;
+}
+
+export const ImageOutput: FC<ImageOutputProps> = props => {
+  let { image_uri } = props;
+
+  return (
+    <Card>
+      <img style={{ width: "40%" }} src={image_uri} alt="Prediction Result" />
+    </Card>
   );
 };

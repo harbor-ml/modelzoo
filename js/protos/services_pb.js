@@ -17,7 +17,12 @@ goog.exportSymbol('proto.modelzoo.ImageDownloadRequest', null, global);
 goog.exportSymbol('proto.modelzoo.ImageDownloadResponse', null, global);
 goog.exportSymbol('proto.modelzoo.KVPair', null, global);
 goog.exportSymbol('proto.modelzoo.ListModelsResponse', null, global);
+goog.exportSymbol('proto.modelzoo.MetricItems', null, global);
+goog.exportSymbol('proto.modelzoo.MetricItems.Metric', null, global);
 goog.exportSymbol('proto.modelzoo.Model', null, global);
+goog.exportSymbol('proto.modelzoo.Payload', null, global);
+goog.exportSymbol('proto.modelzoo.PayloadType', null, global);
+goog.exportSymbol('proto.modelzoo.RateLimitToken', null, global);
 goog.exportSymbol('proto.modelzoo.Table', null, global);
 goog.exportSymbol('proto.modelzoo.Table.Row', null, global);
 goog.exportSymbol('proto.modelzoo.Text', null, global);
@@ -71,7 +76,7 @@ proto.modelzoo.Image.toObject = function(includeInstance, msg) {
   var f, obj = {
     metadataMap: (f = msg.getMetadataMap()) ? f.toObject(includeInstance, undefined) : [],
     imageDataUrl: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    modelId: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    modelName: jspb.Message.getFieldWithDefault(msg, 3, ""),
     accessToken: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
@@ -120,8 +125,8 @@ proto.modelzoo.Image.deserializeBinaryFromReader = function(msg, reader) {
       msg.setImageDataUrl(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readInt32());
-      msg.setModelId(value);
+      var value = /** @type {string} */ (reader.readString());
+      msg.setModelName(value);
       break;
     case 4:
       var value = /** @type {string} */ (reader.readString());
@@ -167,9 +172,9 @@ proto.modelzoo.Image.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getModelId();
-  if (f !== 0) {
-    writer.writeInt32(
+  f = message.getModelName();
+  if (f.length > 0) {
+    writer.writeString(
       3,
       f
     );
@@ -218,17 +223,17 @@ proto.modelzoo.Image.prototype.setImageDataUrl = function(value) {
 
 
 /**
- * optional int32 model_id = 3;
- * @return {number}
+ * optional string model_name = 3;
+ * @return {string}
  */
-proto.modelzoo.Image.prototype.getModelId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+proto.modelzoo.Image.prototype.getModelName = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
-/** @param {number} value */
-proto.modelzoo.Image.prototype.setModelId = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+/** @param {string} value */
+proto.modelzoo.Image.prototype.setModelName = function(value) {
+  jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -303,7 +308,7 @@ proto.modelzoo.Text.toObject = function(includeInstance, msg) {
   var f, obj = {
     metadataMap: (f = msg.getMetadataMap()) ? f.toObject(includeInstance, undefined) : [],
     textsList: jspb.Message.getRepeatedField(msg, 2),
-    modelId: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    modelName: jspb.Message.getFieldWithDefault(msg, 3, ""),
     accessToken: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
@@ -352,8 +357,8 @@ proto.modelzoo.Text.deserializeBinaryFromReader = function(msg, reader) {
       msg.addTexts(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readInt32());
-      msg.setModelId(value);
+      var value = /** @type {string} */ (reader.readString());
+      msg.setModelName(value);
       break;
     case 4:
       var value = /** @type {string} */ (reader.readString());
@@ -399,9 +404,9 @@ proto.modelzoo.Text.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getModelId();
-  if (f !== 0) {
-    writer.writeInt32(
+  f = message.getModelName();
+  if (f.length > 0) {
+    writer.writeString(
       3,
       f
     );
@@ -464,17 +469,17 @@ proto.modelzoo.Text.prototype.clearTextsList = function() {
 
 
 /**
- * optional int32 model_id = 3;
- * @return {number}
+ * optional string model_name = 3;
+ * @return {string}
  */
-proto.modelzoo.Text.prototype.getModelId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+proto.modelzoo.Text.prototype.getModelName = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
-/** @param {number} value */
-proto.modelzoo.Text.prototype.setModelId = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+/** @param {string} value */
+proto.modelzoo.Text.prototype.setModelName = function(value) {
+  jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -548,7 +553,7 @@ proto.modelzoo.Table.prototype.toObject = function(opt_includeInstance) {
 proto.modelzoo.Table.toObject = function(includeInstance, msg) {
   var f, obj = {
     metadataMap: (f = msg.getMetadataMap()) ? f.toObject(includeInstance, undefined) : [],
-    modelId: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    modelName: jspb.Message.getFieldWithDefault(msg, 2, ""),
     accessToken: jspb.Message.getFieldWithDefault(msg, 3, ""),
     tableMap: (f = msg.getTableMap()) ? f.toObject(includeInstance, proto.modelzoo.Table.Row.toObject) : [],
     columnNamesList: jspb.Message.getRepeatedField(msg, 5)
@@ -595,8 +600,8 @@ proto.modelzoo.Table.deserializeBinaryFromReader = function(msg, reader) {
          });
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readInt32());
-      msg.setModelId(value);
+      var value = /** @type {string} */ (reader.readString());
+      msg.setModelName(value);
       break;
     case 3:
       var value = /** @type {string} */ (reader.readString());
@@ -645,9 +650,9 @@ proto.modelzoo.Table.serializeBinaryToWriter = function(message, writer) {
   if (f && f.getLength() > 0) {
     f.serializeBinary(1, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
   }
-  f = message.getModelId();
-  if (f !== 0) {
-    writer.writeInt32(
+  f = message.getModelName();
+  if (f.length > 0) {
+    writer.writeString(
       2,
       f
     );
@@ -836,17 +841,17 @@ proto.modelzoo.Table.prototype.clearMetadataMap = function() {
 
 
 /**
- * optional int32 model_id = 2;
- * @return {number}
+ * optional string model_name = 2;
+ * @return {string}
  */
-proto.modelzoo.Table.prototype.getModelId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+proto.modelzoo.Table.prototype.getModelName = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
-/** @param {number} value */
-proto.modelzoo.Table.prototype.setModelId = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+/** @param {string} value */
+proto.modelzoo.Table.prototype.setModelName = function(value) {
+  jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -1252,7 +1257,6 @@ proto.modelzoo.Model.prototype.toObject = function(opt_includeInstance) {
 proto.modelzoo.Model.toObject = function(includeInstance, msg) {
   var f, obj = {
     modelName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    userEmail: jspb.Message.getFieldWithDefault(msg, 2, ""),
     metadataList: jspb.Message.toObjectList(msg.getMetadataList(),
     proto.modelzoo.KVPair.toObject, includeInstance)
   };
@@ -1295,10 +1299,6 @@ proto.modelzoo.Model.deserializeBinaryFromReader = function(msg, reader) {
       var value = /** @type {string} */ (reader.readString());
       msg.setModelName(value);
       break;
-    case 2:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setUserEmail(value);
-      break;
     case 3:
       var value = new proto.modelzoo.KVPair;
       reader.readMessage(value,proto.modelzoo.KVPair.deserializeBinaryFromReader);
@@ -1340,13 +1340,6 @@ proto.modelzoo.Model.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getUserEmail();
-  if (f.length > 0) {
-    writer.writeString(
-      2,
-      f
-    );
-  }
   f = message.getMetadataList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
@@ -1370,21 +1363,6 @@ proto.modelzoo.Model.prototype.getModelName = function() {
 /** @param {string} value */
 proto.modelzoo.Model.prototype.setModelName = function(value) {
   jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-/**
- * optional string user_email = 2;
- * @return {string}
- */
-proto.modelzoo.Model.prototype.getUserEmail = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/** @param {string} value */
-proto.modelzoo.Model.prototype.setUserEmail = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -1466,7 +1444,8 @@ proto.modelzoo.User.prototype.toObject = function(opt_includeInstance) {
  */
 proto.modelzoo.User.toObject = function(includeInstance, msg) {
   var f, obj = {
-    email: jspb.Message.getFieldWithDefault(msg, 1, "")
+    email: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    password: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -1507,6 +1486,10 @@ proto.modelzoo.User.deserializeBinaryFromReader = function(msg, reader) {
       var value = /** @type {string} */ (reader.readString());
       msg.setEmail(value);
       break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setPassword(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1543,6 +1526,13 @@ proto.modelzoo.User.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getPassword();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
 };
 
 
@@ -1557,6 +1547,163 @@ proto.modelzoo.User.prototype.getEmail = function() {
 
 /** @param {string} value */
 proto.modelzoo.User.prototype.setEmail = function(value) {
+  jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional string password = 2;
+ * @return {string}
+ */
+proto.modelzoo.User.prototype.getPassword = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/** @param {string} value */
+proto.modelzoo.User.prototype.setPassword = function(value) {
+  jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.modelzoo.RateLimitToken = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.modelzoo.RateLimitToken, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.modelzoo.RateLimitToken.displayName = 'proto.modelzoo.RateLimitToken';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.modelzoo.RateLimitToken.prototype.toObject = function(opt_includeInstance) {
+  return proto.modelzoo.RateLimitToken.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.modelzoo.RateLimitToken} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.modelzoo.RateLimitToken.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    token: jspb.Message.getFieldWithDefault(msg, 1, "")
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.modelzoo.RateLimitToken}
+ */
+proto.modelzoo.RateLimitToken.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.modelzoo.RateLimitToken;
+  return proto.modelzoo.RateLimitToken.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.modelzoo.RateLimitToken} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.modelzoo.RateLimitToken}
+ */
+proto.modelzoo.RateLimitToken.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setToken(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.modelzoo.RateLimitToken.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.modelzoo.RateLimitToken.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.modelzoo.RateLimitToken} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.modelzoo.RateLimitToken.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getToken();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string token = 1;
+ * @return {string}
+ */
+proto.modelzoo.RateLimitToken.prototype.getToken = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/** @param {string} value */
+proto.modelzoo.RateLimitToken.prototype.setToken = function(value) {
   jspb.Message.setProto3StringField(this, 1, value);
 };
 
@@ -2012,5 +2159,679 @@ proto.modelzoo.ImageDownloadResponse.prototype.setImage = function(value) {
   jspb.Message.setProto3StringField(this, 1, value);
 };
 
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.modelzoo.Payload = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.modelzoo.Payload.oneofGroups_);
+};
+goog.inherits(proto.modelzoo.Payload, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.modelzoo.Payload.displayName = 'proto.modelzoo.Payload';
+}
+/**
+ * Oneof group definitions for this message. Each group defines the field
+ * numbers belonging to that group. When of these fields' value is set, all
+ * other fields in the group are cleared. During deserialization, if multiple
+ * fields are encountered for a group, only the last value seen will be kept.
+ * @private {!Array<!Array<number>>}
+ * @const
+ */
+proto.modelzoo.Payload.oneofGroups_ = [[2,3,4]];
+
+/**
+ * @enum {number}
+ */
+proto.modelzoo.Payload.PayloadCase = {
+  PAYLOAD_NOT_SET: 0,
+  IMAGE: 2,
+  TEXT: 3,
+  TABLE: 4
+};
+
+/**
+ * @return {proto.modelzoo.Payload.PayloadCase}
+ */
+proto.modelzoo.Payload.prototype.getPayloadCase = function() {
+  return /** @type {proto.modelzoo.Payload.PayloadCase} */(jspb.Message.computeOneofCase(this, proto.modelzoo.Payload.oneofGroups_[0]));
+};
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.modelzoo.Payload.prototype.toObject = function(opt_includeInstance) {
+  return proto.modelzoo.Payload.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.modelzoo.Payload} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.modelzoo.Payload.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    type: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    image: (f = msg.getImage()) && proto.modelzoo.Image.toObject(includeInstance, f),
+    text: (f = msg.getText()) && proto.modelzoo.Text.toObject(includeInstance, f),
+    table: (f = msg.getTable()) && proto.modelzoo.Table.toObject(includeInstance, f)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.modelzoo.Payload}
+ */
+proto.modelzoo.Payload.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.modelzoo.Payload;
+  return proto.modelzoo.Payload.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.modelzoo.Payload} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.modelzoo.Payload}
+ */
+proto.modelzoo.Payload.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {!proto.modelzoo.PayloadType} */ (reader.readEnum());
+      msg.setType(value);
+      break;
+    case 2:
+      var value = new proto.modelzoo.Image;
+      reader.readMessage(value,proto.modelzoo.Image.deserializeBinaryFromReader);
+      msg.setImage(value);
+      break;
+    case 3:
+      var value = new proto.modelzoo.Text;
+      reader.readMessage(value,proto.modelzoo.Text.deserializeBinaryFromReader);
+      msg.setText(value);
+      break;
+    case 4:
+      var value = new proto.modelzoo.Table;
+      reader.readMessage(value,proto.modelzoo.Table.deserializeBinaryFromReader);
+      msg.setTable(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.modelzoo.Payload.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.modelzoo.Payload.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.modelzoo.Payload} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.modelzoo.Payload.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getType();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      1,
+      f
+    );
+  }
+  f = message.getImage();
+  if (f != null) {
+    writer.writeMessage(
+      2,
+      f,
+      proto.modelzoo.Image.serializeBinaryToWriter
+    );
+  }
+  f = message.getText();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      proto.modelzoo.Text.serializeBinaryToWriter
+    );
+  }
+  f = message.getTable();
+  if (f != null) {
+    writer.writeMessage(
+      4,
+      f,
+      proto.modelzoo.Table.serializeBinaryToWriter
+    );
+  }
+};
+
+
+/**
+ * optional PayloadType type = 1;
+ * @return {!proto.modelzoo.PayloadType}
+ */
+proto.modelzoo.Payload.prototype.getType = function() {
+  return /** @type {!proto.modelzoo.PayloadType} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/** @param {!proto.modelzoo.PayloadType} value */
+proto.modelzoo.Payload.prototype.setType = function(value) {
+  jspb.Message.setProto3EnumField(this, 1, value);
+};
+
+
+/**
+ * optional Image image = 2;
+ * @return {?proto.modelzoo.Image}
+ */
+proto.modelzoo.Payload.prototype.getImage = function() {
+  return /** @type{?proto.modelzoo.Image} */ (
+    jspb.Message.getWrapperField(this, proto.modelzoo.Image, 2));
+};
+
+
+/** @param {?proto.modelzoo.Image|undefined} value */
+proto.modelzoo.Payload.prototype.setImage = function(value) {
+  jspb.Message.setOneofWrapperField(this, 2, proto.modelzoo.Payload.oneofGroups_[0], value);
+};
+
+
+proto.modelzoo.Payload.prototype.clearImage = function() {
+  this.setImage(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.modelzoo.Payload.prototype.hasImage = function() {
+  return jspb.Message.getField(this, 2) != null;
+};
+
+
+/**
+ * optional Text text = 3;
+ * @return {?proto.modelzoo.Text}
+ */
+proto.modelzoo.Payload.prototype.getText = function() {
+  return /** @type{?proto.modelzoo.Text} */ (
+    jspb.Message.getWrapperField(this, proto.modelzoo.Text, 3));
+};
+
+
+/** @param {?proto.modelzoo.Text|undefined} value */
+proto.modelzoo.Payload.prototype.setText = function(value) {
+  jspb.Message.setOneofWrapperField(this, 3, proto.modelzoo.Payload.oneofGroups_[0], value);
+};
+
+
+proto.modelzoo.Payload.prototype.clearText = function() {
+  this.setText(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.modelzoo.Payload.prototype.hasText = function() {
+  return jspb.Message.getField(this, 3) != null;
+};
+
+
+/**
+ * optional Table table = 4;
+ * @return {?proto.modelzoo.Table}
+ */
+proto.modelzoo.Payload.prototype.getTable = function() {
+  return /** @type{?proto.modelzoo.Table} */ (
+    jspb.Message.getWrapperField(this, proto.modelzoo.Table, 4));
+};
+
+
+/** @param {?proto.modelzoo.Table|undefined} value */
+proto.modelzoo.Payload.prototype.setTable = function(value) {
+  jspb.Message.setOneofWrapperField(this, 4, proto.modelzoo.Payload.oneofGroups_[0], value);
+};
+
+
+proto.modelzoo.Payload.prototype.clearTable = function() {
+  this.setTable(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.modelzoo.Payload.prototype.hasTable = function() {
+  return jspb.Message.getField(this, 4) != null;
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.modelzoo.MetricItems = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.modelzoo.MetricItems.repeatedFields_, null);
+};
+goog.inherits(proto.modelzoo.MetricItems, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.modelzoo.MetricItems.displayName = 'proto.modelzoo.MetricItems';
+}
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.modelzoo.MetricItems.repeatedFields_ = [4];
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.modelzoo.MetricItems.prototype.toObject = function(opt_includeInstance) {
+  return proto.modelzoo.MetricItems.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.modelzoo.MetricItems} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.modelzoo.MetricItems.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    metricsList: jspb.Message.toObjectList(msg.getMetricsList(),
+    proto.modelzoo.MetricItems.Metric.toObject, includeInstance)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.modelzoo.MetricItems}
+ */
+proto.modelzoo.MetricItems.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.modelzoo.MetricItems;
+  return proto.modelzoo.MetricItems.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.modelzoo.MetricItems} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.modelzoo.MetricItems}
+ */
+proto.modelzoo.MetricItems.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 4:
+      var value = new proto.modelzoo.MetricItems.Metric;
+      reader.readMessage(value,proto.modelzoo.MetricItems.Metric.deserializeBinaryFromReader);
+      msg.addMetrics(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.modelzoo.MetricItems.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.modelzoo.MetricItems.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.modelzoo.MetricItems} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.modelzoo.MetricItems.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getMetricsList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      4,
+      f,
+      proto.modelzoo.MetricItems.Metric.serializeBinaryToWriter
+    );
+  }
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.modelzoo.MetricItems.Metric = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.modelzoo.MetricItems.Metric, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.modelzoo.MetricItems.Metric.displayName = 'proto.modelzoo.MetricItems.Metric';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.modelzoo.MetricItems.Metric.prototype.toObject = function(opt_includeInstance) {
+  return proto.modelzoo.MetricItems.Metric.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.modelzoo.MetricItems.Metric} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.modelzoo.MetricItems.Metric.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    key: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    value: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    unit: jspb.Message.getFieldWithDefault(msg, 3, "")
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.modelzoo.MetricItems.Metric}
+ */
+proto.modelzoo.MetricItems.Metric.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.modelzoo.MetricItems.Metric;
+  return proto.modelzoo.MetricItems.Metric.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.modelzoo.MetricItems.Metric} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.modelzoo.MetricItems.Metric}
+ */
+proto.modelzoo.MetricItems.Metric.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setKey(value);
+      break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setValue(value);
+      break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUnit(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.modelzoo.MetricItems.Metric.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.modelzoo.MetricItems.Metric.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.modelzoo.MetricItems.Metric} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.modelzoo.MetricItems.Metric.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getKey();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+  f = message.getValue();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
+  f = message.getUnit();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string key = 1;
+ * @return {string}
+ */
+proto.modelzoo.MetricItems.Metric.prototype.getKey = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/** @param {string} value */
+proto.modelzoo.MetricItems.Metric.prototype.setKey = function(value) {
+  jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional string value = 2;
+ * @return {string}
+ */
+proto.modelzoo.MetricItems.Metric.prototype.getValue = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/** @param {string} value */
+proto.modelzoo.MetricItems.Metric.prototype.setValue = function(value) {
+  jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * optional string unit = 3;
+ * @return {string}
+ */
+proto.modelzoo.MetricItems.Metric.prototype.getUnit = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/** @param {string} value */
+proto.modelzoo.MetricItems.Metric.prototype.setUnit = function(value) {
+  jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * repeated Metric metrics = 4;
+ * @return {!Array.<!proto.modelzoo.MetricItems.Metric>}
+ */
+proto.modelzoo.MetricItems.prototype.getMetricsList = function() {
+  return /** @type{!Array.<!proto.modelzoo.MetricItems.Metric>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.modelzoo.MetricItems.Metric, 4));
+};
+
+
+/** @param {!Array.<!proto.modelzoo.MetricItems.Metric>} value */
+proto.modelzoo.MetricItems.prototype.setMetricsList = function(value) {
+  jspb.Message.setRepeatedWrapperField(this, 4, value);
+};
+
+
+/**
+ * @param {!proto.modelzoo.MetricItems.Metric=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.modelzoo.MetricItems.Metric}
+ */
+proto.modelzoo.MetricItems.prototype.addMetrics = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 4, opt_value, proto.modelzoo.MetricItems.Metric, opt_index);
+};
+
+
+proto.modelzoo.MetricItems.prototype.clearMetricsList = function() {
+  this.setMetricsList([]);
+};
+
+
+/**
+ * @enum {number}
+ */
+proto.modelzoo.PayloadType = {
+  IMAGE: 0,
+  TEXT: 1,
+  TABLE: 2
+};
 
 goog.object.extend(exports, proto.modelzoo);
