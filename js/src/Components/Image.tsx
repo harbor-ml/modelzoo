@@ -1,7 +1,7 @@
-import React, { FC, useState, Dispatch, SetStateAction } from "react";
+import { Alert, Button, Card, Col, Icon, Input, Row, Upload } from "antd";
 import { ModelzooServicePromiseClient } from "protos/services_grpc_web_pb";
 import { ImageDownloadRequest } from "protos/services_pb";
-import { Button, Alert, Row, Col, Card, Upload, Input, Icon } from "antd";
+import React, { FC, useState } from "react";
 import { DefaultImages } from "../Config";
 
 interface ImageInputProps {

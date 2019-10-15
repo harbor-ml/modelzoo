@@ -1,24 +1,14 @@
-import {
-  Alert,
-  Col,
-  message,
-  Result,
-  Row,
-  Spin,
-  Statistic,
-  Typography,
-  Divider
-} from "antd";
+import { Divider, message, Result, Spin, Typography } from "antd";
 import _ from "lodash";
 import { ModelzooServicePromiseClient } from "protos/services_grpc_web_pb";
-import { Image, Payload, PayloadType, Empty } from "protos/services_pb";
-import React, { FC, Dispatch, useState, useReducer, useMemo } from "react";
+import { Empty, Image, Payload, PayloadType, Text } from "protos/services_pb";
+import React, { Dispatch, FC, useMemo, useReducer } from "react";
 import { useParams } from "react-router-dom";
 import { ImageInput, ImageOutput } from "../Components/Image";
+import { TableOutput } from "../Components/Table";
 import { TagsSet } from "../Components/Tags";
-import { TextsInput } from "../Components/Texts";
+import { TextsInput, TextsOutput } from "../Components/Texts";
 import { ModelObject, parseModels } from "../Utils/ProtoUtil";
-import { stat } from "fs";
 
 interface ModelProps {
   client: ModelzooServicePromiseClient;
@@ -129,6 +119,7 @@ function reducer(
                 imageProto.setAccessToken(state.token);
                 imageProto.setModelName(state.modelName);
                 payload.setImage(imageProto);
+                payload.setType(PayloadType.IMAGE);
                 state.dispatch!({
                   type: ModelActionType.SetInput,
                   payload: payload
@@ -138,7 +129,25 @@ function reducer(
             />
           );
           break;
-        case "texts":
+        case "text":
+          inputElement = (
+            <TextsInput
+              setTexts={(texts: Array<string>) => {
+                let payload = new Payload();
+                let textProto = new Text();
+                textProto.setTextsList(texts);
+                textProto.setAccessToken(state.token);
+                textProto.setModelName(state.modelName);
+                payload.setText(textProto);
+                payload.setType(PayloadType.TEXT);
+                state.dispatch!({
+                  type: ModelActionType.SetInput,
+                  payload: payload
+                });
+              }}
+              client={state.client!}
+            />
+          );
           break;
         default:
           message.error("Unknown input type " + inputType);
@@ -183,9 +192,25 @@ function reducer(
               ></ImageOutput>
             )
           };
-        case "texts":
+        case "text":
+          return {
+            ...state,
+            outputElement: (
+              <TextsOutput
+                texts={payload.getText()!.getTextsList()}
+              ></TextsOutput>
+            )
+          };
+        case "table":
+          return {
+            ...state,
+            outputElement: (
+              <TableOutput tableProto={payload.getTable()!}></TableOutput>
+            )
+          };
         default:
-          break;
+          message.error("Unknown output type " + state.outputType);
+          return state;
       }
 
     case ModelActionType.SetModelNotFound:
@@ -251,7 +276,7 @@ export const Model: FC<ModelProps> = props => {
           type: ModelActionType.SetModelNotFound
         });
       });
-  }, [client, token]);
+  }, [client, token, name]);
 
   return (
     <div>

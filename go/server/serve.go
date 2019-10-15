@@ -53,7 +53,7 @@ func ServeForever(cancelCtx context.Context, public bool, port int) {
 		)),
 	)
 
-	s := &ProxyServer{db}
+	s := &ProxyServer{db, newLogger}
 	modelzoo.RegisterModelzooServiceServer(grpcServer, s)
 
 	cancelFunc := func() {

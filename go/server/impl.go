@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/harbor-ml/modelzoo/go/schema"
 
 	"google.golang.org/grpc/codes"
@@ -21,7 +23,8 @@ import (
 
 // ProxyServer implements the generated model server from modelzoo.proto
 type ProxyServer struct {
-	db *gorm.DB
+	db     *gorm.DB
+	logger *logrus.Logger
 }
 
 // GetImage download an image from a url

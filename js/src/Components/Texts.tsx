@@ -1,8 +1,10 @@
-import React, { FC, Dispatch, SetStateAction, useState } from "react";
-import { Card, Input, Button, List } from "antd";
+import { Button, Card, Input, List } from "antd";
+import { ModelzooServicePromiseClient } from "protos/services_grpc_web_pb";
+import React, { FC, useState } from "react";
 
 interface TextsInputProps {
-  setTexts: Dispatch<SetStateAction<Array<string>>>;
+  setTexts: (texts: Array<string>) => void;
+  client: ModelzooServicePromiseClient;
 }
 
 export const TextsInput: FC<TextsInputProps> = props => {
@@ -12,7 +14,7 @@ export const TextsInput: FC<TextsInputProps> = props => {
   return (
     <Card>
       <Input
-        defaultValue="Enter text..."
+        placeholder="Enter text here..."
         onChange={event => setSingleLine(event.target.value)}
         onPressEnter={() => setTexts([singleLine])}
       ></Input>
@@ -30,6 +32,7 @@ export const TextsOutput: FC<TextsOutputProps> = props => {
   return (
     <List
       header={<div>Result</div>}
+      style={{ background: "white" }}
       bordered
       dataSource={texts}
       renderItem={item => <List.Item>{item}</List.Item>}

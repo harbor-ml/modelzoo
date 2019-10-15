@@ -42,6 +42,8 @@ func (s *ProxyServer) Inference(ctx context.Context, payload *modelzoo.Payload) 
 	var err error
 	var token string
 
+	s.logger.WithField("payload_type", payload.Type).Info("Received new inference request")
+
 	switch payload.Type {
 	case modelzoo.PayloadType_IMAGE:
 		item := payload.GetImage()
