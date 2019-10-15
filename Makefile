@@ -10,7 +10,7 @@ proto-js:
 		./protos/*.proto
 
 proto-py:
-	protoc \
+	protoc \ 
 		--python_out=python/model_io --mypy_out=python/model_io \
 		./protos/*.proto
 
@@ -19,7 +19,18 @@ proto-py-pkg:
 	python -m grpc_tools.protoc -I protos --python_out=modelzoo/protos --grpc_python_out=modelzoo/protos protos/services.proto
 	
 proto-go:
-	protoc --go_out=plugins=grpc,paths=source_relative:go ./protos/*.proto
+	protoc -I/usr/local/include -I . \
+  		-I ${GOPATH}/src \
+  		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+  		--go_out=plugins=grpc,paths=source_relative:go ./protos/*.proto && \
+	protoc -I/usr/local/include -I . \
+  		-I${GOPATH}/src \
+  		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+  		--grpc-gateway_out=logtostderr=true,paths=source_relative:go ./protos/*.proto  && \
+	protoc -I/usr/local/include -I . \
+  		-I ${GOPATH}/src \
+  		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+  		--swagger_out=logtostderr=true:go protos/*.proto
 
 .PHONY: protos
 protos: proto-js proto-py proto-go

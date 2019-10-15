@@ -18,9 +18,18 @@ var serveCmd = &cobra.Command{
 	},
 }
 
+var proxyCmd = &cobra.Command{
+	Use:   "proxy",
+	Short: "Start the reverse HTTP proxy",
+	Run: func(cmd *cobra.Command, args []string) {
+		server.ProxyForever(9000, 9090)
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(serveCmd)
 
+	rootCmd.AddCommand(proxyCmd)
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
