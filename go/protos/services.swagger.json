@@ -176,6 +176,20 @@
     }
   },
   "definitions": {
+    "MetricItemsMetric": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        }
+      }
+    },
     "TableRow": {
       "type": "object",
       "properties": {
@@ -210,7 +224,7 @@
           "type": "string"
         }
       },
-      "title": "Image is repsented by the dataurl format\nhttps://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs"
+      "title": "Image is repsented by the datauri format\nhttps://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs"
     },
     "modelzooImageDownloadResponse": {
       "type": "object",
@@ -238,6 +252,17 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/modelzooModel"
+          }
+        }
+      }
+    },
+    "modelzooMetricItems": {
+      "type": "object",
+      "properties": {
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetricItemsMetric"
           }
         }
       }

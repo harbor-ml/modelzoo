@@ -4,7 +4,7 @@ import "google/api/annotations.proto";
 
 package modelzoo;
 
-/* Image is repsented by the dataurl format
+/* Image is repsented by the datauri format
 https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
 */
 message Image {
@@ -70,7 +70,6 @@ enum PayloadType {
   IMAGE = 0;
   TEXT = 1;
   TABLE = 2;
-  
 }
 
 message Payload {
@@ -81,6 +80,16 @@ message Payload {
     Text text = 3;
     Table table = 4;
   }
+}
+
+message MetricItems {
+  message Metric {
+    string key = 1;
+    string value = 2;
+    string unit = 3;
+  }
+
+  repeated Metric metrics = 4;
 }
 
 service ModelzooService {
@@ -94,6 +103,7 @@ service ModelzooService {
 
   // Website utils
   rpc GetImage(ImageDownloadRequest) returns (ImageDownloadResponse) {}
+  rpc GetMetrics(Empty) returns (MetricItems) {}
 
   // Rate limiting
   rpc GetToken(Empty) returns (RateLimitToken) {
@@ -128,4 +138,6 @@ service ModelzooService {
       body: "*"
     };
   }
+
+
 }
