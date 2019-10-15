@@ -1,11 +1,11 @@
 import setuptools
 
-with open("README.md", "r") as fh:
+with open("modelzoo/README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="modelzoo",
-    version="0.0.2",
+    version="0.3.2",
     author="Rehan Durrani",
     author_email="rdurrani@berkeley.edu",
     description="Python package for querying ModelZoo.Live",
@@ -18,4 +18,5 @@ setuptools.setup(
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3 :: Only",
     ],
+    python_requires='>=3.6',
 )
