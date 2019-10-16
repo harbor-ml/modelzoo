@@ -43,6 +43,22 @@
   },
   {
     "@type": "/modelzoo.Model",
+    "model_name": "HuggingFace BigGan 256",
+    "metadata": [
+      { "key": "category", "value": "image generation" },
+      { "key": "author", "value": "HuggingFace" },
+      { "key": "service_type", "value": "clipper" },
+      {
+        "key": "clipper_url",
+        "value": "http://localhost:10000/biggan/predict"
+      },
+      { "key": "input_type", "value": "text" },
+      { "key": "output_type", "value": "image" },
+      { "key": "framework", "value": "PyTorch" }
+    ]
+  },
+  {
+    "@type": "/modelzoo.Model",
     "model_name": "HuggingFace XLNetLMHeadModel",
     "metadata": [
       { "key": "category", "value": "text generation" },

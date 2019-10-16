@@ -62,6 +62,11 @@ print("Done")
 print("XLNet Time")
 tokenizerX = XLNetTokenizer.from_pretrained('xlnet-base-cased')
 modelX = XLNetLMHeadModel.from_pretrained('xlnet-base-cased')
+print("BigGan Time!")
+from pytorch_pretrained_biggan import (BigGAN, one_hot_from_names, truncated_noise_sample,
+                                       convert_to_images)
+modelBG = BigGAN.from_pretrained('biggan-deep-256')
+
 print("All prep complete!")
 labels = {int(key):value for (key, value) in requests.get('https://s3.amazonaws.com/outcome-blog/imagenet/labels.json').json().items()}
 detect_labels = {int(key):value for (key, value) in requests.get('https://gist.githubusercontent.com/RehanSD/6f74a9992848e25658e091148ee20e17/raw/fae1f9f3ee0c3eb20ca9829e99cd8b616f22fa45/cocolabels.json').json().items()}
@@ -177,6 +182,18 @@ def faster(inp: Image, metadata):
         }
     ).astype(str)
     return df
+
+@register_type(text_input, image_output)
+def biggan(inp: List[str], metadata):
+    truncation = 0.4
+    class_vector = one_hot_from_names(inp, batch_size=1)
+    noise_vector = truncated_noise_sample(truncation=truncation, batch_size=1)
+    noise_vector = torch.from_numpy(noise_vector)
+    class_vector = torch.from_numpy(class_vector)
+    with torch.no_grad():
+        output = model(noise_vector, class_vector, truncation)
+    return convert_to_images(output)[0]
+
 
 @register_type(image_input, table_output)
 def vision_classification(inp: Image, metadata):
@@ -327,9 +344,11 @@ def clipper(app_name):
         elif app_name == "faster":
             pred_func = faster
         input_cls = pb.Image
-    elif app_name in ['gpt2', 'xlnet']:
+    elif app_name in ['gpt2', 'xlnet', 'biggan']:
         if app_name == 'gpt2':
             pred_func = gpt2
+        elif app_name == 'biggan':
+            pred_func = biggan
         else:
             pred_func = xlnet
         input_cls = pb.Text
