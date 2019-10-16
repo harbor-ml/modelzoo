@@ -11,33 +11,129 @@
   },
   {
     "@type": "/modelzoo.Model",
-    "model_name": "image_segmentation_mock",
+    "model_name": "ImageNet Classification ResNet50",
     "metadata": [
-      { "key": "category", "value": "image segmentation" },
-      { "key": "author", "value": "pytorch folks" },
+      { "key": "category", "value": "vision classification" },
+      { "key": "author", "value": "PyTorch" },
       { "key": "service_type", "value": "clipper" },
       {
         "key": "clipper_url",
-        "value": "http://localhost:10000/image_segmentation/predict"
+        "value": "http://localhost:10000/image_r50/predict"
       },
       { "key": "input_type", "value": "image" },
-      { "key": "output_type", "value": "image" },
-      { "key": "framework", "value": "TensorFlow" }
+      { "key": "output_type", "value": "table" },
+      { "key": "framework", "value": "PyTorch" }
     ]
   },
   {
     "@type": "/modelzoo.Model",
-    "model_name": "text_generation_mock",
+    "model_name": "HuggingFace GPT2LMHeadModel",
     "metadata": [
       { "key": "category", "value": "text generation" },
-      { "key": "author", "value": "pytorch folks" },
+      { "key": "author", "value": "HuggingFace" },
       { "key": "service_type", "value": "clipper" },
       {
         "key": "clipper_url",
-        "value": "http://localhost:10000/text_generation/predict"
+        "value": "http://localhost:10000/gpt2/predict"
       },
       { "key": "input_type", "value": "text" },
       { "key": "output_type", "value": "text" },
+      { "key": "framework", "value": "PyTorch" }
+    ]
+  },
+  {
+    "@type": "/modelzoo.Model",
+    "model_name": "HuggingFace XLNetLMHeadModel",
+    "metadata": [
+      { "key": "category", "value": "text generation" },
+      { "key": "author", "value": "HuggingFace" },
+      { "key": "service_type", "value": "clipper" },
+      {
+        "key": "clipper_url",
+        "value": "http://localhost:10000/xlnet/predict"
+      },
+      { "key": "input_type", "value": "text" },
+      { "key": "output_type", "value": "text" },
+      { "key": "framework", "value": "PyTorch" }
+    ]
+  },
+  {
+    "@type": "/modelzoo.Model",
+    "model_name": "ImageNet Classification ResNet18",
+    "metadata": [
+      { "key": "category", "value": "vision classification" },
+      { "key": "author", "value": "PyTorch" },
+      { "key": "service_type", "value": "clipper" },
+      {
+        "key": "clipper_url",
+        "value": "http://localhost:10000/image_r18/predict"
+      },
+      { "key": "input_type", "value": "image" },
+      { "key": "output_type", "value": "table" },
+      { "key": "framework", "value": "PyTorch" }
+    ]
+  },
+  {
+    "@type": "/modelzoo.Model",
+    "model_name": "ImageNet Classification ResNet152",
+    "metadata": [
+      { "key": "category", "value": "vision classification" },
+      { "key": "author", "value": "PyTorch" },
+      { "key": "service_type", "value": "clipper" },
+      {
+        "key": "clipper_url",
+        "value": "http://localhost:10000/image_r152/predict"
+      },
+      { "key": "input_type", "value": "image" },
+      { "key": "output_type", "value": "table" },
+      { "key": "framework", "value": "PyTorch" }
+    ]
+  },
+  {
+    "@type": "/modelzoo.Model",
+    "model_name": "Coco Detection Faster R-CNN",
+    "metadata": [
+      { "key": "category", "value": "object detection" },
+      { "key": "author", "value": "PyTorch" },
+      { "key": "service_type", "value": "clipper" },
+      {
+        "key": "clipper_url",
+        "value": "http://localhost:10000/faster/predict"
+      },
+      { "key": "input_type", "value": "image" },
+      { "key": "output_type", "value": "table" },
+      { "key": "framework", "value": "PyTorch" }
+    ]
+  },
+  {
+    "@type": "/modelzoo.Model",
+    "model_name": "Coco Detection Keypoint R-CNN",
+    "metadata": [
+      { "key": "category", "value": "object detection" },
+      { "key": "author", "value": "PyTorch" },
+      { "key": "service_type", "value": "clipper" },
+      {
+        "key": "clipper_url",
+        "value": "http://localhost:10000/keypoint/predict"
+      },
+      { "key": "input_type", "value": "image" },
+      { "key": "output_type", "value": "table" },
+      { "key": "framework", "value": "PyTorch" }
+    ]
+  },
+  {
+    "@type": "/modelzoo.Model",
+    "model_name": "Coco Detection Mask R-CNN",
+    "metadata": [
+      { "key": "category", "value": "object detection" },
+      { "key": "author", "value": "PyTorch" },
+      { "key": "service_type", "value": "clipper" },
+      {
+        "key": "clipper_url",
+        "value": "http://localhost:10000/mask/predict"
+      },
+      { "key": "input_type", "value": "image" },
+      { "key": "output_type", "value": "table" },
       { "key": "framework", "value": "PyTorch" }
     ]
   }

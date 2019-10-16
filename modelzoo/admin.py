@@ -7,11 +7,12 @@ import modelzoo.utils as utils
 from modelzoo.exceptions import (AuthenticationException,
                                  InvalidCredentialsException,
                                  ModelZooConnectionException)
-from modelzoo.model_io.sugar import image_input, table_output, text_input
+from modelzoo.sugar import image_input, table_output, text_input, table_input
 from modelzoo.protos.services_pb2 import (Empty, Image, Payload, PayloadType,
                                           RateLimitToken, Status, Table, Text,
                                           User)
 from modelzoo.protos.services_pb2_grpc import ModelzooServiceStub
+from google.protobuf import json_format
 
 
 class ModelZooConnection(object):
@@ -21,8 +22,8 @@ class ModelZooConnection(object):
 
     Attributes
     ----------
-    address : string
-        This is the address of the ModelZoo instance to connect to. By default, it is the global testbed managed by RISELab.
+    address : Optional[string]
+        This is the address of the ModelZoo instance to connect to.
     email : Optional[string]
         The email with which to authenticate to the ModelZoo instance.
         password : Optional[string]: The password with which to authenticate to the ModelZoo instance.
@@ -40,7 +41,7 @@ class ModelZooConnection(object):
 
     def __init__(
         self,
-        address: Optional[str] = "grpc.modelzoo.live",
+        address: Optional[str] = None,
         email: Optional[str] = "",
         password: Optional[str] = "",
     ):
@@ -53,8 +54,10 @@ class ModelZooConnection(object):
         )
         self.email = email
         self.password = password
+        if self.address is not None:
+            self.connect(address=self.address)
 
-    def connect(self, address: Optional[str] = "grpc.modelzoo.live") -> None:
+    def connect(self, address: str) -> None:
         """
         Method to connect to the ModelZoo instance specified by self.address | address.
         Must be called first, so that later methods have a connection to the server to perform queries.
@@ -150,19 +153,35 @@ class ModelZooConnection(object):
         except Exception:
             raise ModelZooConnectionException("Failed to create user.")
 
-    def list_all_models(self,) -> List[dict]:
+    def list_all_models(self, expand_metadata: Optional[bool] = False) -> pd.DataFrame:
         """
         Lists all models.
 
+        Parameters
+        ----------
+        expand_metadata: Optional[bool]
+            Whether to return a DataFrame with a metadata column containing a
+            a JSON string consisting of metadata key/value pairs, or to expand
+            to a DataFrame indexed by modelname with metadata expanded to columns.
+
         Return
         ------
-        List[dict]
-            A dictionary of the models currently registered.
+        pd.DataFrame
+            A dataframe of the models currently registered.
         """
         if self.conn is None:
             raise self.conn_error
         resp = self.conn.ListModels(Empty())
-        return resp.models
+        if not expand_metadata:
+            return pd.DataFrame(json_format.MessageToDict(resp)['models'])
+        else:
+            frames = []
+            for g in json_format.MessageToDict(resp)['models']:
+                p = pd.DataFrame(g['metadata'])
+                p.index = [g['modelName']]*len(p)
+                frames.append(p)
+            g = pd.concat(frames)
+            return g.set_index([g.index, 'key'])
 
     def text_inference(self, model: str, texts: List[str]) -> Payload:
         """
@@ -272,9 +291,8 @@ class ModelZooConnection(object):
         Raises
         ------
         ModelZooConnectionException
-            A ModelZooConnectionException is called in two cases:
-                1) If the Payload contains a tabular output. Post processing for tabular outputs is not currently supported.
-                2) The Payload contains a type besides oneof(text, image). This is likely a sign that the Payload was not produced
+            A ModelZooConnectionException is called in one case:
+                1) The Payload contains a type besides oneof(text, image). This is likely a sign that the Payload was not produced
                     by an inference method.
         """
         if resp.type == PayloadType.TEXT:
@@ -290,9 +308,11 @@ class ModelZooConnection(object):
             else:
                 return callback(image)
         elif resp.type == PayloadType.TABLE:
-            raise ModelZooConnectionException(
-                "Post processing for tabular outputs is not supported at this time."
-            )
+            table = table_input(resp.table)
+            if callback is None:
+                return table
+            else:
+                return callback(table)
         else:
             raise ModelZooConnectionException(
                 "Payload type does not match known values. Please ensure that your packet is not corrupted."

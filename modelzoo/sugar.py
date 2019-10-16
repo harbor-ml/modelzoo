@@ -3,11 +3,12 @@ import io
 import mimetypes
 from functools import wraps
 from typing import List
+from google.protobuf import json_format
 
-import pandas as pd
 from PIL import Image
 from w3lib.url import parse_data_uri
 
+import pandas as pd
 import modelzoo.protos.services_pb2 as pb
 
 
@@ -25,7 +26,6 @@ class register_type:
             kwargs = {self.metadata_name: metadata}
             out = func(*args, **kwargs)
             return self._out_transformer(out)
-
         return wrapped
 
 
@@ -51,6 +51,13 @@ def text_output(texts: List[str]) -> pb.Text:
     return pb.Text(texts=texts)
 
 
+def table_input(table_request: pb.Table) -> pd.DataFrame:
+    result_dict = json_format.MessageToDict(table_request)
+    p = []
+    for i in range(len(result_dict['table'])):
+        p.append(pd.DataFrame.from_dict(result_dict['table']['%d' % (i)], orient='index'))
+    return pd.concat(p).reset_index().drop('index', axis=1)
+
 def table_output(dataframe: pd.DataFrame) -> pb.Table:
     dataframe.index = list(map(str, dataframe.index))
     dataframe.columns = list(map(str, dataframe.columns))
@@ -63,5 +70,5 @@ def table_output(dataframe: pd.DataFrame) -> pb.Table:
         row = table.table[row_name]
         for column, value in column_value_map.items():
             row.column_to_value[column] = value
-
+        
     return table
