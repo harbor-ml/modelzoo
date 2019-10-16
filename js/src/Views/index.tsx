@@ -1,5 +1,5 @@
 export * from "./API";
-export * from "./Catalog";
+// export * from "./Catalog";
 export * from "./Contact";
 export * from "./Home";
 export * from "./Monitor";

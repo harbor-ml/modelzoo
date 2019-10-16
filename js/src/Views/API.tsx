@@ -10,7 +10,8 @@ export const API: FC = () => {
   return (
     <Tabs defaultActiveKey="python">
       <TabPane tab="Python" key="python">
-        <Result
+        <script src="https://gist.github.com/simon-mo/7780865ce3333df86a2325b84aabd37b.js"></script>
+        {/* <Result
           status="404"
           title="Python API Doc coming soon"
           subTitle={
@@ -18,7 +19,7 @@ export const API: FC = () => {
               https://pypi.org/project/modelzoo/
             </a>
           }
-        />
+        /> */}
       </TabPane>
 
       <TabPane tab="HTTP" key="http">

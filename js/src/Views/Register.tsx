@@ -61,7 +61,7 @@ export const Register: FC<RegisterProp> = registerProps => {
             .createModel(modelProto, undefined)
             .then(resp => {
               message.success("Success!");
-              setLoadingRedirect(<Redirect to="/catalog" />);
+              setLoadingRedirect(<Redirect to="/" />);
             })
             .catch(err => {
               message.error(

@@ -117,26 +117,26 @@ const App: FC = () => {
           >
             <Switch>
               <Route exact path="/">
-                <Home models={allModels} />
+                <Home models={allModels} client={client} />
               </Route>
-              <Route path="/catalog">
+              {/* <Route path="/catalog">
                 <Catalog
                   client={client}
                   // models={allModels}
                 />
-              </Route>
-              <Route path="/monitor">
+              </Route> */}
+              {/* <Route path="/monitor">
                 <Monitor />
-              </Route>
+              </Route> */}
               <Route path="/api">
                 <API />
               </Route>
               <Route path="/register">
                 <Register client={client} />
               </Route>
-              <Route path="/contact">
+              {/* <Route path="/contact">
                 <Contact />
-              </Route>
+              </Route> */}
               <Route path="/model/:name">
                 <Model
                   client={client}
@@ -144,12 +144,12 @@ const App: FC = () => {
                   // models={allModels}
                 />
               </Route>
-              <Route path="/compare">
+              {/* <Route path="/compare">
                 <h2>
                   Comparison fucntion coming soon. View your result in one
                   place.
                 </h2>
-              </Route>
+              </Route> */}
             </Switch>
           </Content>
 

@@ -1,53 +1,68 @@
-import { Card, Col, Row, Statistic } from "antd";
+import { Card, Col, message, Row, Statistic } from "antd";
 import _ from "lodash";
-import React, { FC } from "react";
+import { ModelzooServicePromiseClient } from "protos/services_grpc_web_pb";
+import { Empty } from "protos/services_pb";
+import React, { FC, useMemo, useState } from "react";
 import { FeaturedModelTag } from "../Components/Tags";
-import { ModelObject } from "../Utils/ProtoUtil";
+import { ModelObject, parseModels } from "../Utils/ProtoUtil";
+
+import { Link } from "react-router-dom";
+import { TagsSet } from "../Components/Tags";
 
 interface HomeProps {
   models: ModelObject[];
+  client: ModelzooServicePromiseClient;
 }
 
-export const Home: FC<HomeProps> = props => {
+interface CatalogProps {
+  // models: ModelObject[];
+  client: ModelzooServicePromiseClient;
+}
+
+export const Catalog: FC<CatalogProps> = props => {
   // let { models } = props;
+  let { client } = props;
+  const [models, setModels] = useState<Array<ModelObject>>([]);
 
-  let featuredModels = _.times(3, i => (
-    <Card.Grid>
-      <h2>Resnet50</h2>
-      <Row>
-        <Col span={8}>
-          <Statistic title="Accuracy" value={82.8} suffix={"%"} />
-        </Col>
-        <Col span={8}>
-          <Statistic title="Mean Latency" value={50} suffix={"ms"} />
-        </Col>
-      </Row>
-      <FeaturedModelTag
-        name="Category"
-        val="Image Classification"
-        color="yellow"
-      />
-      <FeaturedModelTag name="Framework" val="PyTorch" color="magenta" />
-      <FeaturedModelTag name="Input" val="Image" color="blue" />
-      <FeaturedModelTag name="Output" val="Table" color="green" />
-      <FeaturedModelTag name="Serving System" val="Clipper" color="volcano" />
-    </Card.Grid>
-  ));
+  useMemo(() => {
+    client
+      .listModels(new Empty(), undefined)
+      .then(resp => setModels(parseModels(resp.getModelsList())))
+      .catch(err => message.error("Unable to fetch all models"));
+  }, [client]);
 
-  let globalMetrics = _.times(3, i => (
-    <Card.Grid>
-      <Statistic title="Active Users" value={112893} />
-    </Card.Grid>
-  ));
+  let cards = models.map((model: ModelObject, index, arr) => {
+    return (
+      <Col span={12}>
+        <Card
+          title={model.name}
+          style={{ margin: "4px" }}
+          extra={<Link to={`model/${model.name}`}>Test it</Link>}
+        >
+          <Row>
+            <Col span={8}>
+              <Statistic title="Accuracy" value={82.8} suffix={"%"} />
+            </Col>
+            <Col span={8}>
+              <Statistic title="Mean Latency" value={50} suffix={"ms"} />
+            </Col>
+          </Row>
+          <TagsSet model={model} showAll={false}></TagsSet>
+        </Card>
+      </Col>
+    );
+  });
 
   return (
     <div>
-      <Card title="Featured Models" bordered={false}>
-        {featuredModels}
-      </Card>
-
-      <br></br>
-      <Card title="Metric Summaries">{globalMetrics}</Card>
+      <Row>{cards}</Row>
     </div>
   );
+};
+
+export const Home: FC<HomeProps> = props => {
+  // let { models } = props;
+  let { client } = props;
+
+  return <Catalog client={client}></Catalog>;
 };
