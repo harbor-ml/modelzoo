@@ -191,7 +191,7 @@ def biggan(inp: List[str], metadata):
     noise_vector = torch.from_numpy(noise_vector)
     class_vector = torch.from_numpy(class_vector)
     with torch.no_grad():
-        output = model(noise_vector, class_vector, truncation)
+        output = modelBG(noise_vector, class_vector, truncation)
     return convert_to_images(output)[0]
 
 
