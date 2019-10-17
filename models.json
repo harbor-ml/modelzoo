@@ -29,7 +29,7 @@
   },
   {
     "@type": "/modelzoo.Model",
-    "model_name": "HuggingFace GPT2LMHeadModel",
+    "model_name": "OpenAI GPT2LMHeadModel",
     "metadata": [
       { "key": "category", "value": "text generation" },
       { "key": "author", "value": "OpenAI" },
@@ -40,14 +40,14 @@
       },
       { "key": "input_type", "value": "text" },
       { "key": "output_type", "value": "text" },
-      { "key": "framework", "value": "HuggingFace" },
+      { "key": "framework", "value": "HuggingFace PyTorch" },
       { "key": "metric_Winograd_Schema_Challenge_accuracy_%", "value": "70.70"},
       { "key": "paper_link", "value": "https://blog.openai.com/better-language-models/"}
     ]
   },
   {
     "@type": "/modelzoo.Model",
-    "model_name": "HuggingFace BigGan 256",
+    "model_name": "DeepMind BigGan 256",
     "metadata": [
       { "key": "category", "value": "image generation" },
       { "key": "author", "value": "DeepMind" },
@@ -58,7 +58,7 @@
       },
       { "key": "input_type", "value": "text" },
       { "key": "output_type", "value": "image" },
-      { "key": "framework", "value": "HuggingFace" },
+      { "key": "framework", "value": "HuggingFace PyTorch" },
       { "key": "paper_link", "value": "https://openreview.net/forum?id=B1xsqj09Fm"},
       { "key": "metric_ImageNet_Inception_Score_", "value":"171.4"}
 
@@ -66,7 +66,7 @@
   },
   {
     "@type": "/modelzoo.Model",
-    "model_name": "HuggingFace XLNetLMHeadModel",
+    "model_name": "XLNetLMHeadModel",
     "metadata": [
       { "key": "category", "value": "text generation" },
       { "key": "author", "value": "Yang, et al." },
@@ -77,7 +77,7 @@
       },
       { "key": "input_type", "value": "text" },
       { "key": "output_type", "value": "text" },
-      { "key": "framework", "value": "HuggingFace" },
+      { "key": "framework", "value": "HuggingFace PyTorch" },
       { "key": "paper_link", "value": "https://arxiv.org/abs/1906.08237"},
       { "key": "metric_RACE_dataset_accuracy_%", "value": "81.75"}
     ]
