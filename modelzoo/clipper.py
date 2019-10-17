@@ -144,7 +144,7 @@ def ensemble(inp: Image, metadata):
     new_df.probability = new_df.probability.astype(np.float32)
     new_df.probability /= np.sum(new_df.probability.values)
     new_df = new_df.drop(columns='rank')
-    return new_df
+    return new_df.astype(str)
     
 @register_type(image_input, table_output)
 def image_r152(inp: Image, metadata):
