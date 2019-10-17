@@ -130,7 +130,7 @@
         "value": "http://ec2-34-220-18-51.us-west-2.compute.amazonaws.com:10000/faster/predict"
       },
       { "key": "input_type", "value": "image" },
-      { "key": "output_type", "value": "table" },
+      { "key": "output_type", "value": "image" },
       { "key": "framework", "value": "PyTorch" },
       { "key": "paper_link", "value": "https://arxiv.org/abs/1506.01497"},
       { "key": "metric_MS_COCO_mAP@0.5_%", "value": "42.1"}
@@ -166,7 +166,7 @@
         "value": "http://ec2-34-220-18-51.us-west-2.compute.amazonaws.com:10000/mask/predict"
       },
       { "key": "input_type", "value": "image" },
-      { "key": "output_type", "value": "table" },
+      { "key": "output_type", "value": "image" },
       { "key": "framework", "value": "PyTorch" },
       { "key": "paper_link", "value": "https://arxiv.org/abs/1703.06870"},
       { "key": "metric_COCO_trainval35k_mAP_%", "value":"33.6"}

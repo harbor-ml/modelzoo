@@ -25,6 +25,16 @@ from modelzoo.sugar import (
     text_output,
 )
 
+def get_bounding_boxes(output):
+    """Yield Rectangle object from output string"""
+    import matplotlib.patches as patches
+
+    colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
+    for c, m in zip(colors, output):
+        cat, left, bottom, right, top = m
+        left, bottom, right, top = float(left), float(bottom), float(right), float(top)
+        yield patches.Rectangle((left,bottom), right-left, top-bottom, linewidth=1, facecolor='none', edgecolor=c,label=cat)
+
 app = Flask(__name__)
 CORS(app)
 # import torch
@@ -166,19 +176,27 @@ def image_r152(inp: Image, metadata):
     ).astype(str)
     return df
 
-@register_type(image_input, table_output)
+@register_type(image_input, image_output)
 def mask(inp: Image, metadata):
     image_tensor = torchvision.transforms.functional.to_tensor(inp)
     output = model_mask([image_tensor.cuda()])
-    labels = output[0]['labels'].cpu().numpy()
-    labels = list(set([detect_labels[l] for l in labels]))
-    df = pd.DataFrame(
-        {
-            "rank": list(range(1, len(labels)+1)),
-            "category": labels
-        }
-    ).astype(str)
-    return df
+    labels = output[0]['labels'].cpu().detach().numpy()
+    labels = np.array([detect_labels[i] for i in labels])
+    boxes = boxes = output[0]['boxes'].cpu().detach().numpy()
+    out = np.hstack((labels[None].T, boxes))
+    import matplotlib.pyplot as plt
+    import matplotlib.patches as patches
+    from io import StringIO
+    fig,ax = plt.subplots(1, figsize=(10,8))
+    ax.imshow(np.array(inp))
+    for p in get_bounding_boxes(out):
+        ax.add_patch(p) 
+    fig.legend()
+    buffer = StringIO()
+    canvas = plt.get_current_fig_manager().canvas
+    canvas.draw()
+    pil_image = Image.frombytes('RGB', canvas.get_width_height(), canvas.tostring_rgb())
+    return pil_image
 
 @register_type(image_input, image_output)
 def keypoint(inp: Image, metadata):
@@ -196,19 +214,27 @@ def keypoint(inp: Image, metadata):
     pil_image = Image.frombytes('RGB', canvas.get_width_height(), canvas.tostring_rgb())
     return pil_image
 
-@register_type(image_input, table_output)
+@register_type(image_input, image_output)
 def faster(inp: Image, metadata):
     image_tensor = torchvision.transforms.functional.to_tensor(inp)
     output = model_fast([image_tensor.cuda()])
-    labels = output[0]['labels'].cpu().numpy()
-    labels = list(set([detect_labels[l] for l in labels]))
-    df = pd.DataFrame(
-        {
-            "rank": list(range(1, len(labels)+1)),
-            "category": labels
-        }
-    ).astype(str)
-    return df
+    labels = output[0]['labels'].cpu().detach().numpy()
+    labels = np.array([detect_labels[i] for i in labels])
+    boxes = boxes = output[0]['boxes'].cpu().detach().numpy()
+    out = np.hstack((labels[None].T, boxes))
+    import matplotlib.pyplot as plt
+    import matplotlib.patches as patches
+    from io import StringIO
+    fig,ax = plt.subplots(1, figsize=(10,8))
+    ax.imshow(np.array(inp))
+    for p in get_bounding_boxes(out):
+        ax.add_patch(p) 
+    fig.legend()
+    buffer = StringIO()
+    canvas = plt.get_current_fig_manager().canvas
+    canvas.draw()
+    pil_image = Image.frombytes('RGB', canvas.get_width_height(), canvas.tostring_rgb())
+    return pil_image
 
 @register_type(text_input, image_output)
 def biggan(inp: List[str], metadata):
