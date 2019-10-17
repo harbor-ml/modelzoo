@@ -50,13 +50,12 @@ def text_input(text_request: pb.Text) -> List[str]:
 def text_output(texts: List[str]) -> pb.Text:
     return pb.Text(texts=texts)
 
-
 def table_input(table_request: pb.Table) -> pd.DataFrame:
     result_dict = json_format.MessageToDict(table_request)
     p = []
     for i in range(len(result_dict['table'])):
         p.append(pd.DataFrame.from_dict(result_dict['table']['%d' % (i)], orient='index'))
-    return pd.concat(p).reset_index().drop('index', axis=1)
+    return pd.concat(p, sort=True).reset_index().drop('index', axis=1)
 
 def table_output(dataframe: pd.DataFrame) -> pb.Table:
     dataframe.index = list(map(str, dataframe.index))
