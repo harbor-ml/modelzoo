@@ -312,11 +312,10 @@ def gpt2(inp: List[str], metadata):
     texts = []
     for i in inp:
         context_tokens = tokenizerG.encode(i)
-        context_tokens.to('cuda')
-        out = sample_sequence(model=modelG, context=context_tokens, length=20, temperature=0.7,top_k=0, top_p=0.9, repetition_penalty=1.0)
+        out = sample_sequence(model=modelG, context=context_tokens, length=20, temperature=0.7,top_k=0, top_p=0.9, repetition_penalty=1.0, device='cuda')
         out = out[0, len(context_tokens):].tolist()
         text = tokenizerG.decode(out, clean_up_tokenization_spaces=True, skip_special_tokens=True)
-        texts.append(text.cpu())
+        texts.append(text)
     return texts
 
 @register_type(text_input, text_output)
@@ -324,11 +323,10 @@ def xlnet(inp: List[str], metadata):
     texts = []
     for i in inp:
         context_tokens = tokenizerX.encode(PADDING_TEXT+i)
-        context_tokens.to('cuda')
-        out = sample_sequence(model=modelX, context=context_tokens, length=20, temperature=0.7,top_k=0, top_p=0.9, repetition_penalty=1.0, is_xlnet=True)
+        out = sample_sequence(model=modelX, context=context_tokens, length=20, temperature=0.7,top_k=0, top_p=0.9, repetition_penalty=1.0, is_xlnet=True, device='cuda')
         out = out[0, len(context_tokens):].tolist()
         text = tokenizerX.decode(out, clean_up_tokenization_spaces=True, skip_special_tokens=True)
-        texts.append(text.cpu())
+        texts.append(text)
     return texts
 
 @register_type(image_input, image_output)
