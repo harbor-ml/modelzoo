@@ -193,7 +193,7 @@ def keypoint(inp: Image, metadata):
     buffer = StringIO()
     canvas = plt.get_current_fig_manager().canvas
     canvas.draw()
-    pil_image = PIL.Image.frombytes('RGB', canvas.get_width_height(), canvas.tostring_rgb())
+    pil_image = Image.frombytes('RGB', canvas.get_width_height(), canvas.tostring_rgb())
     return pil_image
 
 @register_type(image_input, table_output)
