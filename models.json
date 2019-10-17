@@ -30,7 +30,7 @@
     "model_name": "HuggingFace GPT2LMHeadModel",
     "metadata": [
       { "key": "category", "value": "text generation" },
-      { "key": "author", "value": "HuggingFace" },
+      { "key": "author", "value": "OpenAI" },
       { "key": "service_type", "value": "clipper" },
       {
         "key": "clipper_url",
@@ -38,7 +38,9 @@
       },
       { "key": "input_type", "value": "text" },
       { "key": "output_type", "value": "text" },
-      { "key": "framework", "value": "PyTorch" }
+      { "key": "framework", "value": "HuggingFace" },
+      { "key": "metric_winograd_schema_challenge_accuracy_%", "value": "70.70"},
+      { "key": "paper_link", "value": "https://blog.openai.com/better-language-models/"}
     ]
   },
   {
@@ -46,7 +48,7 @@
     "model_name": "HuggingFace BigGan 256",
     "metadata": [
       { "key": "category", "value": "image generation" },
-      { "key": "author", "value": "HuggingFace" },
+      { "key": "author", "value": "DeepMind" },
       { "key": "service_type", "value": "clipper" },
       {
         "key": "clipper_url",
@@ -54,7 +56,10 @@
       },
       { "key": "input_type", "value": "text" },
       { "key": "output_type", "value": "image" },
-      { "key": "framework", "value": "PyTorch" }
+      { "key": "framework", "value": "HuggingFace" },
+      { "key": "paper_link", "value": "https://openreview.net/forum?id=B1xsqj09Fm"},
+      { "key": "metric_imagenet_inception_score_", "value":"171.4"}
+
     ]
   },
   {
@@ -62,7 +67,7 @@
     "model_name": "HuggingFace XLNetLMHeadModel",
     "metadata": [
       { "key": "category", "value": "text generation" },
-      { "key": "author", "value": "HuggingFace" },
+      { "key": "author", "value": "Yang, et al." },
       { "key": "service_type", "value": "clipper" },
       {
         "key": "clipper_url",
@@ -70,7 +75,9 @@
       },
       { "key": "input_type", "value": "text" },
       { "key": "output_type", "value": "text" },
-      { "key": "framework", "value": "PyTorch" }
+      { "key": "framework", "value": "HuggingFace" },
+      { "key": "paper_link", "value": "https://arxiv.org/abs/1906.08237"},
+      { "key": "metric_race_dataset_accuracy_%", "value": "81.75"}
     ]
   },
   {
