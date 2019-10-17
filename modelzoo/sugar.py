@@ -33,7 +33,7 @@ class register_type:
                 out = func(*args, **kwargs)
                 out = self._out_transformer(out)
             except:
-                out = inp_mapping[self._in_transformer.__name__]
+                out = self._out_transformer(inp_mapping[self._in_transformer.__name__])
             return out
         return wrapped
 
