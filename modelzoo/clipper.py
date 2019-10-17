@@ -125,6 +125,26 @@ def image_r18(inp: Image, metadata):
         }
     ).astype(str)
     return df
+
+@register_type(image_input, table_output)
+def ensemble(inp: Image, metadata):
+    from PIL import Image
+    from modelzoo.admin import ModelZooConnection
+    from modelzoo.sugar import table_input
+    import numpy as np
+    import pandas as pd
+    conn = ModelZooConnection(address="52.40.213.134:9000")
+    models = ['ImageNet Classification ResNet18', 'ImageNet Classification ResNet50',
+              'ImageNet Classification ResNet152']
+    tables = []
+    for m in models:
+        payload = conn.image_inference(m, inp)
+        tables.append(sugar.table_input(payload.table))
+    new_df = pd.concat(tables,sort=True).reset_index().drop('index', axis=1)
+    new_df.probability = new_df.probability.astype(np.float32)
+    new_df.probability /= np.sum(new_df.probability.values)
+    new_df = new_df.drop(columns='rank')
+    return new_df
     
 @register_type(image_input, table_output)
 def image_r152(inp: Image, metadata):
