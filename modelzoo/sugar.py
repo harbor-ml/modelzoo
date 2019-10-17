@@ -27,13 +27,13 @@ class register_type:
     def __call__(self, func):
         @wraps(func)
         def wrapped(inp, metadata):
-            try:
-                args = (self._in_transformer(inp),)
-                kwargs = {self.metadata_name: metadata}
-                out = func(*args, **kwargs)
-                out = self._out_transformer(out)
-            except:
-                out = inp_mapping[self._in_transformer.__name__]
+            # try:
+            args = (self._in_transformer(inp),)
+            kwargs = {self.metadata_name: metadata}
+            out = func(*args, **kwargs)
+            out = self._out_transformer(out)
+            # except:
+            #     out = inp_mapping[self._in_transformer.__name__]
             return out
         return wrapped
 
