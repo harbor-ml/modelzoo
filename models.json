@@ -18,7 +18,7 @@
       { "key": "service_type", "value": "clipper" },
       {
         "key": "clipper_url",
-        "value": "http://172.31.47.82:10000/image_r50/predict"
+        "value": "http://ec2-34-220-18-51.us-west-2.compute.amazonaws.com:10000/image_r50/predict"
       },
       { "key": "input_type", "value": "image" },
       { "key": "output_type", "value": "table" },
@@ -34,7 +34,7 @@
       { "key": "service_type", "value": "clipper" },
       {
         "key": "clipper_url",
-        "value": "http://172.31.47.82:10000/gpt2/predict"
+        "value": "http://ec2-34-220-18-51.us-west-2.compute.amazonaws.com:10000/gpt2/predict"
       },
       { "key": "input_type", "value": "text" },
       { "key": "output_type", "value": "text" },
@@ -50,7 +50,7 @@
       { "key": "service_type", "value": "clipper" },
       {
         "key": "clipper_url",
-        "value": "http://172.31.47.82:10000/biggan/predict"
+        "value": "http://ec2-34-220-18-51.us-west-2.compute.amazonaws.com:10000/biggan/predict"
       },
       { "key": "input_type", "value": "text" },
       { "key": "output_type", "value": "image" },
@@ -66,7 +66,7 @@
       { "key": "service_type", "value": "clipper" },
       {
         "key": "clipper_url",
-        "value": "http://172.31.47.82:10000/xlnet/predict"
+        "value": "http://ec2-34-220-18-51.us-west-2.compute.amazonaws.com:10000/xlnet/predict"
       },
       { "key": "input_type", "value": "text" },
       { "key": "output_type", "value": "text" },
@@ -82,7 +82,7 @@
       { "key": "service_type", "value": "clipper" },
       {
         "key": "clipper_url",
-        "value": "http://172.31.47.82:10000/image_r18/predict"
+        "value": "http://ec2-34-220-18-51.us-west-2.compute.amazonaws.com:10000/image_r18/predict"
       },
       { "key": "input_type", "value": "image" },
       { "key": "output_type", "value": "table" },
@@ -98,7 +98,7 @@
       { "key": "service_type", "value": "clipper" },
       {
         "key": "clipper_url",
-        "value": "http://172.31.47.82:10000/image_r152/predict"
+        "value": "http://ec2-34-220-18-51.us-west-2.compute.amazonaws.com:10000/image_r152/predict"
       },
       { "key": "input_type", "value": "image" },
       { "key": "output_type", "value": "table" },
@@ -114,7 +114,7 @@
       { "key": "service_type", "value": "clipper" },
       {
         "key": "clipper_url",
-        "value": "http://172.31.47.82:10000/faster/predict"
+        "value": "http://ec2-34-220-18-51.us-west-2.compute.amazonaws.com:10000/faster/predict"
       },
       { "key": "input_type", "value": "image" },
       { "key": "output_type", "value": "table" },
@@ -130,7 +130,7 @@
       { "key": "service_type", "value": "clipper" },
       {
         "key": "clipper_url",
-        "value": "http://172.31.47.82:10000/keypoint/predict"
+        "value": "http://ec2-34-220-18-51.us-west-2.compute.amazonaws.com:10000/keypoint/predict"
       },
       { "key": "input_type", "value": "image" },
       { "key": "output_type", "value": "table" },
@@ -146,7 +146,7 @@
       { "key": "service_type", "value": "clipper" },
       {
         "key": "clipper_url",
-        "value": "http://172.31.47.82:10000/mask/predict"
+        "value": "http://ec2-34-220-18-51.us-west-2.compute.amazonaws.com:10000/mask/predict"
       },
       { "key": "input_type", "value": "image" },
       { "key": "output_type", "value": "table" },
