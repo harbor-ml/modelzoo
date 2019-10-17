@@ -139,7 +139,7 @@ def ensemble(inp: Image, metadata):
     tables = []
     for m in models:
         payload = conn.image_inference(m, inp)
-        tables.append(sugar.table_input(payload.table))
+        tables.append(table_input(payload.table))
     new_df = pd.concat(tables,sort=True).reset_index().drop('index', axis=1)
     new_df.probability = new_df.probability.astype(np.float32)
     new_df.probability /= np.sum(new_df.probability.values)
@@ -365,7 +365,7 @@ def ok():
 
 @app.route("/<app_name>/predict", methods=["POST"])
 def clipper(app_name):
-    if app_name in ["image_r50", "image_r18", "image_r152", "keypoint", "mask", "faster"]:
+    if app_name in ["image_r50", "image_r18", "image_r152", "keypoint", "mask", "faster", "ensemble"]:
         if app_name == "image_r50":
             pred_func = image_r50
         elif app_name == "image_r18":
@@ -378,6 +378,8 @@ def clipper(app_name):
             pred_func = keypoint
         elif app_name == "faster":
             pred_func = faster
+        elif app_name == "ensemble":
+            pred_func = ensemble
         input_cls = pb.Image
     elif app_name in ['gpt2', 'xlnet', 'biggan']:
         if app_name == 'gpt2':
