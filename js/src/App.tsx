@@ -22,8 +22,8 @@ const App: FC = () => {
 
   const client = useMemo(() => {
     let newClient = new ModelzooServicePromiseClient(
-      // `${window.location.protocol}//${window.location.hostname}:8080`,
-      `http://${window.location.hostname}:8080`,
+      `${window.location.protocol}//${window.location.hostname}:8080`,
+      // `http://${window.location.hostname}:8080`,
       null,
       null
     );
