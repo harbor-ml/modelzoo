@@ -54,10 +54,14 @@ print("have keypoint")
 model_mask.eval()
 model_fast.eval()
 model_keypoint.eval()
+model_mask.cuda()
+model_fast.cuda()
+model_keypoint.cuda()
 print("Evaled all")
 print("GPT2 Time")
 tokenizerG = GPT2Tokenizer.from_pretrained('gpt2')
 modelG = GPT2LMHeadModel.from_pretrained('gpt2')
+modelG.to('cuda')
 print("Done")
 print("XLNet Time")
 tokenizerX = XLNetTokenizer.from_pretrained('xlnet-base-cased')
@@ -67,6 +71,7 @@ from pytorch_pretrained_biggan import (BigGAN, one_hot_from_names, truncated_noi
                                        convert_to_images)
 modelBG = BigGAN.from_pretrained('biggan-deep-256')
 
+modelX.to('cuda')
 print("All prep complete!")
 labels = {int(key):value for (key, value) in requests.get('https://s3.amazonaws.com/outcome-blog/imagenet/labels.json').json().items()}
 detect_labels = {int(key):value for (key, value) in requests.get('https://gist.githubusercontent.com/RehanSD/6f74a9992848e25658e091148ee20e17/raw/fae1f9f3ee0c3eb20ca9829e99cd8b616f22fa45/cocolabels.json').json().items()}
@@ -144,8 +149,8 @@ def image_r152(inp: Image, metadata):
 @register_type(image_input, table_output)
 def mask(inp: Image, metadata):
     image_tensor = torchvision.transforms.functional.to_tensor(inp)
-    output = model_mask([image_tensor])
-    labels = output[0]['labels'].numpy()
+    output = model_mask([image_tensor.cuda()])
+    labels = output[0]['labels'].cpu().numpy()
     labels = list(set([detect_labels[l] for l in labels]))
     df = pd.DataFrame(
         {
@@ -158,8 +163,8 @@ def mask(inp: Image, metadata):
 @register_type(image_input, table_output)
 def keypoint(inp: Image, metadata):
     image_tensor = torchvision.transforms.functional.to_tensor(inp)
-    output = model_keypoint([image_tensor])
-    labels = output[0]['labels'].numpy()
+    output = model_keypoint([image_tensor.cuda()])
+    labels = output[0]['labels'].cpu().numpy()
     labels = list(set([detect_labels[l] for l in labels]))
     df = pd.DataFrame(
         {
@@ -172,8 +177,8 @@ def keypoint(inp: Image, metadata):
 @register_type(image_input, table_output)
 def faster(inp: Image, metadata):
     image_tensor = torchvision.transforms.functional.to_tensor(inp)
-    output = model_fast([image_tensor])
-    labels = output[0]['labels'].numpy()
+    output = model_fast([image_tensor.cuda()])
+    labels = output[0]['labels'].cpu().numpy()
     labels = list(set([detect_labels[l] for l in labels]))
     df = pd.DataFrame(
         {
@@ -237,7 +242,7 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
         logits[indices_to_remove] = filter_value
     return logits
 def sample_sequence(model, length, context, num_samples=1, temperature=1, top_k=0, top_p=0.0, repetition_penalty=1.0,
-                    is_xlnet=False, is_xlm_mlm=False, xlm_mask_token=None, xlm_lang=None, device='cpu'):
+                    is_xlnet=False, is_xlm_mlm=False, xlm_mask_token=None, xlm_lang=None, device='cuda'):
     context = torch.tensor(context, dtype=torch.long, device=device)
     context = context.unsqueeze(0).repeat(num_samples, 1)
     generated = context
