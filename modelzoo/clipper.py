@@ -54,14 +54,24 @@ print("have keypoint")
 model_mask.eval()
 model_fast.eval()
 model_keypoint.eval()
+model_mask.cuda()
+model_fast.cuda()
+model_keypoint.cuda()
 print("Evaled all")
 print("GPT2 Time")
 tokenizerG = GPT2Tokenizer.from_pretrained('gpt2')
 modelG = GPT2LMHeadModel.from_pretrained('gpt2')
+modelG.to('cuda')
 print("Done")
 print("XLNet Time")
 tokenizerX = XLNetTokenizer.from_pretrained('xlnet-base-cased')
 modelX = XLNetLMHeadModel.from_pretrained('xlnet-base-cased')
+print("BigGan Time!")
+from pytorch_pretrained_biggan import (BigGAN, one_hot_from_names, truncated_noise_sample,
+                                       convert_to_images)
+modelBG = BigGAN.from_pretrained('biggan-deep-256')
+
+modelX.to('cuda')
 print("All prep complete!")
 labels = {int(key):value for (key, value) in requests.get('https://s3.amazonaws.com/outcome-blog/imagenet/labels.json').json().items()}
 detect_labels = {int(key):value for (key, value) in requests.get('https://gist.githubusercontent.com/RehanSD/6f74a9992848e25658e091148ee20e17/raw/fae1f9f3ee0c3eb20ca9829e99cd8b616f22fa45/cocolabels.json').json().items()}
@@ -139,8 +149,8 @@ def image_r152(inp: Image, metadata):
 @register_type(image_input, table_output)
 def mask(inp: Image, metadata):
     image_tensor = torchvision.transforms.functional.to_tensor(inp)
-    output = model_mask([image_tensor])
-    labels = output[0]['labels'].numpy()
+    output = model_mask([image_tensor.cuda()])
+    labels = output[0]['labels'].cpu().numpy()
     labels = list(set([detect_labels[l] for l in labels]))
     df = pd.DataFrame(
         {
@@ -153,8 +163,8 @@ def mask(inp: Image, metadata):
 @register_type(image_input, table_output)
 def keypoint(inp: Image, metadata):
     image_tensor = torchvision.transforms.functional.to_tensor(inp)
-    output = model_keypoint([image_tensor])
-    labels = output[0]['labels'].numpy()
+    output = model_keypoint([image_tensor.cuda()])
+    labels = output[0]['labels'].cpu().numpy()
     labels = list(set([detect_labels[l] for l in labels]))
     df = pd.DataFrame(
         {
@@ -167,8 +177,8 @@ def keypoint(inp: Image, metadata):
 @register_type(image_input, table_output)
 def faster(inp: Image, metadata):
     image_tensor = torchvision.transforms.functional.to_tensor(inp)
-    output = model_fast([image_tensor])
-    labels = output[0]['labels'].numpy()
+    output = model_fast([image_tensor.cuda()])
+    labels = output[0]['labels'].cpu().numpy()
     labels = list(set([detect_labels[l] for l in labels]))
     df = pd.DataFrame(
         {
@@ -177,6 +187,26 @@ def faster(inp: Image, metadata):
         }
     ).astype(str)
     return df
+
+@register_type(text_input, image_output)
+def biggan(inp: List[str], metadata):
+    truncation = 0.4
+    try:
+        class_vector = one_hot_from_names(inp, batch_size=len(inp))
+        noise_vector = truncated_noise_sample(truncation=truncation, batch_size=len(inp))
+        noise_vector = torch.from_numpy(noise_vector)
+        class_vector = torch.from_numpy(class_vector)
+        with torch.no_grad():
+            output = modelBG(noise_vector, class_vector, truncation)
+    except:
+        inp = ['cat']
+        class_vector = torch.from_numpy(one_hot_from_names(inp, batch_size=len(inp)))
+        noise_vector = torch.from_numpy(truncated_noise_sample(truncation=truncation, batch_size=len(inp)))
+        with torch.no_grad():
+            output = modelBG(noise_vector, class_vector, truncation)
+
+    return convert_to_images(output)[0]
+
 
 @register_type(image_input, table_output)
 def vision_classification(inp: Image, metadata):
@@ -215,7 +245,7 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
         logits[indices_to_remove] = filter_value
     return logits
 def sample_sequence(model, length, context, num_samples=1, temperature=1, top_k=0, top_p=0.0, repetition_penalty=1.0,
-                    is_xlnet=False, is_xlm_mlm=False, xlm_mask_token=None, xlm_lang=None, device='cpu'):
+                    is_xlnet=False, is_xlm_mlm=False, xlm_mask_token=None, xlm_lang=None, device='cuda'):
     context = torch.tensor(context, dtype=torch.long, device=device)
     context = context.unsqueeze(0).repeat(num_samples, 1)
     generated = context
@@ -327,9 +357,11 @@ def clipper(app_name):
         elif app_name == "faster":
             pred_func = faster
         input_cls = pb.Image
-    elif app_name in ['gpt2', 'xlnet']:
+    elif app_name in ['gpt2', 'xlnet', 'biggan']:
         if app_name == 'gpt2':
             pred_func = gpt2
+        elif app_name == 'biggan':
+            pred_func = biggan
         else:
             pred_func = xlnet
         input_cls = pb.Text

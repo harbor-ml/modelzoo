@@ -42,8 +42,8 @@ func CreateToken(db *gorm.DB) (*Token, error) {
 		Secret:         uuidVal.String(),
 		RestoredAt:     time.Now(),
 		RestoreEvery:   time.Minute * 1,
-		NumQueriesLeft: 50,
-		DefaultQuota:   50,
+		NumQueriesLeft: 60,
+		DefaultQuota:   60,
 	}
 	if err := db.Create(&token).Error; err != nil {
 		return nil, err
