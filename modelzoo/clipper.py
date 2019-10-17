@@ -180,19 +180,21 @@ def mask(inp: Image, metadata):
     ).astype(str)
     return df
 
-@register_type(image_input, table_output)
+@register_type(image_input, image_output)
 def keypoint(inp: Image, metadata):
+    from matplotlib import pyplot as plt
+    from io import StringIO
     image_tensor = torchvision.transforms.functional.to_tensor(inp)
     output = model_keypoint([image_tensor.cuda()])
-    labels = output[0]['labels'].cpu().numpy()
-    labels = list(set([detect_labels[l] for l in labels]))
-    df = pd.DataFrame(
-        {
-            "rank": list(range(1, len(labels)+1)),
-            "category": labels
-        }
-    ).astype(str)
-    return df
+    keypoints = output[0]['keypoints'].cpu().numpy()
+    plt.imshow(inp)
+    for group in keypoints:
+        plt.scatter(group[:, 0], group[:, 1], s=24, marker='.')
+    buffer = StringIO()
+    canvas = plt.get_current_fig_manager().canvas
+    canvas.draw()
+    pil_image = PIL.Image.frombytes('RGB', canvas.get_width_height(), canvas.tostring_rgb())
+    return pil_image
 
 @register_type(image_input, table_output)
 def faster(inp: Image, metadata):
