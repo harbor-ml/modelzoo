@@ -191,9 +191,9 @@ def faster(inp: Image, metadata):
 @register_type(text_input, image_output)
 def biggan(inp: List[str], metadata):
     truncation = 0.4
-    class_vector = one_hot_from_names(inp, batch_size=len(inp))
-    noise_vector = truncated_noise_sample(truncation=truncation, batch_size=len(inp))
     try:
+        class_vector = one_hot_from_names(inp, batch_size=len(inp))
+        noise_vector = truncated_noise_sample(truncation=truncation, batch_size=len(inp))
         noise_vector = torch.from_numpy(noise_vector)
         class_vector = torch.from_numpy(class_vector)
         with torch.no_grad():
