@@ -15,7 +15,7 @@ import pandas as pd
 imarray = np.random.rand(100,100,3) * 255
 im = Image.fromarray(imarray.astype('uint8')).convert('RGB')
 
-out_mapping = {"image_output": im, "table_output": pd.DataFrame({'status': "Failed"}), "text_output": ["default"]}
+out_mapping = {"image_output": im, "table_output": pd.DataFrame({'status': ["Inference Failed"]}), "text_output": ["default"]}
 
 # NOTE(simon): Metadata should be a single mutable state that's returned.
 class register_type:
