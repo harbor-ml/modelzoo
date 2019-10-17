@@ -125,6 +125,26 @@ def image_r18(inp: Image, metadata):
         }
     ).astype(str)
     return df
+
+@register_type(image_input, table_output)
+def ensemble(inp: Image, metadata):
+    from PIL import Image
+    from modelzoo.admin import ModelZooConnection
+    from modelzoo.sugar import table_input
+    import numpy as np
+    import pandas as pd
+    conn = ModelZooConnection(address="52.40.213.134:9000")
+    models = ['ImageNet Classification ResNet18', 'ImageNet Classification ResNet50',
+              'ImageNet Classification ResNet152']
+    tables = []
+    for m in models:
+        payload = conn.image_inference(m, inp)
+        tables.append(table_input(payload.table))
+    new_df = pd.concat(tables,sort=True).reset_index().drop('index', axis=1)
+    new_df.probability = new_df.probability.astype(np.float32)
+    new_df.probability /= np.sum(new_df.probability.values)
+    new_df = new_df.drop(columns='rank')
+    return new_df.astype(str)
     
 @register_type(image_input, table_output)
 def image_r152(inp: Image, metadata):
@@ -292,7 +312,7 @@ def gpt2(inp: List[str], metadata):
     texts = []
     for i in inp:
         context_tokens = tokenizerG.encode(i)
-        out = sample_sequence(model=modelG, context=context_tokens, length=20, temperature=0.7,top_k=0, top_p=0.9, repetition_penalty=1.0)
+        out = sample_sequence(model=modelG, context=context_tokens, length=20, temperature=0.7,top_k=0, top_p=0.9, repetition_penalty=1.0, device='cuda')
         out = out[0, len(context_tokens):].tolist()
         text = tokenizerG.decode(out, clean_up_tokenization_spaces=True, skip_special_tokens=True)
         texts.append(text)
@@ -303,7 +323,7 @@ def xlnet(inp: List[str], metadata):
     texts = []
     for i in inp:
         context_tokens = tokenizerX.encode(PADDING_TEXT+i)
-        out = sample_sequence(model=modelX, context=context_tokens, length=20, temperature=0.7,top_k=0, top_p=0.9, repetition_penalty=1.0, is_xlnet=True)
+        out = sample_sequence(model=modelX, context=context_tokens, length=20, temperature=0.7,top_k=0, top_p=0.9, repetition_penalty=1.0, is_xlnet=True, device='cuda')
         out = out[0, len(context_tokens):].tolist()
         text = tokenizerX.decode(out, clean_up_tokenization_spaces=True, skip_special_tokens=True)
         texts.append(text)
@@ -343,7 +363,7 @@ def ok():
 
 @app.route("/<app_name>/predict", methods=["POST"])
 def clipper(app_name):
-    if app_name in ["image_r50", "image_r18", "image_r152", "keypoint", "mask", "faster"]:
+    if app_name in ["image_r50", "image_r18", "image_r152", "keypoint", "mask", "faster", "ensemble"]:
         if app_name == "image_r50":
             pred_func = image_r50
         elif app_name == "image_r18":
@@ -356,6 +376,8 @@ def clipper(app_name):
             pred_func = keypoint
         elif app_name == "faster":
             pred_func = faster
+        elif app_name == "ensemble":
+            pred_func = ensemble
         input_cls = pb.Image
     elif app_name in ['gpt2', 'xlnet', 'biggan']:
         if app_name == 'gpt2':

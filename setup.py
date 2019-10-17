@@ -5,7 +5,7 @@ with open("modelzoo/README.md", "r") as fh:
 
 setuptools.setup(
     name="modelzoo",
-    version="0.3.2",
+    version="0.3.3",
     author="Rehan Durrani",
     author_email="rdurrani@berkeley.edu",
     description="Python package for querying ModelZoo.Live",
