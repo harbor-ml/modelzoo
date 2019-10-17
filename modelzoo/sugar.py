@@ -15,7 +15,7 @@ import pandas as pd
 imarray = np.random.rand(100,100,3) * 255
 im = Image.fromarray(imarray.astype('uint8')).convert('RGB')
 
-inp_mapping = {image_input: im, table_input: pd.DataFrame(), text_input: ["default"]}
+inp_mapping = {"image_input": im, "table_input": pd.DataFrame(), "text_input": ["default"]}
 
 # NOTE(simon): Metadata should be a single mutable state that's returned.
 class register_type:
