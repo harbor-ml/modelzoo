@@ -14,7 +14,8 @@ export const TagToColor: Record<string, string> = {
   framework: "magenta",
   category: "cyan",
   input_type: "blue",
-  output_type: "purple"
+  output_type: "purple",
+  service_type: "green"
 };
 
 // TODO: use upsplash /daily?search_term API

@@ -1,4 +1,4 @@
-import { Divider, message, Result, Spin, Typography } from "antd";
+import { Divider, message, Result, Spin, Typography, Col, Row } from "antd";
 import _ from "lodash";
 import { ModelzooServicePromiseClient } from "protos/services_grpc_web_pb";
 import { Empty, Image, Payload, PayloadType, Text } from "protos/services_pb";
@@ -6,7 +6,7 @@ import React, { Dispatch, FC, useMemo, useReducer } from "react";
 import { useParams } from "react-router-dom";
 import { ImageInput, ImageOutput } from "../Components/Image";
 import { TableOutput } from "../Components/Table";
-import { TagsSet } from "../Components/Tags";
+import { TagsSet, StatsSet } from "../Components/Tags";
 import { TextsInput, TextsOutput } from "../Components/Texts";
 import { ModelObject, parseModels } from "../Utils/ProtoUtil";
 
@@ -35,6 +35,7 @@ interface ModelInferenceState {
   errorElement: JSX.Element;
   metadataElement: JSX.Element;
   inputElement: JSX.Element;
+  displayElement: JSX.Element;
   outputElement: JSX.Element;
 }
 
@@ -52,6 +53,7 @@ const modelInitialState: ModelInferenceState = {
   errorElement: <div></div>,
   metadataElement: <div></div>,
   inputElement: <div></div>,
+  displayElement: <div></div>,
   outputElement: <div></div>
 };
 
@@ -61,7 +63,8 @@ enum ModelActionType {
   SetModelTypes,
   SetInput,
   SetOutputLoading,
-  SetOutputResult
+  SetOutputResult,
+  SetDisplayResult
 }
 
 interface ModelAction {
@@ -80,6 +83,7 @@ interface SetPayloadAction extends ModelAction {
   payload: Payload;
 }
 type SetInputAction = SetPayloadAction;
+type SetDisplayAction = SetPayloadAction;
 type SetOutputAction = SetPayloadAction;
 type ModelActionUnion =
   | SetModelNameAction
@@ -157,13 +161,24 @@ function reducer(
 
       return {
         ...state,
-        metadataElement: <TagsSet model={modelFound} showAll={true} />,
+        metadataElement: (
+          <div>
+            <StatsSet model={modelFound} showAll={true} />
+            <TagsSet model={modelFound} showAll={true} />
+            <Divider></Divider>
+          </div>
+        ),
         inputElement: inputElement,
         outputType: outputType,
         inputType: inputType
       };
 
     case ModelActionType.SetInput:
+      state.dispatch!({
+        type: ModelActionType.SetDisplayResult,
+        payload: (action as SetInputAction).payload
+      });
+
       state
         .client!.inference((action as SetInputAction).payload, undefined)
         .then(resp =>
@@ -180,6 +195,42 @@ function reducer(
         ...state,
         outputElement: <Spin></Spin>
       };
+      break;
+    case ModelActionType.SetDisplayResult:
+      let displayPayload = (action as SetDisplayAction).payload;
+      switch (state.inputType) {
+        case "image":
+          return {
+            ...state,
+            displayElement: (
+              <ImageOutput
+                image_uri={displayPayload.getImage()!.getImageDataUrl()}
+              ></ImageOutput>
+            )
+          };
+        case "text":
+          return {
+            ...state,
+            displayElement: (
+              <TextsOutput
+                texts={displayPayload.getText()!.getTextsList()}
+              ></TextsOutput>
+            )
+          };
+        case "table":
+          return {
+            ...state,
+            displayElement: (
+              <TableOutput
+                tableProto={displayPayload.getTable()!}
+              ></TableOutput>
+            )
+          };
+        default:
+          message.error("Unknown input type " + state.inputType);
+          return state;
+      }
+      break;
     case ModelActionType.SetOutputResult:
       let payload = (action as SetOutputAction).payload;
       switch (state.outputType) {
@@ -285,7 +336,11 @@ export const Model: FC<ModelProps> = props => {
       {state.errorElement}
       {state.metadataElement}
       {state.inputElement}
-      {state.outputElement}
+      <Divider></Divider>
+      <Row>
+        <Col span={8}>{state.displayElement}</Col>
+        <Col span={12}>{state.outputElement}</Col>
+      </Row>
     </div>
   );
 

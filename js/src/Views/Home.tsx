@@ -7,7 +7,7 @@ import { FeaturedModelTag } from "../Components/Tags";
 import { ModelObject, parseModels } from "../Utils/ProtoUtil";
 
 import { Link } from "react-router-dom";
-import { TagsSet } from "../Components/Tags";
+import { TagsSet, StatsSet } from "../Components/Tags";
 
 interface HomeProps {
   models: ModelObject[];
@@ -33,19 +33,14 @@ export const Catalog: FC<CatalogProps> = props => {
 
   let cards = models.map((model: ModelObject, index, arr) => {
     return (
-      <Col span={12}>
+      <Col span={8}>
         <Card
           title={model.name}
-          style={{ margin: "4px" }}
+          style={{ margin: "2px" }}
           extra={<Link to={`model/${model.name}`}>Test it</Link>}
         >
           <Row>
-            <Col span={8}>
-              <Statistic title="Accuracy" value={82.8} suffix={"%"} />
-            </Col>
-            <Col span={8}>
-              <Statistic title="Mean Latency" value={50} suffix={"ms"} />
-            </Col>
+            <StatsSet model={model} showAll={false}></StatsSet>
           </Row>
           <TagsSet model={model} showAll={false}></TagsSet>
         </Card>

@@ -125,7 +125,7 @@ export const ImageOutput: FC<ImageOutputProps> = props => {
 
   return (
     <Card>
-      <img style={{ width: "40%" }} src={image_uri} alt="Prediction Result" />
+      <img style={{ width: "60%" }} src={image_uri} alt="Prediction Result" />
     </Card>
   );
 };
