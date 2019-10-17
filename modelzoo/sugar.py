@@ -10,7 +10,12 @@ from w3lib.url import parse_data_uri
 
 import pandas as pd
 import modelzoo.protos.services_pb2 as pb
+import numpy as np
+import pandas as pd
+imarray = np.random.rand(100,100,3) * 255
+im = Image.fromarray(imarray.astype('uint8')).convert('RGB')
 
+inp_mapping = {image_input: im, table_input: pd.DataFrame(), text_input: ["default"]}
 
 # NOTE(simon): Metadata should be a single mutable state that's returned.
 class register_type:
@@ -22,10 +27,14 @@ class register_type:
     def __call__(self, func):
         @wraps(func)
         def wrapped(inp, metadata):
-            args = (self._in_transformer(inp),)
-            kwargs = {self.metadata_name: metadata}
-            out = func(*args, **kwargs)
-            return self._out_transformer(out)
+            try:
+                args = (self._in_transformer(inp),)
+                kwargs = {self.metadata_name: metadata}
+                out = func(*args, **kwargs)
+                out = self._out_transformer(out)
+            except:
+                out = inp_mapping[self._in_transformer]
+            return out
         return wrapped
 
 
