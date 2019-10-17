@@ -186,7 +186,7 @@ def keypoint(inp: Image, metadata):
     from io import StringIO
     image_tensor = torchvision.transforms.functional.to_tensor(inp)
     output = model_keypoint([image_tensor.cuda()])
-    keypoints = output[0]['keypoints'].cpu().numpy()
+    keypoints = output[0]['keypoints'].cpu().detach().numpy()
     plt.imshow(inp)
     for group in keypoints:
         plt.scatter(group[:, 0], group[:, 1], s=24, marker='.')
