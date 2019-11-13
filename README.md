@@ -5,7 +5,7 @@ ModelZoo.Live consists of three layers - a frontend UI written in JavaScript, a 
 
 It can be used to share and keep track of ML models across teams within your organization, and to organize metrics about your models. 
 
-For more info, about ModelZoo.Live, as well as what the team hopes it can do for you, check out [this](https://youtu.be/nNXusFAq4p8) talk. Slides will be posted shortly.
+For more info, about ModelZoo.Live, as well as what the team hopes it can do for you, check out [this](https://youtu.be/nNXusFAq4p8) talk. The corresponding slides can be found [here](https://drive.google.com/drive/folders/10ChH0zbmZOALImtQam6_jLK8ruJf2Swr). 
 
 ## Go
 To seed the model database, cd into `modelzoo/go`, run `go build` and finally `./go seed --data filename`, where `filename` is a JSON file containing your seed data. Please check this [example](models.json) to get an idea for how this file should look.
