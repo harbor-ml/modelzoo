@@ -3,12 +3,12 @@ import io
 import mimetypes
 from functools import wraps
 from typing import List
-from google.protobuf import json_format
 
+import pandas as pd
+from google.protobuf import json_format
 from PIL import Image
 from w3lib.url import parse_data_uri
 
-import pandas as pd
 import model_io.protos.services_pb2 as pb
 
 

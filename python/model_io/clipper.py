@@ -2,16 +2,17 @@ import base64
 import io
 import json
 import mimetypes
-import numpy as np
-
-import pandas as pd
-import numpy as np
-from flask import Flask, jsonify, request, g
-from flask_cors import CORS
-from PIL import Image
 from typing import List
-from google.protobuf import json_format
+
+import numpy as np
+import pandas as pd
 import requests
+import torch
+from flask import Flask, g, jsonify, request
+from flask_cors import CORS
+from google.protobuf import json_format
+from PIL import Image
+from torchvision import transforms
 
 import model_io.protos.services_pb2 as pb
 from model_io.sugar import (
@@ -25,22 +26,30 @@ from model_io.sugar import (
 
 app = Flask(__name__)
 CORS(app)
-import torch
-model18 = torch.hub.load('pytorch/vision', 'resnet18', pretrained=True)
-model50 = torch.hub.load('pytorch/vision', 'resnet50', pretrained=True)
-model152 = torch.hub.load('pytorch/vision', 'resnet152', pretrained=True)
-model18.eval()
-model50.eval()
-model152.eval()
-from torchvision import transforms
-preprocess = transforms.Compose([
-    transforms.Resize(256),
-    transforms.CenterCrop(224),
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-])
 
-labels = {int(key):value for (key, value) in requests.get('https://s3.amazonaws.com/outcome-blog/imagenet/labels.json').json().items()}
+# Load basic models
+model18 = torch.hub.load("pytorch/vision", "resnet18", pretrained=True).eval()
+model50 = torch.hub.load("pytorch/vision", "resnet50", pretrained=True).eval()
+model152 = torch.hub.load("pytorch/vision", "resnet152", pretrained=True).eval()
+
+preprocess = transforms.Compose(
+    [
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    ]
+)
+
+labels = {
+    int(key): value
+    for (key, value) in requests.get(
+        "https://s3.amazonaws.com/outcome-blog/imagenet/labels.json"
+    )
+    .json()
+    .items()
+}
+
 
 @register_type(image_input, table_output)
 def image_r50(inp: Image, metadata):
@@ -52,14 +61,12 @@ def image_r50(inp: Image, metadata):
     top3 = np.argsort(proba)[-3:][::-1]
     l = [labels[i] for i in top3]
     probs = [proba[i] for i in top3]
-    df = pd.DataFrame(
-        {
-            "rank": [1, 2, 3],
-            "probability": probs,
-            "category": l
-        }
-    ).astype(str)
+    df = pd.DataFrame({"rank": [1, 2, 3], "probability": probs, "category": l}).astype(
+        str
+    )
     return df
+
+
 @register_type(image_input, table_output)
 def image_r18(inp: Image, metadata):
     input_tensor = preprocess(inp)
@@ -70,14 +77,12 @@ def image_r18(inp: Image, metadata):
     top3 = np.argsort(proba)[-3:][::-1]
     l = [labels[i] for i in top3]
     probs = [proba[i] for i in top3]
-    df = pd.DataFrame(
-        {
-            "rank": [1, 2, 3],
-            "probability": probs,
-            "category": l
-        }
-    ).astype(str)
+    df = pd.DataFrame({"rank": [1, 2, 3], "probability": probs, "category": l}).astype(
+        str
+    )
     return df
+
+
 @register_type(image_input, table_output)
 def image_r152(inp: Image, metadata):
     input_tensor = preprocess(inp)
@@ -88,14 +93,12 @@ def image_r152(inp: Image, metadata):
     top3 = np.argsort(proba)[-3:][::-1]
     l = [labels[i] for i in top3]
     probs = [proba[i] for i in top3]
-    df = pd.DataFrame(
-        {
-            "rank": [1, 2, 3],
-            "probability": probs,
-            "category": l
-        }
-    ).astype(str)
+    df = pd.DataFrame({"rank": [1, 2, 3], "probability": probs, "category": l}).astype(
+        str
+    )
     return df
+
+
 @register_type(image_input, table_output)
 def vision_classification(inp: Image, metadata):
     df = pd.DataFrame(
@@ -125,7 +128,6 @@ def image_captioning(inp: Image, metadata):
     return ["this is a cool image lol"]
 
 
-
 prediction_apps = dict(
     vision_classification=(vision_classification, pb.Image),
     text_generation=(text_generation, pb.Text),
@@ -144,9 +146,11 @@ def generate_clipper_resp(
         "query_id": 1,
     }
 
+
 @app.route("/")
 def ok():
     return "OK"
+
 
 @app.route("/<app_name>/predict", methods=["POST"])
 def clipper(app_name):
@@ -162,7 +166,7 @@ def clipper(app_name):
         pred_func, input_cls = prediction_apps[app_name]
     request_proto = input_cls()
     request_proto.ParseFromString(base64.b64decode(request.json["input"]))
-    
+
     request_proto_dict = json_format.MessageToDict(request_proto)
     metadata_dict = request_proto_dict.get("metadata", dict())
     result_proto = pred_func(request_proto, metadata_dict)
