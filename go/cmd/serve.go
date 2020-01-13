@@ -14,7 +14,7 @@ var serveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// Pass a do-nothing ctx for serving
 		ctx := context.Background()
-		server.ServeForever(ctx, false, 9000)
+		server.ServeForever(ctx, false, 9000, "")
 	},
 }
 

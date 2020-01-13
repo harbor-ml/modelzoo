@@ -1,5 +1,10 @@
 # Our binary name
+go/modelzoo_server
+# Just in case it was compiled without a name
 go/go
+# Vencor code should be ignored, following python and node's tradition
+go/vendor
+
 # Created by https://www.gitignore.io/api/go,node,python
 # Edit at https://www.gitignore.io/?templates=go,node,python
 

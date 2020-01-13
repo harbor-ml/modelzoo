@@ -3,6 +3,7 @@ package server
 import (
 	"bytes"
 	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -28,4 +29,11 @@ func postJSON(url string, payload map[string]string) (message map[string]interfa
 
 	json.NewDecoder(resp.Body).Decode(&message)
 	return
+}
+
+// CreateTempFile generate a temporary file
+func CreateTempFile(pattern string) string {
+	tmpfile, _ := ioutil.TempFile("", pattern)
+	defer tmpfile.Close()
+	return tmpfile.Name()
 }

@@ -20,7 +20,7 @@ import (
 )
 
 // ServeForever runs?
-func ServeForever(cancelCtx context.Context, public bool, port int) {
+func ServeForever(cancelCtx context.Context, public bool, port int, dbPath string) {
 	lis, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%d", port))
 	panicIf(err)
 
@@ -34,7 +34,11 @@ func ServeForever(cancelCtx context.Context, public bool, port int) {
 		dbURL = "host=34.213.216.228 port=5432 user=modelzoo"
 	} else {
 		dbType = "sqlite3"
-		dbURL = "/tmp/modelzoo.db"
+		if dbPath == "" {
+			dbURL = CreateTempFile("*.db")
+		} else {
+			dbURL = dbPath
+		}
 	}
 
 	db, err := gorm.Open(dbType, dbURL)

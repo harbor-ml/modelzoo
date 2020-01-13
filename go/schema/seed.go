@@ -33,13 +33,13 @@ import (
 // 	Models []ModelInfo `json:"models"`
 // }
 
-func Seed(filename string) {
+// Seed the db
+func Seed(filename string, dbPath string) {
 	// Use modelzoo package so package registration is called
 	var _ modelzoo.Image
 
 	// Open SQLite3 DB on local
-	os.Remove("/tmp/modelzoo.db")
-	db, err := gorm.Open("sqlite3", "/tmp/modelzoo.db")
+	db, err := gorm.Open("sqlite3", dbPath)
 	if err != nil {
 		log.Fatal(err)
 	}
