@@ -1,1 +1,9 @@
 w3lib
+flask_cors
+flask
+google
+google-api-core
+grpcio
+Pillow
+numpy
+pandas
