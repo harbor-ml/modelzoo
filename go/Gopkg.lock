@@ -26,6 +26,52 @@
   version = "v1.4.7"
 
 [[projects]]
+  digest = "1:57ae8919194013fb07b8390fb8a32e700c12fdab96e8dc4bb15d5fe45dc43245"
+  name = "github.com/gobuffalo/envy"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "dc9565002201aca1286f8d6262f5cd568226562a"
+  version = "v1.8.1"
+
+[[projects]]
+  digest = "1:4be32eaa2aff0bac6ccb3cacd9a84b3bc79c1f8ec00765b03d4a8f5cc542cdaa"
+  name = "github.com/gobuffalo/logger"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "fe10b71a76d5acb502f99cd88d1fd28062906dac"
+  version = "v1.0.3"
+
+[[projects]]
+  digest = "1:40849e8495ef81a84ff335ef65e23d33671b61e60e9db464fbab55f19f43f120"
+  name = "github.com/gobuffalo/packd"
+  packages = [
+    ".",
+    "internal/takeon/github.com/markbates/errx",
+  ]
+  pruneopts = "UT"
+  revision = "54ea459691466cfb630ccc276723fe3963f3e9d5"
+  version = "v0.3.0"
+
+[[projects]]
+  digest = "1:d9bb9cf750ff72f31e893a47a18ac0c802fa3abcd66befe1422069d67eeba069"
+  name = "github.com/gobuffalo/packr"
+  packages = [
+    "v2",
+    "v2/file",
+    "v2/file/resolver",
+    "v2/file/resolver/encoding/hex",
+    "v2/internal/takeon/github.com/karrick/godirwalk",
+    "v2/internal/takeon/github.com/markbates/errx",
+    "v2/internal/takeon/github.com/markbates/oncer",
+    "v2/internal/takeon/github.com/markbates/safe",
+    "v2/jam/parser",
+    "v2/plog",
+  ]
+  pruneopts = "UT"
+  revision = "4b4a3c432a2e5a17b4f14c971179b40021c67530"
+  version = "v2.7.1"
+
+[[projects]]
   branch = "master"
   digest = "1:1ba1d79f2810270045c328ae5d674321db34e3aae468eb4233883b473c5c0467"
   name = "github.com/golang/glog"
@@ -159,6 +205,14 @@
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:ecd9aa82687cf31d1585d4ac61d0ba180e42e8a6182b85bd785fcca8dfeefc1b"
+  name = "github.com/joho/godotenv"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "23d116af351c84513e1946b527c88823e476be13"
+  version = "v1.3.0"
+
+[[projects]]
   digest = "1:31e761d97c76151dde79e9d28964a812c46efc5baee4085b86f68f0c654450de"
   name = "github.com/konsorten/go-windows-terminal-sequences"
   packages = ["."]
@@ -259,6 +313,18 @@
   version = "v0.0.8"
 
 [[projects]]
+  digest = "1:e09ada96a5a41deda4748b1659cc8953961799e798aea557257b56baee4ecaf3"
+  name = "github.com/rogpeppe/go-internal"
+  packages = [
+    "modfile",
+    "module",
+    "semver",
+  ]
+  pruneopts = "UT"
+  revision = "bc89b17ba21ce5b8a495fa55a94e3fe32ecf4ed8"
+  version = "v1.5.2"
+
+[[projects]]
   digest = "1:c5dfe46811af7e2eff7c11fc84b6c841520338613c056f659f262d5a4fb42fa8"
   name = "github.com/rs/cors"
   packages = ["."]
@@ -340,6 +406,14 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "d1553a71de50473073e188aa79cebf7f993f20fe"
+
+[[projects]]
+  branch = "master"
+  digest = "1:bbe51412d9915d64ffaa96b51d409e070665efc5194fcf145c4a27d4133107a4"
+  name = "golang.org/x/crypto"
+  packages = ["ssh/terminal"]
+  pruneopts = "UT"
+  revision = "61a87790db17894570dfb32dbaa0a4af9ce60cb4"
 
 [[projects]]
   branch = "master"
@@ -471,6 +545,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/gobuffalo/packr/v2",
     "github.com/golang/glog",
     "github.com/golang/protobuf/descriptor",
     "github.com/golang/protobuf/jsonpb",

@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/gobuffalo/packr/v2"
 	modelzoo "github.com/harbor-ml/modelzoo/go/protos"
 	"github.com/jinzhu/gorm"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -78,6 +79,9 @@ func ServeForever(cancelCtx context.Context, public bool, port int, dbPath strin
 		}).Info("Received grpc web proxy request")
 		wrappedGrpc.ServeHTTP(resp, req)
 	}))
+
+	box := packr.New("asserts", "../protos")
+	go http.ListenAndServe(":3020", http.FileServer(box))
 
 	s := &ProxyServer{db, newLogger}
 	modelzoo.RegisterModelzooServiceServer(grpcServer, s)
