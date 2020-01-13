@@ -3,13 +3,14 @@ import io
 import mimetypes
 from functools import wraps
 from typing import List
+import inspect
 from google.protobuf import json_format
 
 from PIL import Image
 from w3lib.url import parse_data_uri
 
 import pandas as pd
-import modelzoo.protos.services_pb2 as pb
+import modelzoo.protos.model_apis_pb2 as pb
 
 
 # NOTE(simon): Metadata should be a single mutable state that's returned.

@@ -13,10 +13,10 @@ from google.protobuf.message import (
     Message as google___protobuf___message___Message,
 )
 
-from protos.model_apis_pb2 import (
-    Image as protos___model_apis_pb2___Image,
-    Table as protos___model_apis_pb2___Table,
-    Text as protos___model_apis_pb2___Text,
+from modelzoo.protos.model_apis_pb2 import (
+    Image as modelzoo___protos___model_apis_pb2___Image,
+    Table as modelzoo___protos___model_apis_pb2___Table,
+    Text as modelzoo___protos___model_apis_pb2___Text,
 )
 
 from typing import (
@@ -203,20 +203,20 @@ class Payload(google___protobuf___message___Message):
     type = ... # type: PayloadType
 
     @property
-    def image(self) -> protos___model_apis_pb2___Image: ...
+    def image(self) -> modelzoo___protos___model_apis_pb2___Image: ...
 
     @property
-    def text(self) -> protos___model_apis_pb2___Text: ...
+    def text(self) -> modelzoo___protos___model_apis_pb2___Text: ...
 
     @property
-    def table(self) -> protos___model_apis_pb2___Table: ...
+    def table(self) -> modelzoo___protos___model_apis_pb2___Table: ...
 
     def __init__(self,
         *,
         type : typing___Optional[PayloadType] = None,
-        image : typing___Optional[protos___model_apis_pb2___Image] = None,
-        text : typing___Optional[protos___model_apis_pb2___Text] = None,
-        table : typing___Optional[protos___model_apis_pb2___Table] = None,
+        image : typing___Optional[modelzoo___protos___model_apis_pb2___Image] = None,
+        text : typing___Optional[modelzoo___protos___model_apis_pb2___Text] = None,
+        table : typing___Optional[modelzoo___protos___model_apis_pb2___Table] = None,
         ) -> None: ...
     @classmethod
     def FromString(cls, s: builtin___bytes) -> Payload: ...

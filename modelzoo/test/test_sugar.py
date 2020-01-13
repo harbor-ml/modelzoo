@@ -1,7 +1,7 @@
 import pytest
 from PIL import Image
 import pandas as pd
-import modelzoo.protos.services_pb2 as pb
+import modelzoo.protos.model_apis_pb2 as pb
 from modelzoo.sugar import (
     image_input,
     image_output,

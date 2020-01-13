@@ -3,7 +3,7 @@ import "google/api/annotations.proto";
 
 package modelzoo;
 
-import "protos/model_apis.proto";
+import "modelzoo/protos/model_apis.proto";
 
 // Web
 message Empty {}

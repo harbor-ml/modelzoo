@@ -20,12 +20,12 @@ proto-js:
 
 
 proto-py:
-	python -m grpc_tools.protoc \
+	cd ..; python -m grpc_tools.protoc \
 		$(protoc_include) \
 		--python_out=modelzoo \
 		--grpc_python_out=modelzoo \
 		--mypy_out=modelzoo \
-		protos/*.proto
+		modelzoo/protos/*.proto
 	
 proto-go:
 	PATH="$(GOPATH)/bin:$(PATH)" \
