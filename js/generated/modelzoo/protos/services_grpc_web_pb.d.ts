@@ -1,7 +1,7 @@
 import * as grpcWeb from 'grpc-web';
 
-import * as google_api_annotations_pb from '../google/api/annotations_pb';
-import * as protos_model_apis_pb from '../protos/model_apis_pb';
+import * as google_api_annotations_pb from '../../google/api/annotations_pb';
+import * as modelzoo_protos_model_apis_pb from '../../modelzoo/protos/model_apis_pb';
 
 import {
   Empty,

@@ -12,9 +12,9 @@ const grpc = {};
 grpc.web = require('grpc-web');
 
 
-var google_api_annotations_pb = require('../google/api/annotations_pb.js')
+var google_api_annotations_pb = require('../../google/api/annotations_pb.js')
 
-var protos_model_apis_pb = require('../protos/model_apis_pb.js')
+var modelzoo_protos_model_apis_pb = require('../../modelzoo/protos/model_apis_pb.js')
 const proto = {};
 proto.modelzoo = require('./services_pb.js');
 

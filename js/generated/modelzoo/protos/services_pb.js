@@ -1,4 +1,4 @@
-// source: protos/services.proto
+// source: modelzoo/protos/services.proto
 /**
  * @fileoverview
  * @enhanceable
@@ -12,10 +12,10 @@ var jspb = require('google-protobuf');
 var goog = jspb;
 var global = Function('return this')();
 
-var google_api_annotations_pb = require('../google/api/annotations_pb.js');
+var google_api_annotations_pb = require('../../google/api/annotations_pb.js');
 goog.object.extend(proto, google_api_annotations_pb);
-var protos_model_apis_pb = require('../protos/model_apis_pb.js');
-goog.object.extend(proto, protos_model_apis_pb);
+var modelzoo_protos_model_apis_pb = require('../../modelzoo/protos/model_apis_pb.js');
+goog.object.extend(proto, modelzoo_protos_model_apis_pb);
 goog.exportSymbol('proto.modelzoo.Empty', null, global);
 goog.exportSymbol('proto.modelzoo.ImageDownloadRequest', null, global);
 goog.exportSymbol('proto.modelzoo.ImageDownloadResponse', null, global);
@@ -1481,9 +1481,9 @@ proto.modelzoo.Payload.prototype.toObject = function(opt_includeInstance) {
 proto.modelzoo.Payload.toObject = function(includeInstance, msg) {
   var f, obj = {
     type: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    image: (f = msg.getImage()) && protos_model_apis_pb.Image.toObject(includeInstance, f),
-    text: (f = msg.getText()) && protos_model_apis_pb.Text.toObject(includeInstance, f),
-    table: (f = msg.getTable()) && protos_model_apis_pb.Table.toObject(includeInstance, f)
+    image: (f = msg.getImage()) && modelzoo_protos_model_apis_pb.Image.toObject(includeInstance, f),
+    text: (f = msg.getText()) && modelzoo_protos_model_apis_pb.Text.toObject(includeInstance, f),
+    table: (f = msg.getTable()) && modelzoo_protos_model_apis_pb.Table.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1525,18 +1525,18 @@ proto.modelzoo.Payload.deserializeBinaryFromReader = function(msg, reader) {
       msg.setType(value);
       break;
     case 2:
-      var value = new protos_model_apis_pb.Image;
-      reader.readMessage(value,protos_model_apis_pb.Image.deserializeBinaryFromReader);
+      var value = new modelzoo_protos_model_apis_pb.Image;
+      reader.readMessage(value,modelzoo_protos_model_apis_pb.Image.deserializeBinaryFromReader);
       msg.setImage(value);
       break;
     case 3:
-      var value = new protos_model_apis_pb.Text;
-      reader.readMessage(value,protos_model_apis_pb.Text.deserializeBinaryFromReader);
+      var value = new modelzoo_protos_model_apis_pb.Text;
+      reader.readMessage(value,modelzoo_protos_model_apis_pb.Text.deserializeBinaryFromReader);
       msg.setText(value);
       break;
     case 4:
-      var value = new protos_model_apis_pb.Table;
-      reader.readMessage(value,protos_model_apis_pb.Table.deserializeBinaryFromReader);
+      var value = new modelzoo_protos_model_apis_pb.Table;
+      reader.readMessage(value,modelzoo_protos_model_apis_pb.Table.deserializeBinaryFromReader);
       msg.setTable(value);
       break;
     default:
@@ -1580,7 +1580,7 @@ proto.modelzoo.Payload.serializeBinaryToWriter = function(message, writer) {
     writer.writeMessage(
       2,
       f,
-      protos_model_apis_pb.Image.serializeBinaryToWriter
+      modelzoo_protos_model_apis_pb.Image.serializeBinaryToWriter
     );
   }
   f = message.getText();
@@ -1588,7 +1588,7 @@ proto.modelzoo.Payload.serializeBinaryToWriter = function(message, writer) {
     writer.writeMessage(
       3,
       f,
-      protos_model_apis_pb.Text.serializeBinaryToWriter
+      modelzoo_protos_model_apis_pb.Text.serializeBinaryToWriter
     );
   }
   f = message.getTable();
@@ -1596,7 +1596,7 @@ proto.modelzoo.Payload.serializeBinaryToWriter = function(message, writer) {
     writer.writeMessage(
       4,
       f,
-      protos_model_apis_pb.Table.serializeBinaryToWriter
+      modelzoo_protos_model_apis_pb.Table.serializeBinaryToWriter
     );
   }
 };
@@ -1626,7 +1626,7 @@ proto.modelzoo.Payload.prototype.setType = function(value) {
  */
 proto.modelzoo.Payload.prototype.getImage = function() {
   return /** @type{?proto.modelzoo.Image} */ (
-    jspb.Message.getWrapperField(this, protos_model_apis_pb.Image, 2));
+    jspb.Message.getWrapperField(this, modelzoo_protos_model_apis_pb.Image, 2));
 };
 
 
@@ -1663,7 +1663,7 @@ proto.modelzoo.Payload.prototype.hasImage = function() {
  */
 proto.modelzoo.Payload.prototype.getText = function() {
   return /** @type{?proto.modelzoo.Text} */ (
-    jspb.Message.getWrapperField(this, protos_model_apis_pb.Text, 3));
+    jspb.Message.getWrapperField(this, modelzoo_protos_model_apis_pb.Text, 3));
 };
 
 
@@ -1700,7 +1700,7 @@ proto.modelzoo.Payload.prototype.hasText = function() {
  */
 proto.modelzoo.Payload.prototype.getTable = function() {
   return /** @type{?proto.modelzoo.Table} */ (
-    jspb.Message.getWrapperField(this, protos_model_apis_pb.Table, 4));
+    jspb.Message.getWrapperField(this, modelzoo_protos_model_apis_pb.Table, 4));
 };
 
 

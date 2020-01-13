@@ -1,7 +1,7 @@
 import * as jspb from "google-protobuf"
 
-import * as google_api_annotations_pb from '../google/api/annotations_pb';
-import * as protos_model_apis_pb from '../protos/model_apis_pb';
+import * as google_api_annotations_pb from '../../google/api/annotations_pb';
+import * as modelzoo_protos_model_apis_pb from '../../modelzoo/protos/model_apis_pb';
 
 export class Empty extends jspb.Message {
   serializeBinary(): Uint8Array;
@@ -163,18 +163,18 @@ export class Payload extends jspb.Message {
   getType(): PayloadType;
   setType(value: PayloadType): void;
 
-  getImage(): protos_model_apis_pb.Image | undefined;
-  setImage(value?: protos_model_apis_pb.Image): void;
+  getImage(): modelzoo_protos_model_apis_pb.Image | undefined;
+  setImage(value?: modelzoo_protos_model_apis_pb.Image): void;
   hasImage(): boolean;
   clearImage(): void;
 
-  getText(): protos_model_apis_pb.Text | undefined;
-  setText(value?: protos_model_apis_pb.Text): void;
+  getText(): modelzoo_protos_model_apis_pb.Text | undefined;
+  setText(value?: modelzoo_protos_model_apis_pb.Text): void;
   hasText(): boolean;
   clearText(): void;
 
-  getTable(): protos_model_apis_pb.Table | undefined;
-  setTable(value?: protos_model_apis_pb.Table): void;
+  getTable(): modelzoo_protos_model_apis_pb.Table | undefined;
+  setTable(value?: modelzoo_protos_model_apis_pb.Table): void;
   hasTable(): boolean;
   clearTable(): void;
 
@@ -191,9 +191,9 @@ export class Payload extends jspb.Message {
 export namespace Payload {
   export type AsObject = {
     type: PayloadType,
-    image?: protos_model_apis_pb.Image.AsObject,
-    text?: protos_model_apis_pb.Text.AsObject,
-    table?: protos_model_apis_pb.Table.AsObject,
+    image?: modelzoo_protos_model_apis_pb.Image.AsObject,
+    text?: modelzoo_protos_model_apis_pb.Text.AsObject,
+    table?: modelzoo_protos_model_apis_pb.Table.AsObject,
   }
 
   export enum PayloadCase { 

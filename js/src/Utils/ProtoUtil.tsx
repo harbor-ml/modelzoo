@@ -1,4 +1,4 @@
-import { Model as pb_Model, KVPair } from "protos/services_pb";
+import { Model as pb_Model, KVPair } from "js/generated/modelzoo/protos/services_pb";
 import _ from "lodash";
 
 export interface ModelObject {

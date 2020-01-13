@@ -1,4 +1,4 @@
-// source: protos/model_apis.proto
+// source: modelzoo/protos/model_apis.proto
 /**
  * @fileoverview
  * @enhanceable

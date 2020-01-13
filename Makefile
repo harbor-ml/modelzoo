@@ -12,11 +12,11 @@ protoc_include = -I/usr/local/include -I . \
   		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis 
 
 proto-js:
-	protoc \
+	cd ..; protoc \
 		$(protoc_include) \
-		--js_out=import_style=commonjs,binary:js \
-		--grpc-web_out=import_style=commonjs+dts,mode=grpcwebtext:js \
-		protos/*.proto 
+		--js_out=import_style=commonjs,binary:modelzoo/js/generated \
+		--grpc-web_out=import_style=commonjs+dts,mode=grpcwebtext:modelzoo/js/generated \
+		modelzoo/protos/*.proto google/api/annotations.proto google/api/http.proto
 
 
 proto-py:
@@ -28,16 +28,16 @@ proto-py:
 		modelzoo/protos/*.proto
 	
 proto-go:
-	PATH="$(GOPATH)/bin:$(PATH)" \
-	protoc \
+	cd ..; protoc \
 		$(protoc_include) \
-  		--go_out=plugins=grpc,paths=source_relative:go \
-		--grpc-gateway_out=logtostderr=true,paths=source_relative:go \
-        --swagger_out=logtostderr=true:go \
-		./protos/*.proto
+  		--go_out=plugins=grpc,paths=source_relative:modelzoo/go \
+		--grpc-gateway_out=logtostderr=true,paths=source_relative:modelzoo/go \
+        --swagger_out=logtostderr=true:modelzoo/go \
+		modelzoo/protos/*.proto
 
 .PHONY: link
 link:
-	cd js/protos; yarn link
-	cd js; yarn link "protos"
+	cd js; yarn unlink "js"
+	cd js/generated/modelzoo/protos; yarn link
+	cd js; yarn link "js"
 

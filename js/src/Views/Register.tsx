@@ -12,8 +12,8 @@ import {
   message,
   Spin
 } from "antd";
-import { ModelzooServicePromiseClient } from "protos/services_grpc_web_pb";
-import { Model as pb_Model, KVPair } from "protos/services_pb";
+import { ModelzooServicePromiseClient } from "js/generated/modelzoo/protos/services_grpc_web_pb";
+import { Model as pb_Model, KVPair } from "js/generated/modelzoo/protos/services_pb";
 import _ from "lodash";
 
 interface RegisterProp {
@@ -188,8 +188,8 @@ export const Register: FC<RegisterProp> = registerProps => {
               })(<Input placeholder="http://..." />)}
             </Form.Item>
           ) : (
-            ""
-          )}
+              ""
+            )}
 
           <Divider orientation="left">Metadata</Divider>
           <KVFields form={form} addFieldText="Add new entry"></KVFields>
