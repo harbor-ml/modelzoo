@@ -37,7 +37,7 @@ proto-go:
 
 .PHONY: link
 link:
-	cd js; yarn unlink "js"
+	cd js; yarn unlink "js" || true
 	cd js/generated/modelzoo/protos; yarn link
 	cd js; yarn link "js"
 
