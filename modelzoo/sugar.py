@@ -21,9 +21,7 @@ class register_type:
         self.metadata_name = override_metadata_name
 
     def __call__(self, func):
-        assert inspect.ismethod(func) or inspect.isfunction(func)
-
-        if inspect.ismethod(func):
+        if inspect.getfullargspec(func).args[0] == "self":
             return self.make_method_decorator(func)
         else:
             return self.make_function_decorator(func)

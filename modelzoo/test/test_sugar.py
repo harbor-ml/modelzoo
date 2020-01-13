@@ -70,3 +70,16 @@ def test_table():
     assert list(df.columns) == list(new_df.columns)
     for i in range(len(df)):
         assert pd.DataFrame.equals(df.iloc[i, :], new_df.iloc[i, :])
+
+def test_sugar_work_for_method():
+    class MyModel:
+        @register_type(text_input, text_output)
+        def my_func(self, inp, metadata):
+            metadata["new_field"] = 2
+            return inp
+
+    metadata = {"old_field": 1}
+    inp = pb.Text(texts=["a"])
+    out = MyModel().my_func(inp, metadata)
+    assert out.texts == ["a"]
+    assert metadata == {"old_field": 1, "new_field": 2}
