@@ -10,8 +10,7 @@ from PIL import Image
 
 from modelzoo.admin import *
 from modelzoo.exceptions import *
-from modelzoo.protos.services_pb2 import (Image, Payload, PayloadType, Table,
-                                          Text)
+from modelzoo.protos.services_pb2 import Image, Payload, PayloadType, Table, Text
 from modelzoo.utils import *
 
 

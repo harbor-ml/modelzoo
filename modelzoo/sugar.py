@@ -20,11 +20,28 @@ class register_type:
         self.metadata_name = override_metadata_name
 
     def __call__(self, func):
+        assert inspect.ismethod(func) or inspect.isfunction(func)
+
+        if inspect.ismethod(func):
+            return self.make_method_decorator(func)
+        else:
+            return self.make_function_decorator(func)
+
+    def make_function_decorator(self, func):
         @wraps(func)
         def wrapped(inp, metadata):
             args = (self._in_transformer(inp),)
             kwargs = {self.metadata_name: metadata}
             out = func(*args, **kwargs)
+            return self._out_transformer(out)
+        return wrapped
+    
+    def make_method_decorator(self, func):
+        @wraps(func)
+        def wrapped(self_object, inp, metadata):
+            args = (self._in_transformer(inp),)
+            kwargs = {self.metadata_name: metadata}
+            out = func(self_object, *args, **kwargs)
             return self._out_transformer(out)
         return wrapped
 
@@ -50,12 +67,16 @@ def text_input(text_request: pb.Text) -> List[str]:
 def text_output(texts: List[str]) -> pb.Text:
     return pb.Text(texts=texts)
 
+
 def table_input(table_request: pb.Table) -> pd.DataFrame:
     result_dict = json_format.MessageToDict(table_request)
     p = []
-    for i in range(len(result_dict['table'])):
-        p.append(pd.DataFrame.from_dict(result_dict['table']['%d' % (i)], orient='index'))
-    return pd.concat(p, sort=True).reset_index().drop('index', axis=1)
+    for i in range(len(result_dict["table"])):
+        p.append(
+            pd.DataFrame.from_dict(result_dict["table"]["%d" % (i)], orient="index")
+        )
+    return pd.concat(p, sort=True).reset_index().drop("index", axis=1)
+
 
 def table_output(dataframe: pd.DataFrame) -> pb.Table:
     dataframe.index = list(map(str, dataframe.index))
@@ -69,5 +90,5 @@ def table_output(dataframe: pd.DataFrame) -> pb.Table:
         row = table.table[row_name]
         for column, value in column_value_map.items():
             row.column_to_value[column] = value
-        
+
     return table

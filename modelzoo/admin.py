@@ -4,21 +4,33 @@ import grpc
 import pandas as pd
 
 import modelzoo.utils as utils
-from modelzoo.exceptions import (AuthenticationException,
-                                 InvalidCredentialsException,
-                                 ModelZooConnectionException)
+from modelzoo.exceptions import (
+    AuthenticationException,
+    InvalidCredentialsException,
+    ModelZooConnectionException,
+)
 from modelzoo.sugar import image_input, table_output, text_input, table_input
-from modelzoo.protos.services_pb2 import (Empty, Image, Payload, PayloadType,
-                                          RateLimitToken, Status, Table, Text,
-                                          User)
+from modelzoo.protos.services_pb2 import (
+    Empty,
+    Image,
+    Payload,
+    PayloadType,
+    RateLimitToken,
+    Status,
+    Table,
+    Text,
+    User,
+)
 from modelzoo.protos.services_pb2_grpc import ModelzooServiceStub
 from google.protobuf import json_format
 
 
 class ModelZooConnection(object):
     """
-    ModelZooConnection class. This class will be the main client API for connecting to a ModelZoo instance, whether it be a local or external one.
-    This class manages authentication, and features several bound methods to aid the user in creation and manipulation of users and models.
+    ModelZooConnection class. This class will be the main client API for connecting 
+    to a ModelZoo instance, whether it be a local or external one.
+    This class manages authentication, and features several bound methods to aid the 
+    user in creation and manipulation of users and models.
 
     Attributes
     ----------
@@ -29,14 +41,15 @@ class ModelZooConnection(object):
         password : Optional[string]: The password with which to authenticate to the ModelZoo instance.
     conn : GRPC Channel
         The connection to the ModelZoo instance. The connect() method must be called to instantiate this.
-            Before this is instantiated, most methods will fail.
+        Before this is instantiated, most methods will fail.
     token : string
         The token to use for rate limiting and potentially access control in the future.
     conn_error : ModelZooConnectionException
         A shorthand for the connection exception to be raised whenever a method is called before a connection
-            to the ModelZoo instance has been instantiated.
+        to the ModelZoo instance has been instantiated.
     authenticated : bool
-        Flag that indicates whether or not user has authenticated. Can be used to block access to creation or manipulation of models.
+        Flag that indicates whether or not user has authenticated. 
+        Can be used to block access to creation or manipulation of models.
     """
 
     def __init__(
@@ -59,9 +72,10 @@ class ModelZooConnection(object):
 
     def connect(self, address: str) -> None:
         """
-        Method to connect to the ModelZoo instance specified by self.address | address.
+        Method to connect to the ModelZoo instance specified by self.address or address.
         Must be called first, so that later methods have a connection to the server to perform queries.
-        If a username and email were not provided previously, an incognito rate limiting token is generated for the user.
+        If a username and email were not provided previously, 
+        an incognito rate limiting token is generated for the user.
 
         Parameters
         ----------
@@ -104,7 +118,8 @@ class ModelZooConnection(object):
             self.conn.GetUser(User(email=email, password=password))
         except Exception:
             raise InvalidCredentialsException(
-                "Email and password do not match an existing user. Please check to make sure you have not made any typos."
+                "Email and password do not match an existing user. "
+                "Please check to make sure you have not made any typos."
             )
         self.authenticated = True
 
@@ -129,7 +144,8 @@ class ModelZooConnection(object):
 
     def create_user(self, email: str, password: str) -> None:
         """
-        Method to create user. Current user must be connected to ModelZoo instance prior to this method call.
+        Method to create user. Current user must be connected to ModelZoo 
+        instance prior to this method call.
 
         Parameters
         ----------
@@ -173,15 +189,15 @@ class ModelZooConnection(object):
             raise self.conn_error
         resp = self.conn.ListModels(Empty())
         if not expand_metadata:
-            return pd.DataFrame(json_format.MessageToDict(resp)['models'])
+            return pd.DataFrame(json_format.MessageToDict(resp)["models"])
         else:
             frames = []
-            for g in json_format.MessageToDict(resp)['models']:
-                p = pd.DataFrame(g['metadata'])
-                p.index = [g['modelName']]*len(p)
+            for g in json_format.MessageToDict(resp)["models"]:
+                p = pd.DataFrame(g["metadata"])
+                p.index = [g["modelName"]] * len(p)
                 frames.append(p)
             g = pd.concat(frames)
-            return g.set_index([g.index, 'key'])
+            return g.set_index([g.index, "key"])
 
     def text_inference(self, model: str, texts: List[str]) -> Payload:
         """
@@ -202,7 +218,8 @@ class ModelZooConnection(object):
         Raises
         ------
         ModelZooConnectionException
-            A ModelZooConnectionException is raised if the user is not connected to a ModelZoo instance.
+            A ModelZooConnectionException is raised if the user is not connected 
+            to a ModelZoo instance.
         """
         if self.conn is None:
             raise self.conn_error
@@ -229,7 +246,8 @@ class ModelZooConnection(object):
         Raises
         ------
         ModelZooConnectionException
-            A ModelZooConnectionException is raised if the user is not connected to a ModelZoo instance.
+            A ModelZooConnectionException is raised if the user is not connected 
+            to a ModelZoo instance.
         """
         if self.conn is None:
             raise self.conn_error
@@ -260,7 +278,8 @@ class ModelZooConnection(object):
         Raises
         ------
         ModelZooConnectionException
-            A ModelZooConnectionException is raised if the user is not connected to a ModelZoo instance.
+            A ModelZooConnectionException is raised if the user is not 
+            connected to a ModelZoo instance.
         """
         if self.conn is None:
             raise self.conn_error
@@ -292,8 +311,8 @@ class ModelZooConnection(object):
         ------
         ModelZooConnectionException
             A ModelZooConnectionException is called in one case:
-                1) The Payload contains a type besides oneof(text, image). This is likely a sign that the Payload was not produced
-                    by an inference method.
+                1) The Payload contains a type besides oneof(text, image). 
+                   This is likely a sign that the Payload was not produced by an inference method.
         """
         if resp.type == PayloadType.TEXT:
             texts = text_input(resp.text)
