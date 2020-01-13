@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import { ColumnProps } from "antd/lib/table";
 import _ from "lodash";
-import { Table as pb_Table } from "protos/services_pb";
+import { Table as pb_Table } from "protos/model_apis_pb";
 import React, { FC } from "react";
 
 interface TableOutputProps {

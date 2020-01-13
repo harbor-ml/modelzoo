@@ -1,64 +1,43 @@
 SHELL := /bin/bash
 
 placeholder:
-	@echo "Use make with commands like `make protos`"
+	@echo "Do not use plain 'make'. Add a subcommand."
+
+.PHONY: protos
+
+protos: proto-js proto-py proto-go
+
+protoc_include = -I/usr/local/include -I . \
+  		-I ${GOPATH}/src \
+  		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis 
 
 proto-js:
 	protoc \
+		$(protoc_include) \
 		--js_out=import_style=commonjs,binary:js \
 		--grpc-web_out=import_style=commonjs+dts,mode=grpcwebtext:js \
-		./protos/*.proto
+		protos/*.proto 
+
 
 proto-py:
-	protoc \ 
-		--python_out=python/model_io --mypy_out=python/model_io \
-		./protos/*.proto
-
-.PHONY: proto-py-pkg
-proto-py-pkg:
-	python -m grpc_tools.protoc -I protos --python_out=modelzoo/protos --grpc_python_out=modelzoo/protos protos/services.proto
+	python -m grpc_tools.protoc \
+		$(protoc_include) \
+		--python_out=modelzoo \
+		--grpc_python_out=modelzoo \
+		--mypy_out=modelzoo \
+		protos/*.proto
 	
 proto-go:
-	protoc -I/usr/local/include -I . \
-  		-I ${GOPATH}/src \
-  		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-  		--go_out=plugins=grpc,paths=source_relative:go ./protos/*.proto && \
-	protoc -I/usr/local/include -I . \
-  		-I${GOPATH}/src \
-  		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-  		--grpc-gateway_out=logtostderr=true,paths=source_relative:go ./protos/*.proto  && \
-	protoc -I/usr/local/include -I . \
-  		-I ${GOPATH}/src \
-  		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-  		--swagger_out=logtostderr=true:go protos/*.proto
-
-.PHONY: protos
-protos: proto-js proto-py proto-go
+	PATH="$(GOPATH)/bin:$(PATH)" \
+	protoc \
+		$(protoc_include) \
+  		--go_out=plugins=grpc,paths=source_relative:go \
+		--grpc-gateway_out=logtostderr=true,paths=source_relative:go \
+        --swagger_out=logtostderr=true:go \
+		./protos/*.proto
 
 .PHONY: link
 link:
 	cd js/protos; yarn link
 	cd js; yarn link "protos"
 
-.PHONY: base
-base:
-	sudo docker build -t modelzoolive/base -f ./dockerfiles/base.Dockerfile .
-
-.PHONY: go
-go:
-	sudo docker build -t modelzoolive/go -f ./dockerfiles/go.Dockerfile .
-
-.PHONY: js
-js:
-	sudo docker build -t modelzoolive/js -f ./dockerfiles/js.Dockerfile .
-
-.PHONY: envoyProd
-envoyProd:
-	sudo docker build -t modelzoolive/envoy -f ./dockerfiles/envoy_prod.Dockerfile .
-
-.PHONY: envoyDev
-envoyDev:
-	docker build -t modelzoolive/envoydev -f ./dockerfiles/envoy_dev.Dockerfile .
-
-format-yaml:
-	fd 'y[a]*ml' . | xargs -n 1 -I {} bash -c "yq r '{}' | sponge '{}'"

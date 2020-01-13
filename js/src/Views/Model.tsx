@@ -1,7 +1,8 @@
 import { Divider, message, Result, Spin, Typography, Col, Row } from "antd";
 import _ from "lodash";
 import { ModelzooServicePromiseClient } from "protos/services_grpc_web_pb";
-import { Empty, Image, Payload, PayloadType, Text } from "protos/services_pb";
+import { Empty, Payload, PayloadType } from "protos/services_pb";
+import { Image, Text } from "protos/model_apis_pb";
 import React, { Dispatch, FC, useMemo, useReducer } from "react";
 import { useParams } from "react-router-dom";
 import { ImageInput, ImageOutput } from "../Components/Image";

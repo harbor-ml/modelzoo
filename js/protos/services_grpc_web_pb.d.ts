@@ -1,5 +1,8 @@
 import * as grpcWeb from 'grpc-web';
 
+import * as google_api_annotations_pb from '../google/api/annotations_pb';
+import * as protos_model_apis_pb from '../protos/model_apis_pb';
+
 import {
   Empty,
   ImageDownloadRequest,
@@ -13,8 +16,8 @@ import {
 
 export class ModelzooServiceClient {
   constructor (hostname: string,
-               credentials: null | { [index: string]: string; },
-               options: null | { [index: string]: string; });
+               credentials?: null | { [index: string]: string; },
+               options?: null | { [index: string]: string; });
 
   inference(
     request: Payload,
@@ -29,6 +32,13 @@ export class ModelzooServiceClient {
     callback: (err: grpcWeb.Error,
                response: ImageDownloadResponse) => void
   ): grpcWeb.ClientReadableStream<ImageDownloadResponse>;
+
+  getMetrics(
+    request: Empty,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.Error,
+               response: MetricItems) => void
+  ): grpcWeb.ClientReadableStream<MetricItems>;
 
   getToken(
     request: Empty,
@@ -65,19 +75,12 @@ export class ModelzooServiceClient {
                response: Empty) => void
   ): grpcWeb.ClientReadableStream<Empty>;
 
-  getMetrics(
-    request: Empty,
-    metadata: grpcWeb.Metadata | undefined,
-    callback: (err: grpcWeb.Error,
-               response: MetricItems) => void
-  ): grpcWeb.ClientReadableStream<MetricItems>;
-
 }
 
 export class ModelzooServicePromiseClient {
   constructor (hostname: string,
-               credentials: null | { [index: string]: string; },
-               options: null | { [index: string]: string; });
+               credentials?: null | { [index: string]: string; },
+               options?: null | { [index: string]: string; });
 
   inference(
     request: Payload,
@@ -88,6 +91,11 @@ export class ModelzooServicePromiseClient {
     request: ImageDownloadRequest,
     metadata?: grpcWeb.Metadata
   ): Promise<ImageDownloadResponse>;
+
+  getMetrics(
+    request: Empty,
+    metadata?: grpcWeb.Metadata
+  ): Promise<MetricItems>;
 
   getToken(
     request: Empty,
@@ -113,11 +121,6 @@ export class ModelzooServicePromiseClient {
     request: User,
     metadata?: grpcWeb.Metadata
   ): Promise<Empty>;
-
-  getMetrics(
-    request: Empty,
-    metadata?: grpcWeb.Metadata
-  ): Promise<MetricItems>;
 
 }
 

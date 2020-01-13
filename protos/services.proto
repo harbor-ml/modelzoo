@@ -1,58 +1,28 @@
 syntax = "proto3";
-// import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
 
 package modelzoo;
 
-/* Image is repsented by the datauri format
-https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
-*/
-message Image {
-  map<string, string> metadata = 1;
-  string image_data_url = 2;
-
-  string model_name = 3;
-  string access_token = 4;
-}
-
-// Text is a list of string
-message Text {
-  map<string, string> metadata = 1;
-  repeated string texts = 2;
-
-  string model_name = 3;
-  string access_token = 4;
-}
-
-/* Table is more complicated.
-   It is inspired from pandas orient="index"
-   >>> df.to_json(orient='index')
-   '{"row 1":{"col 1":"a","col 2":"b"},"row 2":{"col 1":"c","col 2":"d"}}'
-*/
-message Table {
-  map<string, string> metadata = 1;
-  string model_name = 2;
-  string access_token = 3;
-
-  message Row { map<string, string> column_to_value = 1; }
-  map<string, Row> table = 4;
-  repeated string column_names = 5;
-}
+import "protos/model_apis.proto";
 
 // Web
 message Empty {}
+
 message KVPair {
   string key = 1;
   string value = 2;
 }
+
 message Model {
   string model_name = 1;
   repeated KVPair metadata = 3;
 }
+
 message User {
   string email = 1;
   string password = 2;
 }
+
 message RateLimitToken { string token = 1; }
 // message RateLimitExceeded {
 //   string token = 1;
@@ -96,10 +66,10 @@ service ModelzooService {
   // Inference
   rpc Inference(Payload) returns (Payload) {
     option (google.api.http) = {
-      post: "/inference"
-      body: "*"
+      post : "/inference"
+      body : "*"
     };
-   }
+  }
 
   // Website utils
   rpc GetImage(ImageDownloadRequest) returns (ImageDownloadResponse) {}
@@ -108,36 +78,34 @@ service ModelzooService {
   // Rate limiting
   rpc GetToken(Empty) returns (RateLimitToken) {
     option (google.api.http) = {
-      post: "/get/token"
-      body: "*"
+      post : "/get/token"
+      body : "*"
     };
   }
 
   // Database
   rpc ListModels(Empty) returns (ListModelsResponse) {
     option (google.api.http) = {
-      post: "/get/models"
-      body: "*"
+      post : "/get/models"
+      body : "*"
     };
   }
   rpc CreateUser(User) returns (Empty) {
     option (google.api.http) = {
-      post: "/create/user"
-      body: "*"
+      post : "/create/user"
+      body : "*"
     };
   }
   rpc CreateModel(Model) returns (Empty) {
     option (google.api.http) = {
-      post: "/create/model"
-      body: "*"
+      post : "/create/model"
+      body : "*"
     };
   }
   rpc GetUser(User) returns (Empty) {
     option (google.api.http) = {
-      post: "/get/user"
-      body: "*"
+      post : "/get/user"
+      body : "*"
     };
   }
-
-
 }
