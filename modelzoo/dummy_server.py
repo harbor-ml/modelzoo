@@ -7,12 +7,10 @@ from typing import List
 import numpy as np
 import pandas as pd
 import requests
-import torch
 from flask import Flask, g, jsonify, request
 from flask_cors import CORS
 from google.protobuf import json_format
 from PIL import Image
-from torchvision import transforms
 
 import modelzoo.protos.model_apis_pb2 as pb
 from modelzoo.sugar import (
