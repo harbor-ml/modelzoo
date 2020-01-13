@@ -1,7 +1,7 @@
 import { NavItem } from "./Components/NavItem";
 
 export const NavItems: NavItem[] = [
-  { route: "/", name: "Home", icon: "home" },
+  { route: "/", name: "Modelzoo", icon: "home", addEffect: true },
   // { route: "/catalog", name: "Catalog", icon: "appstore" },
   // { route: "/monitor", name: "Monitor", icon: "monitor" },
   { route: "/register", name: "Register", icon: "edit" },
