@@ -2,19 +2,38 @@ package cmd
 
 import (
 	"context"
+	"errors"
 
+	"github.com/harbor-ml/modelzoo/go/schema"
 	"github.com/harbor-ml/modelzoo/go/server"
+
 	"github.com/spf13/cobra"
 )
+
+var doSeed bool
+var seedPath string
 
 // serveCmd represents the serve command
 var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "Start the server",
+	Args: func(cmd *cobra.Command, args []string) error {
+		if doSeed && &seedPath == nil {
+			return errors.New("Please pass in seed file path via --path")
+		}
+		return nil
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		// Pass a do-nothing ctx for serving
 		ctx := context.Background()
-		server.ServeForever(ctx, false, 9000, "")
+
+		dbPath := ""
+		if doSeed {
+			dbPath = server.CreateTempFile("*.db")
+			schema.Seed(seedPath, dbPath)
+		}
+
+		server.ServeForever(ctx, false, 9000, dbPath)
 	},
 }
 
@@ -38,5 +57,6 @@ func init() {
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// serveCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	serveCmd.Flags().BoolVarP(&doSeed, "seed", "s", false, "seed the database")
+	serveCmd.Flags().StringVarP(&seedPath, "path", "p", "", "Path for seeding file")
 }

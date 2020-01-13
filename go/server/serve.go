@@ -17,6 +17,7 @@ import (
 	grpc_logrus "github.com/grpc-ecosystem/go-grpc-middleware/logging/logrus"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
+	"github.com/improbable-eng/grpc-web/go/grpcweb"
 )
 
 // ServeForever runs?
@@ -64,6 +65,19 @@ func ServeForever(cancelCtx context.Context, public bool, port int, dbPath strin
 			grpc_recovery.UnaryServerInterceptor(),
 		)),
 	)
+
+	wrappedGrpc := grpcweb.WrapServer(grpcServer,
+		grpcweb.WithCorsForRegisteredEndpointsOnly(false),
+		grpcweb.WithOriginFunc(func(origin string) bool { return true }),
+	)
+	go http.ListenAndServe(":8080", http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
+		logrus.WithFields(logrus.Fields{
+			"path":               req.URL.Path,
+			"method":             req.Method,
+			"is_acceptable_cors": wrappedGrpc.IsAcceptableGrpcCorsRequest(req),
+		}).Info("Received grpc web proxy request")
+		wrappedGrpc.ServeHTTP(resp, req)
+	}))
 
 	s := &ProxyServer{db, newLogger}
 	modelzoo.RegisterModelzooServiceServer(grpcServer, s)

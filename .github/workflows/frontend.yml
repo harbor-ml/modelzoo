@@ -26,3 +26,8 @@ jobs:
       working-directory: ./js
       run: |
         make build
+
+    - name: Run render test
+      working-directory: ./js
+      run: |
+        yarn test

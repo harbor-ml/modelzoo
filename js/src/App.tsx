@@ -21,9 +21,15 @@ const App: FC = () => {
   console.log("App renders with token " + token);
 
   const client = useMemo(() => {
+    let proxyClientAddress = "";
+    if (process.env.NODE_ENV === "development") {
+      console.log("using dev version")
+      proxyClientAddress = "http://localhost:8080";
+    } else {
+      proxyClientAddress = `${window.location.protocol}//${window.location.hostname}:8080`;
+    }
     let newClient = new ModelzooServicePromiseClient(
-      `${window.location.protocol}//${window.location.hostname}:8080`,
-      // `http://${window.location.hostname}:8080`,
+      proxyClientAddress,
       null,
       null
     );
@@ -142,7 +148,7 @@ const App: FC = () => {
                 <Model
                   client={client}
                   token={token}
-                  // models={allModels}
+                // models={allModels}
                 />
               </Route>
               {/* <Route path="/compare">
