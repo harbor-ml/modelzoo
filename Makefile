@@ -37,7 +37,8 @@ protos: proto-js proto-py proto-go
 
 .PHONY: link
 link:
-	cd js; npm link ./protos
+	cd js/protos; yarn link
+	cd js; yarn link "protos"
 
 .PHONY: base
 base:
