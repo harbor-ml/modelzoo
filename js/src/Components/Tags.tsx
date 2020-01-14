@@ -49,6 +49,7 @@ export const StatsSet: FC<TagsSetProp> = props => {
 
           return (
             <Statistic
+              key={metricName}
               title={metricName}
               suffix={metricUnit}
               value={value.toString()}
@@ -71,6 +72,7 @@ export const TagsSet: FC<TagsSetProp> = props => {
         if (showAll || Object.keys(TagToColor).includes(key)) {
           return (
             <FeaturedModelTag
+              key={key}
               name={key}
               val={_.join(value, ", ")}
               color={TagToColor[key]}

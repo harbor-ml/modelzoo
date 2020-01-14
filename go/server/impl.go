@@ -16,7 +16,7 @@ import (
 
 	dataurl "github.com/vincent-petithory/dataurl"
 
-	modelzoo "github.com/harbor-ml/modelzoo/go/protos"
+	modelzoo "github.com/harbor-ml/modelzoo/go/modelzoo/protos"
 
 	"github.com/jinzhu/gorm"
 )

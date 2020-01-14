@@ -1,4 +1,5 @@
 import base64
+import time
 import io
 import mimetypes
 from functools import wraps
@@ -31,7 +32,11 @@ class register_type:
         def wrapped(inp, metadata):
             args = (self._in_transformer(inp),)
             kwargs = {self.metadata_name: metadata}
+
+            started = time.time()
             out = func(*args, **kwargs)
+            metadata["model_runtime_s"] = str((time.time() - started)*1000)
+
             return self._out_transformer(out)
         return wrapped
     

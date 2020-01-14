@@ -8,7 +8,7 @@ import (
 	"net/http"
 
 	"github.com/gobuffalo/packr/v2"
-	modelzoo "github.com/harbor-ml/modelzoo/go/protos"
+	modelzoo "github.com/harbor-ml/modelzoo/go/modelzoo/protos"
 	"github.com/jinzhu/gorm"
 	. "github.com/logrusorgru/aurora"
 	"github.com/prometheus/client_golang/prometheus/promhttp"

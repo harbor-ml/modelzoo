@@ -106,14 +106,14 @@ def vision_classification(inp: Image, metadata):
             "image_data": [str(inp) for _ in range(3)],
         }
     ).astype(str)
-
     return df
 
 
 @register_type(text_input, text_output)
 def text_generation(inp: List[str], metadata):
     metadata["method"] = "reversed"
-    return [item[::-1] for item in inp]
+    result = [item[::-1] for item in inp]
+    return result
 
 
 @register_type(image_input, image_output)

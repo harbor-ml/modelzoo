@@ -178,6 +178,9 @@ export class Payload extends jspb.Message {
   hasTable(): boolean;
   clearTable(): void;
 
+  getResponseId(): number;
+  setResponseId(value: number): void;
+
   getPayloadCase(): Payload.PayloadCase;
 
   serializeBinary(): Uint8Array;
@@ -194,6 +197,7 @@ export namespace Payload {
     image?: modelzoo_protos_model_apis_pb.Image.AsObject,
     text?: modelzoo_protos_model_apis_pb.Text.AsObject,
     table?: modelzoo_protos_model_apis_pb.Table.AsObject,
+    responseId: number,
   }
 
   export enum PayloadCase { 

@@ -50,6 +50,8 @@ message Payload {
     Text text = 3;
     Table table = 4;
   }
+
+  uint32 response_id = 5;
 }
 
 message MetricItems {

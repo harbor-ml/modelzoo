@@ -17,7 +17,6 @@ export const TableOutput: FC<TableOutputProps> = props => {
   });
 
   let dataSource = tableProto.toObject().tableMap.map((val, idx, arr) => {
-    console.log(val);
     let rowName = val[0];
     let rowData = val[1];
     let [rowKeys, rowVals] = _.zip(...rowData.columnToValueMap)!;

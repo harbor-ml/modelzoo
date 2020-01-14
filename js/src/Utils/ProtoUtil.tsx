@@ -1,9 +1,22 @@
-import { Model as pb_Model, KVPair } from "js/generated/modelzoo/protos/services_pb";
+import { Model as pb_Model, KVPair, Payload } from "js/generated/modelzoo/protos/services_pb";
 import _ from "lodash";
 
 export interface ModelObject {
   name: string;
   metadata: Record<string, string[]>;
+}
+
+export function payloadMetadataToRecord(payload: Payload): Record<string, string> | undefined {
+  switch (payload.getPayloadCase()) {
+    case (Payload.PayloadCase.IMAGE):
+      return _.fromPairs(payload.getImage()!.toObject().metadataMap)
+    case (Payload.PayloadCase.TABLE):
+      return _.fromPairs(payload.getTable()!.toObject().metadataMap)
+    case (Payload.PayloadCase.TEXT):
+      return _.fromPairs(payload.getText()!.toObject().metadataMap)
+    default:
+      return undefined
+  }
 }
 
 function metadataToKV(pairs: KVPair[]): Record<string, string[]> {

@@ -15,7 +15,7 @@ import (
 	"github.com/phayes/freeport"
 	"google.golang.org/grpc"
 
-	modelzoo "github.com/harbor-ml/modelzoo/go/protos"
+	modelzoo "github.com/harbor-ml/modelzoo/go/modelzoo/protos"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
@@ -131,7 +131,7 @@ func TestMain(m *testing.M) {
 	ctx, cancel := context.WithCancel(ctx)
 
 	dbPath := server.CreateTempFile("*.test.db")
-	schema.Seed("./models.json", dbPath)
+	schema.Seed("./seed_generated.json", dbPath)
 	go server.ServeForever(ctx, false, port, dbPath)
 
 	address := fmt.Sprintf("0.0.0.0:%d", port)

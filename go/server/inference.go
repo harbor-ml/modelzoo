@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
+	"math/rand"
 	"time"
 
 	"github.com/golang/protobuf/proto"
@@ -12,7 +13,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	modelzoo "github.com/harbor-ml/modelzoo/go/protos"
+	modelzoo "github.com/harbor-ml/modelzoo/go/modelzoo/protos"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -131,6 +132,7 @@ func (s *ProxyServer) Inference(ctx context.Context, payload *modelzoo.Payload) 
 	}
 
 	var val modelzoo.Payload
+	resp_id := rand.Uint32()
 	switch metadata["output_type"] {
 	case "image":
 		data := &modelzoo.Image{}
@@ -139,8 +141,9 @@ func (s *ProxyServer) Inference(ctx context.Context, payload *modelzoo.Payload) 
 			return nil, status.Error(codes.Internal, "failed to unmarshal proto from clipper")
 		}
 		val = modelzoo.Payload{
-			Payload: &modelzoo.Payload_Image{Image: data},
-			Type:    modelzoo.PayloadType_IMAGE,
+			Payload:    &modelzoo.Payload_Image{Image: data},
+			Type:       modelzoo.PayloadType_IMAGE,
+			ResponseId: resp_id,
 		}
 	case "table":
 		data := &modelzoo.Table{}
@@ -149,8 +152,9 @@ func (s *ProxyServer) Inference(ctx context.Context, payload *modelzoo.Payload) 
 			return nil, status.Error(codes.Internal, "failed to unmarshal proto from clipper")
 		}
 		val = modelzoo.Payload{
-			Payload: &modelzoo.Payload_Table{Table: data},
-			Type:    modelzoo.PayloadType_TABLE,
+			Payload:    &modelzoo.Payload_Table{Table: data},
+			Type:       modelzoo.PayloadType_TABLE,
+			ResponseId: resp_id,
 		}
 	case "text":
 		data := &modelzoo.Text{}
@@ -159,8 +163,9 @@ func (s *ProxyServer) Inference(ctx context.Context, payload *modelzoo.Payload) 
 			return nil, status.Error(codes.Internal, "failed to unmarshal proto from clipper")
 		}
 		val = modelzoo.Payload{
-			Payload: &modelzoo.Payload_Text{Text: data},
-			Type:    modelzoo.PayloadType_TEXT,
+			Payload:    &modelzoo.Payload_Text{Text: data},
+			Type:       modelzoo.PayloadType_TEXT,
+			ResponseId: resp_id,
 		}
 	default:
 		return nil, status.Error(codes.Internal, "model doesn't have output_type field")

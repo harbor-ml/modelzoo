@@ -25,7 +25,7 @@ export const Catalog: FC<CatalogProps> = props => {
 
   let cards = models.map((model: ModelObject, index, arr) => {
     return (
-      <Col span={8}>
+      <Col span={8} key={index}>
         <Card
           title={model.name}
           style={{ margin: "4px" }}

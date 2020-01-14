@@ -1483,7 +1483,8 @@ proto.modelzoo.Payload.toObject = function(includeInstance, msg) {
     type: jspb.Message.getFieldWithDefault(msg, 1, 0),
     image: (f = msg.getImage()) && modelzoo_protos_model_apis_pb.Image.toObject(includeInstance, f),
     text: (f = msg.getText()) && modelzoo_protos_model_apis_pb.Text.toObject(includeInstance, f),
-    table: (f = msg.getTable()) && modelzoo_protos_model_apis_pb.Table.toObject(includeInstance, f)
+    table: (f = msg.getTable()) && modelzoo_protos_model_apis_pb.Table.toObject(includeInstance, f),
+    responseId: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -1538,6 +1539,10 @@ proto.modelzoo.Payload.deserializeBinaryFromReader = function(msg, reader) {
       var value = new modelzoo_protos_model_apis_pb.Table;
       reader.readMessage(value,modelzoo_protos_model_apis_pb.Table.deserializeBinaryFromReader);
       msg.setTable(value);
+      break;
+    case 5:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setResponseId(value);
       break;
     default:
       reader.skipField();
@@ -1597,6 +1602,13 @@ proto.modelzoo.Payload.serializeBinaryToWriter = function(message, writer) {
       4,
       f,
       modelzoo_protos_model_apis_pb.Table.serializeBinaryToWriter
+    );
+  }
+  f = message.getResponseId();
+  if (f !== 0) {
+    writer.writeUint32(
+      5,
+      f
     );
   }
 };
@@ -1728,6 +1740,24 @@ proto.modelzoo.Payload.prototype.clearTable = function() {
  */
 proto.modelzoo.Payload.prototype.hasTable = function() {
   return jspb.Message.getField(this, 4) != null;
+};
+
+
+/**
+ * optional uint32 response_id = 5;
+ * @return {number}
+ */
+proto.modelzoo.Payload.prototype.getResponseId = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.modelzoo.Payload} returns this
+ */
+proto.modelzoo.Payload.prototype.setResponseId = function(value) {
+  return jspb.Message.setProto3IntField(this, 5, value);
 };
 
 
