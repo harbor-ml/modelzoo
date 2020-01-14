@@ -3,7 +3,6 @@ package server
 import (
 	"context" // Use "golang.org/x/net/context" for Golang version <= 1.6
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/golang/glog"
@@ -13,7 +12,7 @@ import (
 	gw "github.com/harbor-ml/modelzoo/go/protos" // Update
 )
 
-func run(grpcPort int, port int) error {
+func run(grpcPort uint16, port uint16) error {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
@@ -31,11 +30,8 @@ func run(grpcPort int, port int) error {
 	return http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
 }
 
-func ProxyForever(grpcPort int, port int) {
+func ProxyForever(grpcPort uint16, port uint16) {
 	defer glog.Flush()
-
-	log.Println("Proxy started, listening to port", port)
-
 	if err := run(grpcPort, port); err != nil {
 		glog.Fatal(err)
 	}

@@ -24,12 +24,12 @@ export const API: FC = () => {
 
       <TabPane tab="HTTP" key="http">
         <SwaggerUI
-          url="https://raw.githubusercontent.com/harbor-ml/modelzoo/906d49fa4d008055dcd855b4ff7078f7e8c75306/go/js/generated/modelzoo/protos/services.swagger.json"
-          // url="https://petstore.swagger.io/v2/swagger.json"
+          // Note: this url is generated via `make proto-go` in the ROOT/Makefile
+          //       it should only be working in production build
+          url="static/_swagger/modelzoo/protos/services.swagger.json"
           docExpansion={"list"}
         />
       </TabPane>
     </Tabs>
-    // <div style={{ background: "white" }}>{Array(100).fill(<br></br>)}</div>
   );
 };

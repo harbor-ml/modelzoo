@@ -2,10 +2,11 @@ package schema
 
 import (
 	"bufio"
-	"log"
 	"os"
 
 	"github.com/golang/protobuf/ptypes"
+
+	log "github.com/sirupsen/logrus"
 
 	modelzoo "github.com/harbor-ml/modelzoo/go/protos"
 
@@ -37,11 +38,16 @@ import (
 func Seed(filename string, dbPath string) {
 	// Use modelzoo package so package registration is called
 	var _ modelzoo.Image
+	logger := log.WithFields(log.Fields{
+		"actor":    "seeder",
+		"dbPath":   dbPath,
+		"fromFile": filename,
+	})
 
 	// Open SQLite3 DB on local
 	db, err := gorm.Open("sqlite3", dbPath)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 	defer db.Close()
 
@@ -51,11 +57,11 @@ func Seed(filename string, dbPath string) {
 	db.AutoMigrate(&ModelMetaData{})
 	db.AutoMigrate(&Query{})
 
-	log.Println("Reading", filename)
+	logger.Println("Reading", filename)
 
 	jsonFile, err := os.Open(filename)
 	if err != nil {
-		log.Fatalf("Unable to open %s", filename)
+		logger.Fatalf("Unable to open %s", filename)
 	}
 	defer jsonFile.Close()
 
@@ -74,31 +80,31 @@ func Seed(filename string, dbPath string) {
 		case "/modelzoo.User":
 			user := modelzoo.User{}
 			if err := ptypes.UnmarshalAny(&msg, &user); err != nil {
-				log.Fatal(err)
+				logger.Fatal(err)
 			}
 
 			userRecord := User{Email: user.Email, Password: user.Password}
 			if err := db.Create(&userRecord).Error; err != nil {
-				log.Fatal(err)
+				logger.Fatal(err)
 			}
 
-			log.Printf("user %v created", user.Email)
+			logger.Printf("user %v created", user.Email)
 
 		case "/modelzoo.Model":
 			model := modelzoo.Model{}
 			if err := ptypes.UnmarshalAny(&msg, &model); err != nil {
-				log.Fatal(err)
+				logger.Fatal(err)
 			}
 			if err := CreateModel(db, &model); err != nil {
-				log.Fatal(err)
+				logger.Fatal(err)
 			}
 
-			log.Printf("Model %v created.", model.ModelName)
+			logger.Printf("Model %v created.", model.ModelName)
 		default:
-			log.Fatalf("Message of type %s is not yet supported.", msg.TypeUrl)
+			logger.Fatalf("Message of type %s is not yet supported.", msg.TypeUrl)
 		}
 		if err != nil {
-			log.Fatal(err)
+			logger.Fatal(err)
 		}
 	}
 

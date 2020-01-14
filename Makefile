@@ -28,11 +28,12 @@ proto-py:
 		modelzoo/protos/*.proto
 	
 proto-go:
+	cd ..; mkdir -p modelzoo/js/build/static/_swagger
 	cd ..; protoc \
 		$(protoc_include) \
   		--go_out=plugins=grpc,paths=source_relative:modelzoo/go \
 		--grpc-gateway_out=logtostderr=true,paths=source_relative:modelzoo/go \
-        --swagger_out=logtostderr=true:modelzoo/go \
+        --swagger_out=logtostderr=true:modelzoo/js/build/static/_swagger \
 		modelzoo/protos/*.proto
 
 .PHONY: link
