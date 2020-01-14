@@ -20,20 +20,6 @@ import (
 	"encoding/json"
 )
 
-// Define base outputs
-// var outputs = [...]string{"vision", "text", "segment"}
-
-// type ModelInfo struct {
-// 	Name     string `json:"name"`
-// 	Category string `json:"category"`
-// 	Output   string `json:"output"`
-// 	Private  bool   `json:"private"`
-// }
-
-// type Models struct {
-// 	Models []ModelInfo `json:"models"`
-// }
-
 // Seed the db
 func Seed(filename string, dbPath string) {
 	// Use modelzoo package so package registration is called
@@ -110,40 +96,4 @@ func Seed(filename string, dbPath string) {
 
 	// read closing bracket
 	dec.Token()
-
-	// for _, model := range models.Models {
-	// 	category := int(services.ModelCategory_value[strings.ToUpper(model.Category)])
-	// 	output := index(strings.ToLower(model.Output))
-	// 	db.Create(&Model{
-	// 		ID:            uuid.New(),
-	// 		Name:          model.Name,
-	// 		Author:        iuid,
-	// 		ModelCategory: category,
-	// 		OutputType:    output,
-	// 		Private:       model.Private})
-	// }
-
 }
-
-// func populate_categories(db *gorm.DB) {
-// 	for index, category := range services.ModelCategory_name {
-// 		cmd := fmt.Sprintf("INSERT INTO categories VALUES (%d, \"%s\")", index, category)
-// 		db.Exec(cmd)
-// 	}
-// }
-
-// func populate_outputs(db *gorm.DB) {
-// 	for index, output := range outputs {
-// 		cmd := fmt.Sprintf("INSERT INTO output_types VALUES (%d, \"%s\")", index, output)
-// 		db.Exec(cmd)
-// 	}
-// }
-
-// func index(item string) int {
-// 	for i, it := range outputs {
-// 		if it == item {
-// 			return i
-// 		}
-// 	}
-// 	return -1
-// }
