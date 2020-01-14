@@ -1,5 +1,5 @@
 import { Button, Card, Input, List } from "antd";
-import { ModelzooServicePromiseClient } from "protos/services_grpc_web_pb";
+import { ModelzooServicePromiseClient } from "js/generated/modelzoo/protos/services_grpc_web_pb";
 import React, { FC, useState } from "react";
 
 interface TextsInputProps {

@@ -1,13 +1,13 @@
 import { NavItem } from "./Components/NavItem";
 
 export const NavItems: NavItem[] = [
-  { route: "/", name: "Home", icon: "home" },
+  { route: "/", name: "Modelzoo", icon: "home", addEffect: true },
   // { route: "/catalog", name: "Catalog", icon: "appstore" },
   // { route: "/monitor", name: "Monitor", icon: "monitor" },
   { route: "/register", name: "Register", icon: "edit" },
-  { route: "/api", name: "API", icon: "api" }
+  { route: "/api", name: "API", icon: "api" },
   // { route: "/contact", name: "Contact", icon: "contacts" },
-  // { route: "/compare", name: "Compare", icon: "block" }
+  { route: "/compare", name: "Compare", icon: "block" }
 ];
 
 export const TagToColor: Record<string, string> = {

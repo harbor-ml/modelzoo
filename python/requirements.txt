@@ -1,5 +1,0 @@
-numpy
-w3lib
-protobuf
-flask
-flask-cors

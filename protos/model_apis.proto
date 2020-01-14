@@ -1,0 +1,37 @@
+syntax = "proto3";
+package modelzoo;
+
+/* Image is repsented by the datauri format
+   https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
+*/
+message Image {
+    map<string, string> metadata = 1;
+    string image_data_url = 2;
+  
+    string model_name = 3;
+    string access_token = 4;
+  }
+  
+  // Text is a list of string
+  message Text {
+    map<string, string> metadata = 1;
+    repeated string texts = 2;
+  
+    string model_name = 3;
+    string access_token = 4;
+  }
+  
+  /* Table is more complicated.
+     It is inspired from pandas orient="index"
+     >>> df.to_json(orient='index')
+     '{"row 1":{"col 1":"a","col 2":"b"},"row 2":{"col 1":"c","col 2":"d"}}'
+  */
+  message Table {
+    map<string, string> metadata = 1;
+    string model_name = 2;
+    string access_token = 3;
+  
+    message Row { map<string, string> column_to_value = 1; }
+    map<string, Row> table = 4;
+    repeated string column_names = 5;
+  }

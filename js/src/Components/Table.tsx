@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import { ColumnProps } from "antd/lib/table";
 import _ from "lodash";
-import { Table as pb_Table } from "protos/services_pb";
+import { Table as pb_Table } from "js/generated/modelzoo/protos/model_apis_pb";
 import React, { FC } from "react";
 
 interface TableOutputProps {
@@ -17,7 +17,6 @@ export const TableOutput: FC<TableOutputProps> = props => {
   });
 
   let dataSource = tableProto.toObject().tableMap.map((val, idx, arr) => {
-    console.log(val);
     let rowName = val[0];
     let rowData = val[1];
     let [rowKeys, rowVals] = _.zip(...rowData.columnToValueMap)!;

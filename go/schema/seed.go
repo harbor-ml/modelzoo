@@ -2,12 +2,13 @@ package schema
 
 import (
 	"bufio"
-	"log"
 	"os"
 
 	"github.com/golang/protobuf/ptypes"
 
-	modelzoo "github.com/harbor-ml/modelzoo/go/protos"
+	log "github.com/sirupsen/logrus"
+
+	modelzoo "github.com/harbor-ml/modelzoo/go/modelzoo/protos"
 
 	"github.com/golang/protobuf/ptypes/any"
 
@@ -19,29 +20,20 @@ import (
 	"encoding/json"
 )
 
-// Define base outputs
-// var outputs = [...]string{"vision", "text", "segment"}
-
-// type ModelInfo struct {
-// 	Name     string `json:"name"`
-// 	Category string `json:"category"`
-// 	Output   string `json:"output"`
-// 	Private  bool   `json:"private"`
-// }
-
-// type Models struct {
-// 	Models []ModelInfo `json:"models"`
-// }
-
-func Seed(filename string) {
+// Seed the db
+func Seed(filename string, dbPath string) {
 	// Use modelzoo package so package registration is called
 	var _ modelzoo.Image
+	logger := log.WithFields(log.Fields{
+		"actor":    "seeder",
+		"dbPath":   dbPath,
+		"fromFile": filename,
+	})
 
 	// Open SQLite3 DB on local
-	os.Remove("/tmp/modelzoo.db")
-	db, err := gorm.Open("sqlite3", "/tmp/modelzoo.db")
+	db, err := gorm.Open("sqlite3", dbPath)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 	defer db.Close()
 
@@ -51,11 +43,11 @@ func Seed(filename string) {
 	db.AutoMigrate(&ModelMetaData{})
 	db.AutoMigrate(&Query{})
 
-	log.Println("Reading", filename)
+	logger.Println("Reading", filename)
 
 	jsonFile, err := os.Open(filename)
 	if err != nil {
-		log.Fatalf("Unable to open %s", filename)
+		logger.Fatalf("Unable to open %s", filename)
 	}
 	defer jsonFile.Close()
 
@@ -74,70 +66,34 @@ func Seed(filename string) {
 		case "/modelzoo.User":
 			user := modelzoo.User{}
 			if err := ptypes.UnmarshalAny(&msg, &user); err != nil {
-				log.Fatal(err)
+				logger.Fatal(err)
 			}
 
 			userRecord := User{Email: user.Email, Password: user.Password}
 			if err := db.Create(&userRecord).Error; err != nil {
-				log.Fatal(err)
+				logger.Fatal(err)
 			}
 
-			log.Printf("user %v created", user.Email)
+			logger.Printf("user %v created", user.Email)
 
 		case "/modelzoo.Model":
 			model := modelzoo.Model{}
 			if err := ptypes.UnmarshalAny(&msg, &model); err != nil {
-				log.Fatal(err)
+				logger.Fatal(err)
 			}
 			if err := CreateModel(db, &model); err != nil {
-				log.Fatal(err)
+				logger.Fatal(err)
 			}
 
-			log.Printf("Model %v created.", model.ModelName)
+			logger.Printf("Model %v created.", model.ModelName)
 		default:
-			log.Fatalf("Message of type %s is not yet supported.", msg.TypeUrl)
+			logger.Fatalf("Message of type %s is not yet supported.", msg.TypeUrl)
 		}
 		if err != nil {
-			log.Fatal(err)
+			logger.Fatal(err)
 		}
 	}
 
 	// read closing bracket
 	dec.Token()
-
-	// for _, model := range models.Models {
-	// 	category := int(services.ModelCategory_value[strings.ToUpper(model.Category)])
-	// 	output := index(strings.ToLower(model.Output))
-	// 	db.Create(&Model{
-	// 		ID:            uuid.New(),
-	// 		Name:          model.Name,
-	// 		Author:        iuid,
-	// 		ModelCategory: category,
-	// 		OutputType:    output,
-	// 		Private:       model.Private})
-	// }
-
 }
-
-// func populate_categories(db *gorm.DB) {
-// 	for index, category := range services.ModelCategory_name {
-// 		cmd := fmt.Sprintf("INSERT INTO categories VALUES (%d, \"%s\")", index, category)
-// 		db.Exec(cmd)
-// 	}
-// }
-
-// func populate_outputs(db *gorm.DB) {
-// 	for index, output := range outputs {
-// 		cmd := fmt.Sprintf("INSERT INTO output_types VALUES (%d, \"%s\")", index, output)
-// 		db.Exec(cmd)
-// 	}
-// }
-
-// func index(item string) int {
-// 	for i, it := range outputs {
-// 		if it == item {
-// 			return i
-// 		}
-// 	}
-// 	return -1
-// }

@@ -1,9 +1,7 @@
-import { Card, Col, message, Row, Statistic } from "antd";
-import _ from "lodash";
-import { ModelzooServicePromiseClient } from "protos/services_grpc_web_pb";
-import { Empty } from "protos/services_pb";
+import { Card, Col, message, Row } from "antd";
+import { ModelzooServicePromiseClient } from "js/generated/modelzoo/protos/services_grpc_web_pb";
+import { Empty } from "js/generated/modelzoo/protos/services_pb";
 import React, { FC, useMemo, useState } from "react";
-import { FeaturedModelTag } from "../Components/Tags";
 import { ModelObject, parseModels } from "../Utils/ProtoUtil";
 
 import { Link } from "react-router-dom";

@@ -2,50 +2,61 @@ import { Icon, Layout, Menu, Input, message, Drawer, Typography } from "antd";
 import React, { FC, useState, useMemo } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { NavItemComponent } from "./Components/NavItem";
-import { API, Catalog, Contact, Home, Monitor, Register, Model } from "./Views";
+import { InferenceRun, CompareRuntime } from "./Components/Compare";
+import { API, Home, Register, Model } from "./Views";
 import { NavItems } from "./Config";
-import { ModelzooServicePromiseClient } from "protos/services_grpc_web_pb";
-import { Empty } from "protos/services_pb";
+import { ModelzooServicePromiseClient } from "js/generated/modelzoo/protos/services_grpc_web_pb";
+import { Empty } from "js/generated/modelzoo/protos/services_pb";
 import { ModelObject, parseModels } from "./Utils/ProtoUtil";
 const { Content, Sider, Footer } = Layout;
-// const { Search } = Input;
-// import { Models } from "./Components/Models";
 
-// const { Title } = Typography;
 
 const App: FC = () => {
   let [siderCollapsed, setSiderCollapsed] = useState(false);
   const [token, setToken] = useState("");
   const [tokenDrawerVisible, setTokenDrawerVisible] = useState(false);
   const [allModels, setAllModels] = useState<Array<ModelObject>>([]);
-  console.log("App renders with token " + token);
+
+  const [inferenceRuns, setInferenceRuns] = useState<Array<InferenceRun>>([]);
+  function pushInferenceRun(newRun: InferenceRun) {
+    setInferenceRuns((inferenceRuns) => [...inferenceRuns, newRun]);
+  }
 
   const client = useMemo(() => {
-    let newClient = new ModelzooServicePromiseClient(
-      `${window.location.protocol}//${window.location.hostname}:8080`,
-      // `http://${window.location.hostname}:8080`,
+    let proxyClientAddress = "";
+    if (process.env.NODE_ENV === "development") {
+      console.log("using dev version")
+      proxyClientAddress = "http://localhost:8080";
+    } else {
+      proxyClientAddress = `${window.location.protocol}//${window.location.hostname}:8080`;
+    }
+    return new ModelzooServicePromiseClient(
+      proxyClientAddress,
       null,
       null
-    );
+    )
+  }, []);
 
-    // Use new client to fetch list of models immediately
-    newClient
-      .listModels(new Empty(), undefined)
-      .then(resp => setAllModels(parseModels(resp.getModelsList())))
-      .catch(err => {
-        message.error("Failed to fetch models");
-        console.error(err);
-      });
+  // Use new client to fetch list of models immediately
+  useMemo(() => {
+    if (client) {
+      client.listModels(new Empty(), undefined)
+        .then(resp => setAllModels(parseModels(resp.getModelsList())))
+        .catch(err => {
+          message.error("Failed to fetch models");
+          console.error(err);
+        })
+    }
+  }, [client]);
 
-    newClient
-      .getToken(new Empty(), undefined)
+  useMemo(() => {
+    client.getToken(new Empty(), undefined)
       .then(resp => setToken(resp.getToken()))
       .catch(err => {
         message.loading("Failed to retrieve token");
         console.log(err);
-      });
-    return newClient;
-  }, []);
+      })
+  }, [client]);
 
   let contentPading = 20;
   let contentWidth = siderCollapsed ? 80 : 200;
@@ -142,15 +153,13 @@ const App: FC = () => {
                 <Model
                   client={client}
                   token={token}
-                  // models={allModels}
+                  finishedCallback={pushInferenceRun}
+                // models={allModels}
                 />
               </Route>
-              {/* <Route path="/compare">
-                <h2>
-                  Comparison fucntion coming soon. View your result in one
-                  place.
-                </h2>
-              </Route> */}
+              <Route path="/compare">
+                <CompareRuntime allRuns={inferenceRuns}></CompareRuntime>
+              </Route>
             </Switch>
           </Content>
 

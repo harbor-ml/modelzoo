@@ -1,19 +1,17 @@
 import base64
+import time
 import io
 import mimetypes
 from functools import wraps
 from typing import List
+import inspect
 from google.protobuf import json_format
 
 from PIL import Image
 from w3lib.url import parse_data_uri
 
 import pandas as pd
-import modelzoo.protos.services_pb2 as pb
-import numpy as np
-import pandas as pd
-imarray = np.random.rand(100,100,3) * 255
-im = Image.fromarray(imarray.astype('uint8')).convert('RGB')
+import modelzoo.protos.model_apis_pb2 as pb
 
 out_mapping = {"image_output": im, "table_output": pd.DataFrame({'status': ["Inference Failed"]}), "text_output": ["default"]}
 
@@ -25,16 +23,31 @@ class register_type:
         self.metadata_name = override_metadata_name
 
     def __call__(self, func):
+        if inspect.getfullargspec(func).args[0] == "self":
+            return self.make_method_decorator(func)
+        else:
+            return self.make_function_decorator(func)
+
+    def make_function_decorator(self, func):
         @wraps(func)
         def wrapped(inp, metadata):
-            try:
-                args = (self._in_transformer(inp),)
-                kwargs = {self.metadata_name: metadata}
-                out = func(*args, **kwargs)
-                out = self._out_transformer(out)
-            except:
-                out = self._out_transformer(out_mapping[self._out_transformer.__name__])
-            return out
+            args = (self._in_transformer(inp),)
+            kwargs = {self.metadata_name: metadata}
+
+            started = time.time()
+            out = func(*args, **kwargs)
+            metadata["model_runtime_s"] = str((time.time() - started)*1000)
+
+            return self._out_transformer(out)
+        return wrapped
+    
+    def make_method_decorator(self, func):
+        @wraps(func)
+        def wrapped(self_object, inp, metadata):
+            args = (self._in_transformer(inp),)
+            kwargs = {self.metadata_name: metadata}
+            out = func(self_object, *args, **kwargs)
+            return self._out_transformer(out)
         return wrapped
 
 
@@ -59,12 +72,16 @@ def text_input(text_request: pb.Text) -> List[str]:
 def text_output(texts: List[str]) -> pb.Text:
     return pb.Text(texts=texts)
 
+
 def table_input(table_request: pb.Table) -> pd.DataFrame:
     result_dict = json_format.MessageToDict(table_request)
     p = []
-    for i in range(len(result_dict['table'])):
-        p.append(pd.DataFrame.from_dict(result_dict['table']['%d' % (i)], orient='index'))
-    return pd.concat(p, sort=True).reset_index().drop('index', axis=1)
+    for i in range(len(result_dict["table"])):
+        p.append(
+            pd.DataFrame.from_dict(result_dict["table"]["%d" % (i)], orient="index")
+        )
+    return pd.concat(p, sort=True).reset_index().drop("index", axis=1)
+
 
 def table_output(dataframe: pd.DataFrame) -> pb.Table:
     dataframe.index = list(map(str, dataframe.index))
@@ -78,5 +95,5 @@ def table_output(dataframe: pd.DataFrame) -> pb.Table:
         row = table.table[row_name]
         for column, value in column_value_map.items():
             row.column_to_value[column] = value
-        
+
     return table

@@ -16,7 +16,7 @@ var seedCmd = &cobra.Command{
 
 A SQLLite3 instance will be created by default.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		schema.Seed(*dataPath)
+		schema.Seed(*dataPath, "/tmp/modelzoo.db")
 	},
 }
 

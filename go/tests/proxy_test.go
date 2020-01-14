@@ -11,10 +11,11 @@ import (
 	"os"
 	"testing"
 
+	"github.com/harbor-ml/modelzoo/go/schema"
 	"github.com/harbor-ml/modelzoo/go/server"
 	"github.com/phayes/freeport"
 
-	modelzoo "github.com/harbor-ml/modelzoo/go/protos"
+	modelzoo "github.com/harbor-ml/modelzoo/go/modelzoo/protos"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
@@ -50,6 +51,8 @@ func TestListModel(t *testing.T) {
 }
 
 func TestTextInfer(t *testing.T) {
+	t.Skip("This requires setup of the default python server")
+
 	values := map[string]string{"body": ""}
 
 	jsonValue, _ := json.Marshal(values)
@@ -69,7 +72,7 @@ func TestTextInfer(t *testing.T) {
 
 	if string(payloadStruct) != "{\"type\":\"TEXT\",\"text\":{\"metadata\":{\"method\":\"reversed\"},\"texts\":[\"654321\",\"123456\"]}}" {
 		log.Println(string(payloadStruct))
-		errorAndFailWith(errors.New("Inference Return failed."), t)
+		errorAndFailWith(errors.New("inference Return failed"), t)
 	}
 }
 
@@ -91,7 +94,9 @@ func TestMain(m *testing.M) {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 
-	go server.ServeForever(ctx, false, port)
+	dbPath := server.CreateTempFile("*.test.db")
+	schema.Seed("./seed_generated.json", dbPath)
+	go server.ServeForever(ctx, false, port, dbPath)
 
 	go server.ProxyForever(port, proxyPort)
 

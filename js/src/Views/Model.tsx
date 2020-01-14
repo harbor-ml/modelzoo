@@ -1,18 +1,21 @@
 import { Divider, message, Result, Spin, Typography, Col, Row } from "antd";
 import _ from "lodash";
-import { ModelzooServicePromiseClient } from "protos/services_grpc_web_pb";
-import { Empty, Image, Payload, PayloadType, Text } from "protos/services_pb";
+import { ModelzooServicePromiseClient } from "js/generated/modelzoo/protos/services_grpc_web_pb";
+import { Empty, Payload, PayloadType } from "js/generated/modelzoo/protos/services_pb";
+import { Image, Text } from "js/generated/modelzoo/protos/model_apis_pb";
 import React, { Dispatch, FC, useMemo, useReducer } from "react";
 import { useParams } from "react-router-dom";
 import { ImageInput, ImageOutput } from "../Components/Image";
 import { TableOutput } from "../Components/Table";
 import { TagsSet, StatsSet } from "../Components/Tags";
 import { TextsInput, TextsOutput } from "../Components/Texts";
-import { ModelObject, parseModels } from "../Utils/ProtoUtil";
+import { ModelObject, parseModels, payloadMetadataToRecord } from "../Utils/ProtoUtil";
+import { InferenceRun } from "../Components/Compare";
 
 interface ModelProps {
   client: ModelzooServicePromiseClient;
   token: string;
+  finishedCallback: (run: InferenceRun) => void;
 }
 
 enum ModelFoundState {
@@ -37,6 +40,9 @@ interface ModelInferenceState {
   inputElement: JSX.Element;
   displayElement: JSX.Element;
   outputElement: JSX.Element;
+
+  props: ModelProps | undefined;
+  seenResponseIDs: Set<number>;
 }
 
 const modelInitialState: ModelInferenceState = {
@@ -54,17 +60,20 @@ const modelInitialState: ModelInferenceState = {
   metadataElement: <div></div>,
   inputElement: <div></div>,
   displayElement: <div></div>,
-  outputElement: <div></div>
+  outputElement: <div></div>,
+
+  props: undefined,
+  seenResponseIDs: new Set([])
 };
 
 enum ModelActionType {
-  SetModelName,
-  SetModelNotFound,
-  SetModelTypes,
-  SetInput,
-  SetOutputLoading,
-  SetOutputResult,
-  SetDisplayResult
+  SetModelName = "SetModelName",
+  SetModelNotFound = "SetModelNotFound",
+  SetModelTypes = "SetModelTypes",
+  SetInput = "SetInput",
+  SetOutputLoading = "SetOutputLoading",
+  SetOutputResult = "SetOutputResult",
+  SetDisplayResult = "SetDisplayResult",
 }
 
 interface ModelAction {
@@ -95,6 +104,7 @@ function reducer(
   state: ModelInferenceState,
   action: ModelActionUnion
 ): ModelInferenceState {
+  console.log("Model.tsx Recuder acting on action " + action.type);
   switch (action.type) {
     case ModelActionType.SetModelName:
       let actionCast = action as SetModelNameAction;
@@ -105,9 +115,7 @@ function reducer(
         dispatch: actionCast.dispatch,
         token: actionCast.token
       };
-
     case ModelActionType.SetModelTypes:
-      console.log(state);
       let modelFound = (action as SetModelTypeAction).modelObject;
 
       let inputType = modelFound.metadata["input_type"][0].toLowerCase();
@@ -170,7 +178,8 @@ function reducer(
         ),
         inputElement: inputElement,
         outputType: outputType,
-        inputType: inputType
+        inputType: inputType,
+        modelObject: modelFound,
       };
 
     case ModelActionType.SetInput:
@@ -193,9 +202,8 @@ function reducer(
 
       return {
         ...state,
-        outputElement: <Spin></Spin>
+        outputElement: <Spin></Spin>,
       };
-      break;
     case ModelActionType.SetDisplayResult:
       let displayPayload = (action as SetDisplayAction).payload;
       switch (state.inputType) {
@@ -230,9 +238,20 @@ function reducer(
           message.error("Unknown input type " + state.inputType);
           return state;
       }
-      break;
     case ModelActionType.SetOutputResult:
       let payload = (action as SetOutputAction).payload;
+      if (state.seenResponseIDs.has(payload.getResponseId())) {
+        return state;
+      }
+
+      const currentRunData: InferenceRun = {
+        model: state.modelObject!,
+        input_type: state.inputType,
+        output_type: state.outputType,
+        queryMetadata: payloadMetadataToRecord(payload)!
+      }
+      state.props!.finishedCallback(currentRunData)
+
       switch (state.outputType) {
         case "image":
           return {
@@ -241,7 +260,8 @@ function reducer(
               <ImageOutput
                 image_uri={payload.getImage()!.getImageDataUrl()}
               ></ImageOutput>
-            )
+            ),
+            seenResponseIDs: state.seenResponseIDs.add(payload.getResponseId())
           };
         case "text":
           return {
@@ -250,14 +270,16 @@ function reducer(
               <TextsOutput
                 texts={payload.getText()!.getTextsList()}
               ></TextsOutput>
-            )
+            ),
+            seenResponseIDs: state.seenResponseIDs.add(payload.getResponseId())
           };
         case "table":
           return {
             ...state,
             outputElement: (
               <TableOutput tableProto={payload.getTable()!}></TableOutput>
-            )
+            ),
+            seenResponseIDs: state.seenResponseIDs.add(payload.getResponseId())
           };
         default:
           message.error("Unknown output type " + state.outputType);
@@ -290,9 +312,9 @@ export const Model: FC<ModelProps> = props => {
   // Parse props
   let { name } = useParams();
   let { client, token } = props;
+  modelInitialState.props = props;
   const [state, dispatch] = useReducer(reducer, modelInitialState);
 
-  console.log("model re-renders with token " + token);
 
   // Initial Action: fetch model
   useMemo(() => {

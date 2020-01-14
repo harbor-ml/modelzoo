@@ -3,8 +3,8 @@ import React, { FC, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { TagsSet } from "../Components/Tags";
 import { ModelObject, parseModels } from "../Utils/ProtoUtil";
-import { ModelzooServicePromiseClient } from "protos/services_grpc_web_pb";
-import { Empty } from "protos/services_pb";
+import { ModelzooServicePromiseClient } from "js/generated/modelzoo/protos/services_grpc_web_pb";
+import { Empty } from "js/generated/modelzoo/protos/services_pb";
 
 interface CatalogProps {
   // models: ModelObject[];
@@ -25,7 +25,7 @@ export const Catalog: FC<CatalogProps> = props => {
 
   let cards = models.map((model: ModelObject, index, arr) => {
     return (
-      <Col span={8}>
+      <Col span={8} key={index}>
         <Card
           title={model.name}
           style={{ margin: "4px" }}

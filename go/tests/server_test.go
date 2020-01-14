@@ -10,11 +10,12 @@ import (
 	"os"
 	"testing"
 
+	"github.com/harbor-ml/modelzoo/go/schema"
 	"github.com/harbor-ml/modelzoo/go/server"
 	"github.com/phayes/freeport"
 	"google.golang.org/grpc"
 
-	modelzoo "github.com/harbor-ml/modelzoo/go/protos"
+	modelzoo "github.com/harbor-ml/modelzoo/go/modelzoo/protos"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
@@ -90,6 +91,8 @@ func TestListModel(t *testing.T) {
 }
 
 func TestTextInfer(t *testing.T) {
+	t.Skip("This requires setup of the default python server")
+
 	input := []string{"123456", "654321"}
 	token, err := client.GetToken(context.Background(), &modelzoo.Empty{})
 	errorAndFailWith(err, t)
@@ -127,7 +130,9 @@ func TestMain(m *testing.M) {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 
-	go server.ServeForever(ctx, false, port)
+	dbPath := server.CreateTempFile("*.test.db")
+	schema.Seed("./seed_generated.json", dbPath)
+	go server.ServeForever(ctx, false, port, dbPath)
 
 	address := fmt.Sprintf("0.0.0.0:%d", port)
 	conn, err := grpc.Dial(address, grpc.WithInsecure())

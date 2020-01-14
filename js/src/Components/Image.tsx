@@ -1,6 +1,6 @@
 import { Alert, Button, Card, Col, Icon, Input, Row, Upload } from "antd";
-import { ModelzooServicePromiseClient } from "protos/services_grpc_web_pb";
-import { ImageDownloadRequest } from "protos/services_pb";
+import { ModelzooServicePromiseClient } from "js/generated/modelzoo/protos/services_grpc_web_pb";
+import { ImageDownloadRequest } from "js/generated/modelzoo/protos/services_pb";
 import React, { FC, useState } from "react";
 import { DefaultImages } from "../Config";
 
