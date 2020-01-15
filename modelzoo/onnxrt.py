@@ -68,10 +68,10 @@ def resnet101_onnxrt(inp: Image, metadata):
 @register_type(image_input, table_output)
 def resnet101_pytorch(inp: Image, metadata):
     input_tensor = preprocess(inp)
-    input_batch = input_tensor.unsqueeze(0).to('cuda')
+    input_batch = input_tensor.unsqueeze(0)
     started = time.time()
     with torch.no_grad():
-        output = model(input_batch)
+        output = model(input_batch.to('cuda'))
     metadata["model_runtime_s"] = str((time.time() - started))
     proba = torch.nn.functional.softmax(output[0], dim=0).cpu().numpy()
     top3 = np.argsort(proba)[-3:][::-1]
