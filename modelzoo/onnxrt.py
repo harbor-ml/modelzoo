@@ -37,7 +37,7 @@ from modelzoo.sugar import (
     text_input,
     text_output,
 )
-
+print("Ready to serve!")
 app = Flask(__name__)
 CORS(app)
 
