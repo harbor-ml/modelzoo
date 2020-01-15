@@ -51,7 +51,7 @@ def postprocess(result):
 
 @register_type(image_input, table_output)
 def resnet101_onnxrt(inp: Image, metadata):
-    image_arr = np.asarray(inp.resize((w, h), Image.ANTIALIAS)).transpose([2, 0, 1]).astype(trt.nptype(ModelData.DTYPE)).ravel()
+    image_arr = np.array([np.asarray(inp.resize((w, h), Image.ANTIALIAS)).transpose([2, 0, 1]).astype(np.float32)])
     image_arr = (image_arr / 255.0 - 0.45) / 0.225
     started = time.time()
     output = session.run([], {input_name: image_arr})[0]
