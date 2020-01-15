@@ -13,8 +13,6 @@ from w3lib.url import parse_data_uri
 import pandas as pd
 import modelzoo.protos.model_apis_pb2 as pb
 
-out_mapping = {"image_output": im, "table_output": pd.DataFrame({'status': ["Inference Failed"]}), "text_output": ["default"]}
-
 # NOTE(simon): Metadata should be a single mutable state that's returned.
 class register_type:
     def __init__(self, inp_type_cls, out_type_cls, override_metadata_name="metadata"):
