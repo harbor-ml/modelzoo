@@ -53,9 +53,9 @@ def postprocess(result):
 def resnet101_onnxrt(inp: Image, metadata):
     image_arr = np.array([np.asarray(inp.resize((w, h), Image.ANTIALIAS)).transpose([2, 0, 1]).astype(np.float32)])
     image_arr = (image_arr / 255.0 - 0.45) / 0.225
-    started = time.time()
+    started = time.perf_counter()
     output = session.run([], {input_name: image_arr})[0]
-    metadata["model_runtime_s"] = str((time.time() - started))
+    metadata["model_runtime_s"] = str((time.perf_counter() - started))
     res = postprocess(output)
     top3 = np.argsort(res)[-3:][::-1]
     l = [labels[i] for i in top3]
@@ -69,10 +69,10 @@ def resnet101_onnxrt(inp: Image, metadata):
 def resnet101_pytorch(inp: Image, metadata):
     input_tensor = preprocess(inp)
     input_batch = input_tensor.unsqueeze(0)
-    started = time.time()
+    started = time.perf_counter()
     with torch.no_grad():
         output = model(input_batch.to('cuda'))
-    metadata["model_runtime_s"] = str((time.time() - started))
+    metadata["model_runtime_s"] = str((time.perf_counter() - started))
     proba = torch.nn.functional.softmax(output[0], dim=0).cpu().numpy()
     top3 = np.argsort(proba)[-3:][::-1]
     l = [labels[i] for i in top3]
