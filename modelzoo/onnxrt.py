@@ -84,7 +84,7 @@ def resnet101_pytorch(inp: Image, metadata):
 
 
 prediction_apps = dict(
-    onnxrt=(resnet101_onnxrt, pb.Image),
+    onnxrtresnet=(resnet101_onnxrt, pb.Image),
     pytorch=(resnet101_pytorch, pb.Image),
 )
 
@@ -106,7 +106,7 @@ def ok():
 
 
 @app.route("/<app_name>/predict", methods=["POST"])
-def clipper(app_name):
+def onnxrt(app_name):
     pred_func, input_cls = prediction_apps[app_name]
     request_proto = input_cls()
     request_proto.ParseFromString(base64.b64decode(request.json["input"]))
