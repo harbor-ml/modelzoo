@@ -12,6 +12,10 @@ from flask import Flask, g, jsonify, request
 from flask_cors import CORS
 from google.protobuf import json_format
 from PIL import Image
+import onnxruntime as onnxrt
+session = onnxrt.InferenceSession('/workspace/resnet101/resnet101v2.onnx', None)
+input_name = session.get_inputs()[0].name
+c, h, w = (3, 224, 224)
 import torch
 model = torch.hub.load('pytorch/vision:v0.4.2', 'resnet101', pretrained=True)
 model.eval()
@@ -24,10 +28,6 @@ preprocess = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 ])
 labels = open('/workspace/resnet101/class_labels.txt', 'r').read().split('\n')
-import onnxruntime as onnxrt
-session = onnxrt.InferenceSession('/workspace/resnet101/resnet101v2.onnx', None)
-input_name = session.get_inputs()[0].name
-c, h, w = (3, 224, 224)
 import modelzoo.protos.model_apis_pb2 as pb
 from modelzoo.sugar import (
     image_input,
