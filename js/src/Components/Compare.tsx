@@ -1,7 +1,7 @@
 import { ModelObject } from "../Utils/ProtoUtil";
 import { FC, useState } from "react";
 import React from "react";
-import { Checkbox, Empty } from 'antd';
+import { Checkbox, Empty, Tag } from 'antd';
 import { Chart } from "react-google-charts";
 
 
@@ -22,7 +22,11 @@ function runToCheckBox(run: InferenceRun, id: number, pushChangedID: (id: number
                 popChangedID(id)
             }
         }}>
-            {run.model.name}, {run.input_type}, {run.output_type}, {JSON.stringify(run.queryMetadata)},
+            {id}:
+            <Tag>{run.model.metadata.framework}</Tag>
+            <Tag>{run.model.name}</Tag>
+            <Tag>{run.input_type}</Tag>
+            <Tag>{run.output_type}</Tag>
         </Checkbox> <br></br>
     </div>
 }
@@ -37,8 +41,8 @@ function createPlot(runs: InferenceRun[]): JSX.Element {
     }
 
     const dataItems = runs.map((value, _, __) => [
-        value.model.name,
-        Number.parseFloat(value.queryMetadata["model_runtime_s"]),
+        value.model.metadata.framework + " " + value.model.name,
+        Number.parseFloat(value.queryMetadata["model_runtime_s"]) * 1000,
         null,
         null])
 
@@ -50,7 +54,7 @@ function createPlot(runs: InferenceRun[]): JSX.Element {
         data={[
             [
                 'Element',
-                'Latency (s)',
+                'Latency (ms)',
                 { role: 'style' },
                 {
                     sourceColumn: 0,
@@ -71,6 +75,12 @@ function createPlot(runs: InferenceRun[]): JSX.Element {
             height: 400,
             bar: { groupWidth: '95%' },
             legend: { position: 'none' },
+            hAxis: {
+                title: "Latency(ms)",
+            },
+            yAxis: {
+                title: "Query"
+            }
         }}
     />
 }
@@ -91,6 +101,7 @@ export const CompareRuntime: FC<CompareProps> = props => {
     }
 
     return <div>
+        <h1>Compare (earliest on top)</h1>
         {allRuns.map((value, id, __) => runToCheckBox(value, id, pushSelectedIndex, popSelectedIndex))}
 
         {createPlot(selectedIndex.map((value, _, __) => allRuns[value]))}

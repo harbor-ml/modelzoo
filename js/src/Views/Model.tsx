@@ -3,7 +3,7 @@ import _ from "lodash";
 import { ModelzooServicePromiseClient } from "js/generated/modelzoo/protos/services_grpc_web_pb";
 import { Empty, Payload, PayloadType } from "js/generated/modelzoo/protos/services_pb";
 import { Image, Text } from "js/generated/modelzoo/protos/model_apis_pb";
-import React, { Dispatch, FC, useMemo, useReducer } from "react";
+import React, { Dispatch, FC, useMemo, useReducer, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { ImageInput, ImageOutput } from "../Components/Image";
 import { TableOutput } from "../Components/Table";
@@ -42,7 +42,7 @@ interface ModelInferenceState {
   outputElement: JSX.Element;
 
   props: ModelProps | undefined;
-  seenResponseIDs: Set<number>;
+  seenResponseIDs: Set<string>;
 }
 
 const modelInitialState: ModelInferenceState = {
@@ -99,6 +99,26 @@ type ModelActionUnion =
   | SetModelTypeAction
   | ModelAction
   | SetPayloadAction;
+
+function deriveDisplayElement(state: ModelInferenceState, displayPayload: Payload): JSX.Element {
+  switch (state.inputType) {
+    case "image":
+      return <ImageOutput
+        image_uri={displayPayload.getImage()!.getImageDataUrl()}
+      ></ImageOutput>
+    case "text":
+      return <TextsOutput
+        texts={displayPayload.getText()!.getTextsList()}
+      ></TextsOutput>
+    case "table":
+      return <TableOutput
+        tableProto={displayPayload.getTable()!}
+      ></TableOutput>
+    default:
+      message.error("Unknown input type " + state.inputType);
+      return <div></div>;
+  }
+}
 
 function reducer(
   state: ModelInferenceState,
@@ -183,11 +203,7 @@ function reducer(
       };
 
     case ModelActionType.SetInput:
-      state.dispatch!({
-        type: ModelActionType.SetDisplayResult,
-        payload: (action as SetInputAction).payload
-      });
-
+      console.log("about to call client inference")
       state
         .client!.inference((action as SetInputAction).payload, undefined)
         .then(resp =>
@@ -200,49 +216,20 @@ function reducer(
           message.error("Can't ping the inference API: " + err.message)
         );
 
+
       return {
         ...state,
         outputElement: <Spin></Spin>,
+        displayElement: deriveDisplayElement(state, (action as SetInputAction).payload)
       };
-    case ModelActionType.SetDisplayResult:
-      let displayPayload = (action as SetDisplayAction).payload;
-      switch (state.inputType) {
-        case "image":
-          return {
-            ...state,
-            displayElement: (
-              <ImageOutput
-                image_uri={displayPayload.getImage()!.getImageDataUrl()}
-              ></ImageOutput>
-            )
-          };
-        case "text":
-          return {
-            ...state,
-            displayElement: (
-              <TextsOutput
-                texts={displayPayload.getText()!.getTextsList()}
-              ></TextsOutput>
-            )
-          };
-        case "table":
-          return {
-            ...state,
-            displayElement: (
-              <TableOutput
-                tableProto={displayPayload.getTable()!}
-              ></TableOutput>
-            )
-          };
-        default:
-          message.error("Unknown input type " + state.inputType);
-          return state;
-      }
+
     case ModelActionType.SetOutputResult:
       let payload = (action as SetOutputAction).payload;
-      if (state.seenResponseIDs.has(payload.getResponseId())) {
-        return state;
-      }
+      // console.log(state)
+      // console.log(payload.getResponseId().toString())
+      // if (state.seenResponseIDs.has(payload.getResponseId().toString())) {
+      //   return state;
+      // }
 
       const currentRunData: InferenceRun = {
         model: state.modelObject!,
@@ -261,7 +248,7 @@ function reducer(
                 image_uri={payload.getImage()!.getImageDataUrl()}
               ></ImageOutput>
             ),
-            seenResponseIDs: state.seenResponseIDs.add(payload.getResponseId())
+            seenResponseIDs: state.seenResponseIDs.add(payload.getResponseId().toString())
           };
         case "text":
           return {
@@ -271,7 +258,7 @@ function reducer(
                 texts={payload.getText()!.getTextsList()}
               ></TextsOutput>
             ),
-            seenResponseIDs: state.seenResponseIDs.add(payload.getResponseId())
+            seenResponseIDs: state.seenResponseIDs.add(payload.getResponseId().toString())
           };
         case "table":
           return {
@@ -279,7 +266,7 @@ function reducer(
             outputElement: (
               <TableOutput tableProto={payload.getTable()!}></TableOutput>
             ),
-            seenResponseIDs: state.seenResponseIDs.add(payload.getResponseId())
+            seenResponseIDs: state.seenResponseIDs.add(payload.getResponseId().toString())
           };
         default:
           message.error("Unknown output type " + state.outputType);
@@ -312,12 +299,16 @@ export const Model: FC<ModelProps> = props => {
   // Parse props
   let { name } = useParams();
   let { client, token } = props;
-  modelInitialState.props = props;
-  const [state, dispatch] = useReducer(reducer, modelInitialState);
+
+  const [state, dispatch] = useReducer(reducer, modelInitialState, (state) => {
+
+    console.log("in initializer")
+    return { ...state, props: props }
+  });
 
 
   // Initial Action: fetch model
-  useMemo(() => {
+  useEffect(() => {
     dispatch({
       type: ModelActionType.SetModelName,
       modelName: name as string,

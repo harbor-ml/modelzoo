@@ -35,7 +35,7 @@ class register_type:
 
             started = time.time()
             out = func(*args, **kwargs)
-            metadata["model_runtime_s"] = str((time.time() - started)*1000)
+            metadata["model_runtime_s"] = str((time.time() - started))
 
             return self._out_transformer(out)
         return wrapped

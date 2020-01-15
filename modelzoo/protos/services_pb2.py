@@ -23,7 +23,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='modelzoo',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x1emodelzoo/protos/services.proto\x12\x08modelzoo\x1a\x1cgoogle/api/annotations.proto\x1a modelzoo/protos/model_apis.proto\"\x07\n\x05\x45mpty\"$\n\x06KVPair\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\"?\n\x05Model\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\"\n\x08metadata\x18\x03 \x03(\x0b\x32\x10.modelzoo.KVPair\"\'\n\x04User\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"\x1f\n\x0eRateLimitToken\x12\r\n\x05token\x18\x01 \x01(\t\"5\n\x12ListModelsResponse\x12\x1f\n\x06models\x18\x01 \x03(\x0b\x32\x0f.modelzoo.Model\"#\n\x14ImageDownloadRequest\x12\x0b\n\x03url\x18\x01 \x01(\t\"&\n\x15ImageDownloadResponse\x12\r\n\x05image\x18\x01 \x01(\t\"\x9d\x01\n\x07Payload\x12#\n\x04type\x18\x01 \x01(\x0e\x32\x15.modelzoo.PayloadType\x12 \n\x05image\x18\x02 \x01(\x0b\x32\x0f.modelzoo.ImageH\x00\x12\x1e\n\x04text\x18\x03 \x01(\x0b\x32\x0e.modelzoo.TextH\x00\x12 \n\x05table\x18\x04 \x01(\x0b\x32\x0f.modelzoo.TableH\x00\x42\t\n\x07payload\"p\n\x0bMetricItems\x12-\n\x07metrics\x18\x04 \x03(\x0b\x32\x1c.modelzoo.MetricItems.Metric\x1a\x32\n\x06Metric\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\x12\x0c\n\x04unit\x18\x03 \x01(\t*-\n\x0bPayloadType\x12\t\n\x05IMAGE\x10\x00\x12\x08\n\x04TEXT\x10\x01\x12\t\n\x05TABLE\x10\x02\x32\xda\x04\n\x0fModelzooService\x12H\n\tInference\x12\x11.modelzoo.Payload\x1a\x11.modelzoo.Payload\"\x15\x82\xd3\xe4\x93\x02\x0f\"\n/inference:\x01*\x12M\n\x08GetImage\x12\x1e.modelzoo.ImageDownloadRequest\x1a\x1f.modelzoo.ImageDownloadResponse\"\x00\x12\x36\n\nGetMetrics\x12\x0f.modelzoo.Empty\x1a\x15.modelzoo.MetricItems\"\x00\x12L\n\x08GetToken\x12\x0f.modelzoo.Empty\x1a\x18.modelzoo.RateLimitToken\"\x15\x82\xd3\xe4\x93\x02\x0f\"\n/get/token:\x01*\x12S\n\nListModels\x12\x0f.modelzoo.Empty\x1a\x1c.modelzoo.ListModelsResponse\"\x16\x82\xd3\xe4\x93\x02\x10\"\x0b/get/models:\x01*\x12\x46\n\nCreateUser\x12\x0e.modelzoo.User\x1a\x0f.modelzoo.Empty\"\x17\x82\xd3\xe4\x93\x02\x11\"\x0c/create/user:\x01*\x12I\n\x0b\x43reateModel\x12\x0f.modelzoo.Model\x1a\x0f.modelzoo.Empty\"\x18\x82\xd3\xe4\x93\x02\x12\"\r/create/model:\x01*\x12@\n\x07GetUser\x12\x0e.modelzoo.User\x1a\x0f.modelzoo.Empty\"\x14\x82\xd3\xe4\x93\x02\x0e\"\t/get/user:\x01*b\x06proto3')
+  serialized_pb=_b('\n\x1emodelzoo/protos/services.proto\x12\x08modelzoo\x1a\x1cgoogle/api/annotations.proto\x1a modelzoo/protos/model_apis.proto\"\x07\n\x05\x45mpty\"$\n\x06KVPair\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\"?\n\x05Model\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\"\n\x08metadata\x18\x03 \x03(\x0b\x32\x10.modelzoo.KVPair\"\'\n\x04User\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"\x1f\n\x0eRateLimitToken\x12\r\n\x05token\x18\x01 \x01(\t\"5\n\x12ListModelsResponse\x12\x1f\n\x06models\x18\x01 \x03(\x0b\x32\x0f.modelzoo.Model\"#\n\x14ImageDownloadRequest\x12\x0b\n\x03url\x18\x01 \x01(\t\"&\n\x15ImageDownloadResponse\x12\r\n\x05image\x18\x01 \x01(\t\"\xb2\x01\n\x07Payload\x12#\n\x04type\x18\x01 \x01(\x0e\x32\x15.modelzoo.PayloadType\x12 \n\x05image\x18\x02 \x01(\x0b\x32\x0f.modelzoo.ImageH\x00\x12\x1e\n\x04text\x18\x03 \x01(\x0b\x32\x0e.modelzoo.TextH\x00\x12 \n\x05table\x18\x04 \x01(\x0b\x32\x0f.modelzoo.TableH\x00\x12\x13\n\x0bresponse_id\x18\x05 \x01(\rB\t\n\x07payload\"p\n\x0bMetricItems\x12-\n\x07metrics\x18\x04 \x03(\x0b\x32\x1c.modelzoo.MetricItems.Metric\x1a\x32\n\x06Metric\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\x12\x0c\n\x04unit\x18\x03 \x01(\t*-\n\x0bPayloadType\x12\t\n\x05IMAGE\x10\x00\x12\x08\n\x04TEXT\x10\x01\x12\t\n\x05TABLE\x10\x02\x32\xda\x04\n\x0fModelzooService\x12H\n\tInference\x12\x11.modelzoo.Payload\x1a\x11.modelzoo.Payload\"\x15\x82\xd3\xe4\x93\x02\x0f\"\n/inference:\x01*\x12M\n\x08GetImage\x12\x1e.modelzoo.ImageDownloadRequest\x1a\x1f.modelzoo.ImageDownloadResponse\"\x00\x12\x36\n\nGetMetrics\x12\x0f.modelzoo.Empty\x1a\x15.modelzoo.MetricItems\"\x00\x12L\n\x08GetToken\x12\x0f.modelzoo.Empty\x1a\x18.modelzoo.RateLimitToken\"\x15\x82\xd3\xe4\x93\x02\x0f\"\n/get/token:\x01*\x12S\n\nListModels\x12\x0f.modelzoo.Empty\x1a\x1c.modelzoo.ListModelsResponse\"\x16\x82\xd3\xe4\x93\x02\x10\"\x0b/get/models:\x01*\x12\x46\n\nCreateUser\x12\x0e.modelzoo.User\x1a\x0f.modelzoo.Empty\"\x17\x82\xd3\xe4\x93\x02\x11\"\x0c/create/user:\x01*\x12I\n\x0b\x43reateModel\x12\x0f.modelzoo.Model\x1a\x0f.modelzoo.Empty\"\x18\x82\xd3\xe4\x93\x02\x12\"\r/create/model:\x01*\x12@\n\x07GetUser\x12\x0e.modelzoo.User\x1a\x0f.modelzoo.Empty\"\x14\x82\xd3\xe4\x93\x02\x0e\"\t/get/user:\x01*b\x06proto3')
   ,
   dependencies=[google_dot_api_dot_annotations__pb2.DESCRIPTOR,modelzoo_dot_protos_dot_model__apis__pb2.DESCRIPTOR,])
 
@@ -48,8 +48,8 @@ _PAYLOADTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=700,
-  serialized_end=745,
+  serialized_start=721,
+  serialized_end=766,
 )
 _sym_db.RegisterEnumDescriptor(_PAYLOADTYPE)
 
@@ -357,6 +357,13 @@ _PAYLOAD = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='response_id', full_name='modelzoo.Payload.response_id', index=4,
+      number=5, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -373,7 +380,7 @@ _PAYLOAD = _descriptor.Descriptor(
       index=0, containing_type=None, fields=[]),
   ],
   serialized_start=427,
-  serialized_end=584,
+  serialized_end=605,
 )
 
 
@@ -417,8 +424,8 @@ _METRICITEMS_METRIC = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=648,
-  serialized_end=698,
+  serialized_start=669,
+  serialized_end=719,
 )
 
 _METRICITEMS = _descriptor.Descriptor(
@@ -447,8 +454,8 @@ _METRICITEMS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=586,
-  serialized_end=698,
+  serialized_start=607,
+  serialized_end=719,
 )
 
 _MODEL.fields_by_name['metadata'].message_type = _KVPAIR
@@ -567,8 +574,8 @@ _MODELZOOSERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=748,
-  serialized_end=1350,
+  serialized_start=769,
+  serialized_end=1371,
   methods=[
   _descriptor.MethodDescriptor(
     name='Inference',
