@@ -5,38 +5,71 @@
   email: simon@modelzoo.live
   password: password
 
+# - '@type': /modelzoo.Model
+#   model_name: ImageNet Classification ResNet50
+#   metadata:
+#   - key: category
+#     value: vision classification
+#   - key: author
+#     value: Microsoft Research
+#   - key: service_type
+#     value: clipper
+#   - key: clipper_url
+#     value: http://localhost:10000/vision_classification/predict
+#   - key: input_type
+#     value: image
+#   - key: output_type
+#     value: table
+#   - key: framework
+#     value: PyTorch
+#   - key: paper_link
+#     value: https://arxiv.org/pdf/1512.03385.pdf
+#   - key: metric_ImageNet_top_5_error_%
+#     value: "5.25"
+
+# - '@type': /modelzoo.Model
+#   model_name: Text Dumy
+#   metadata:
+#   - key: category
+#     value: text generation
+#   - key: service_type
+#     value: clipper
+#   - key: clipper_url
+#     value: http://localhost:10000/text_generation/predict
+#   - key: input_type
+#     value: text
+#   - key: output_type
+#     value: text
+
 - '@type': /modelzoo.Model
-  model_name: ImageNet Classification ResNet50
+  model_name: Resnet101-ONNX
   metadata:
   - key: category
-    value: vision classification
-  - key: author
-    value: Microsoft Research
+    value: image classification
   - key: service_type
     value: clipper
   - key: clipper_url
-    value: http://localhost:10000/vision_classification/predict
+    value: http://34.218.240.189:3000/onnxrtresnet/predict
   - key: input_type
     value: image
   - key: output_type
-    value: table
+    value: table  
   - key: framework
-    value: PyTorch
-  - key: paper_link
-    value: https://arxiv.org/pdf/1512.03385.pdf
-  - key: metric_ImageNet_top_5_error_%
-    value: "5.25"
+    value: ONNXRuntime + TensorRT
 
+    
 - '@type': /modelzoo.Model
-  model_name: Text Dumy
+  model_name: Resnet101-PyTorch
   metadata:
   - key: category
-    value: text generation
+    value: image classification
   - key: service_type
     value: clipper
   - key: clipper_url
-    value: http://localhost:10000/text_generation/predict
+    value: http://34.218.240.189:3000/pytorch/predict
   - key: input_type
-    value: text
+    value: image
   - key: output_type
-    value: text
+    value: table  
+  - key: framework
+    value: PyTorch

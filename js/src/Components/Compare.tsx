@@ -47,8 +47,8 @@ function createPlot(runs: InferenceRun[]): JSX.Element {
         null])
 
     return <Chart
-        width={'500px'}
-        height={'300px'}
+        width={'1000px'}
+        height={'400px'}
         chartType="BarChart"
         loader={<div>Loading Chart</div>}
         data={[
@@ -77,6 +77,7 @@ function createPlot(runs: InferenceRun[]): JSX.Element {
             legend: { position: 'none' },
             hAxis: {
                 title: "Latency(ms)",
+                viewWindow: { min: 0, max: 25 }
             },
             yAxis: {
                 title: "Query"
