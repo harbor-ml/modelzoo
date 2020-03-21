@@ -1,0 +1,22 @@
+version: '3'
+services:
+  backend:
+    build: go/
+    ports:
+      - "3020:3020"
+      - "8080:8080"
+      - "9000:9000"
+      - "9090:9090"
+      - "9999:9999"
+  frontend:
+    build:
+      context: ./
+      dockerfile: ./js/Dockerfile
+    ports:
+      - "3000:3000"
+  modelzoo:
+    build:
+      context: ./
+      dockerfile: ./modelzoo/Dockerfile
+    ports:
+      - "1000:1000"
