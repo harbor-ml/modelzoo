@@ -1,4 +1,4 @@
-SHELL := /bin/bash
+SHELL := /bin/sh
 
 placeholder:
 	@echo "Do not use plain 'make'. Add a subcommand."
