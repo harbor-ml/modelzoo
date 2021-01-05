@@ -13,7 +13,7 @@
     "@types/react-router-dom": "^5.1.0",
     "@types/swagger-ui-react": "^3.23.0",
     "antd": "^3.18.1",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bad-words": "^3.0.2",
     "google-protobuf": "3.8.0-rc.1",
     "grpc-web": "^1.0.4",
